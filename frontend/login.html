@@ -1,40 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
+
+    body {
+      background-color: rgb(217, 217, 217);
+      font-family: 'Open Sans', sans-serif;
+      flex: auto;
+    }
+
+    #nav {
+      overflow: hidden;
+    }
+
+    #nav a {
+      float: right;
+      color: #000000;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+    }
+
+    .loginForm {
+      text-align: center;
+    }
+
+    #login {
+      text-align: center;
+      border: solid black;
+      padding: 14px 16px;
+      margin-left: 40%;
+      margin-right: 40%;
+      font-size: 17px;
+      border-radius: 7%;
+    }
+  </style>
 </head>
+
 <body>
-    </form>
-
-    <form class="loginForm" name="loginForm" autocomplete="on">
-
-      <h2 class="SLformHeader">Login</h2>
-
-      <div class="field">
-
-        <label for="username">username:</label>
-
-        <input type="text" id="username" name="username" placeholder="Enter uaername">
-
-      </div>
-
-      <p id="uError">*username already exists</p>
-
-      <div class="field">
-
-        <label for="">password:</label>
-
-        <input type="text" id="password" name="password" placeholder="Enter password">
-
-      </div>
-
-       <p id="pError">(password should be atleast 6 characters and contain both case, numbers and special characters)</p>
-
-      <input type="button" value="Login" id="btnLogIn">
-
-    </form>
+  <div id="nav">
+    <a href="/">Home</a>
+    <a href="register">Sign Up</a>
+  </div>
+  <form class="loginForm" name="loginForm" autocomplete="on">
+    <h2 class="SLformHeader">Login</h2>
+    <div class="field" id="login">
+      <label for="username">Username</label><br>
+      <input type="text" id="username" name="username" placeholder="Enter uaername"><br>
+      <label for="">Password</label><br>
+      <input type="text" id="password" name="password" placeholder="Enter password"><br>
+      <a>Forgot password?</a><br>
+    <input type="button" value="Login" id="btnLogIn">
+    </div>
+  </form>
 </body>
+
 </html>
