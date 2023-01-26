@@ -72,7 +72,7 @@
         <a href="sign-up">Sign Up</a>
     </div>
 </nav>
-  <form class="loginForm" name="loginForm" autocomplete="on">
+  <form class="loginForm" name="loginForm" autocomplete="on" action='loby.html'>
     <h2 class="SLformHeader">Login</h2>
     <div class="field" id="login">
       <label for="username">Username</label><br>
@@ -80,10 +80,24 @@
       <label for="">Password</label><br>
       <input type="text" id="password" name="password" placeholder="Enter password"><br>
       <a>Forgot password?</a><br>
-    <input type="button" value="Login" id="btnLogIn">
+    <button onclick="loby('1')">Login</button>
     </div>
   </form>
 
 </body>
+<script>
+  const usermane = document.getElementById("usermane");
+  const password = document.getElementById("password");
 
+  //function to get user loby page
+  function loby(x) {
+  if(1==x){
+    console.log('clicked')
+    console.log(usermane,password)
+    //requesting to server
+    http.open("GET", "loby", true);
+    http.send();
+  }
+}
+</script>
 </html>

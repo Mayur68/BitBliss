@@ -2,15 +2,7 @@
 
         body {
             background: linear-gradient(to right, #585bff, #e957ff);
-            font-family: 'Open Sans', sans-serif;
-            flex: auto;
-            
-        }
-
-        nav {
-            overflow: hidden;
-            text-decoration: none;
-            color: #ffffff; 
+            font-family: 'Open Sans', sans-serif;         
         }
         
         #home>a {
@@ -30,7 +22,7 @@
             font-size: 17px;
         }
 
-        #title {
+        .title {
             text-align: center;
             background: linear-gradient(to right, #7a7cff, #ec6eff);
             padding: 14px 16px;

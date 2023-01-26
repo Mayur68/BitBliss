@@ -12,6 +12,10 @@ app.get('/sign-up', (req, res) => {
 
 app.get('/login', (req, res) => {
     res.sendFile(__dirname+ '/frontend/login.html');
-    })    
+    })
+    
+app.get('/loby.html', (req, res) => {
+    res.sendFile(__dirname+ '/frontend/loby.html');
+    })
 
 app.listen(3000, () => console.log('running at 3000...'));
