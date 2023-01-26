@@ -5,49 +5,34 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebApp</title>
+    <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico">
+    <link rel="stylesheet" href="./frontend/css/index.css">
+    <title>Nova Star</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
-
-        body {
-            background-color: rgb(217, 217, 217);
-            font-family: 'Open Sans', sans-serif;
-            flex: auto;
-            
+        html {
+            scroll-behavior: smooth;
         }
 
-        #nav {
-            overflow: hidden;
-        }
-
-        #nav a {
-            float: right;
-            color: #000000;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 17px;
-        }
-
-        #title {
-            text-align: center;
-            background-color: rgb(255, 255, 255);
-            padding: 14px 16px;
-            margin: 10%;
-            font-size: 20px;
-            border-radius: 25px;
+        body::-webkit-scrollbar {
+            display: none;
         }
 
     </style>
 </head>
 
 <body>
-    <div id="nav">
-        <a href="/">Home</a>
-        <a href="register">Sign Up</a>
-        <a href="login">Login</a>
-    </div>
+    <nav>
+        <div id="home">
+            <img src="/assets/favicon/favicon.ico">
+            <a href="/">Nova Star</a>
+        </div>
+        <div id="serv">
+            <a href="sign-up">Sign Up</a>
+            <a href="login">Login</a>
+        </div>
+    </nav>
     <div id="title">
+        <img src="/assets/favicon/android-chrome-192x192.png">
         <h1>Nova Star</h1>
     </div>
 
