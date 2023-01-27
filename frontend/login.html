@@ -2,114 +2,125 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
-.*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
 
-    background: linear-gradient(to right, #585bff, #e957ff);
-    font-family: 'Open Sans', sans-serif;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-nav {
-  margin: 0 0 200px 0;
- display: flex;
-    justify-content: space-between;
-    align-self: center;
-    
-}
+    body {
+
+      background: linear-gradient(to right, #585bff, #e957ff);
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    nav {
+      margin: 0 0 200px 0;
+      display: flex;
+      justify-content: space-between;
+      align-self: center;
+      padding: 2%;
+
+    }
 
 
-#home>a {
-    color: #000000;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-}
+    #home>a {
+      color: #000000;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+    }
 
-#serv>a {
-    color: #000000;
-    text-align: center;
-    padding: 0px 16px;
-    text-decoration: none;
-    font-size: 17px;
-}
+    #serv>a {
+      color: #000000;
+      text-align: center;
+      padding: 0px 16px;
+      text-decoration: none;
+      font-size: 17px;
+    }
 
-.box {
-    display: flex;
-    justify-content: center;
-    align-self: center;
-}
+    .box {
+      display: flex;
+      justify-content: center;
+      align-self: center;
+    }
 
-.loginForm {
-    height: auto;
-    padding: 0 0px 20px 20px;
-    width: 230px;
-    text-align: left;
-    background: linear-gradient(to right, #7a7cff, #ec6eff);
-    border-radius: 25px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
+    .loginForm {
+      height: auto;
+      padding: 0 0px 20px 20px;
+      width: 230px;
+      text-align: left;
+      background: linear-gradient(to right, #7a7cff, #ec6eff);
+      border-radius: 25px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
 
-.field label {
-    font-size: 16px;
-}
+    .field label {
+      font-size: 16px;
+    }
 
-.field input[type=button] {
-  margin: 10px 0 0 0;
-    width: 90%;
-    padding: 4px 6px 4px 6px;
-    border-radius: 15px;
-    background: linear-gradient(to right, #7a7cff, #ec6eff);
-    border: 0.5px solid black;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-font-family: 'Open Sans', sans-serif;
-}
+    .field input[type=button] {
+      margin: 10px 0 0 0;
+      width: 90%;
+      padding: 4px 6px 4px 6px;
+      border-radius: 15px;
+      background: linear-gradient(to right, #7a7cff, #ec6eff);
+      border: 0.5px solid black;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      font-family: 'Open Sans', sans-serif;
+    }
 
-.field input[type=text] {
-    padding: 5px 10px 2px 10px;
-    border-radius: 7px;
-    border: 2px solid black;
-}
+    .field input[type=text] {
+      padding: 5px 10px 2px 10px;
+      border-radius: 7px;
+      border: 2px solid rgb(52, 0, 185);
+    }
 
-.fp {
-    margin: 0 24px 0 0;
-    
-    color: blue;
-    text-align: right;
-    font-size: 12px;
-}
-.fp a{
-text-decoration: none;
-}
-    </style>
+    .fp {
+      margin: 0 24px 0 0;
+
+      color: blue;
+      text-align: right;
+      font-size: 12px;
+    }
+
+    .fp a {
+      text-decoration: none;
+    }
+  </style>
 </head>
 
 <body>
   <nav>
-    <div id="home"> <img src="/assets/favicon/favicon.ico"> <a href="/">Nova Star</a> </div>
-    <div id="serv"> <a href="sign-up">Sign Up</a> </div>
+    <div id="home">
+      <img src="/assets/favicon/favicon.ico">
+      <a href="/">Nova Star</a>
+    </div>
+    <div id="serv">
+      <a href="sign-up">Sign Up</a>
+    </div>
   </nav>
   <div class="box">
     <form class="loginForm" name="loginForm" autocomplete="on">
       <h2 class="SLformHeader">Login</h2>
-      <div class="field" >
+      <div class="field">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter uaername"></div> <div class="field">
+        <input type="text" id="username" name="username" placeholder="Enter uaername"></div>
+      <div class="field">
         <label for="">Password</label>
-        <input type="text" id="password" name="password" placeholder="Enter password"></div> 
-        <div class="fp">
-          <a href="#">Forgot password?</a>
-        </div> <div class="field"> 
+        <input type="text" id="password" name="password" placeholder="Enter password"></div>
+      <div class="fp">
+        <a href="#">Forgot password?</a>
+      </div>
+      <div class="field">
         <input type="button" value="Login" id="btnLogIn"></div>
     </form>
   </div>
@@ -120,13 +131,14 @@ text-decoration: none;
 
   //function to get user loby page
   function loby(x) {
-  if(1==x){
-    console.log('clicked')
-    console.log(usermane,password)
-    //requesting to server
-    http.open("GET", "loby", true);
-    http.send();
+    if (1 == x) {
+      console.log('clicked')
+      console.log(usermane, password)
+      //requesting to server
+      http.open("GET", "loby", true);
+      http.send();
+    }
   }
-}
 </script>
+
 </html>

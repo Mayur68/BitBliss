@@ -1,34 +1,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
 
-        body {
-            background: linear-gradient(to right, #585bff, #e957ff);
-            font-family: 'Open Sans', sans-serif;         
-        }
-        
-        #home>a {
-            float: left;
-            color: #000000;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 17px;
-        }
-        #serv>a {
-            float: right;
-            color: #000000;
-            text-align: center;
-            padding: 0px 16px;
-            text-decoration: none;
-            font-size: 17px;
-        }
+body {
+    background: linear-gradient(to right, #585bff, #e957ff);
+    font-family: 'Open Sans', sans-serif;
+}
 
-        .title {
-            text-align: center;
-            background: linear-gradient(to right, #7a7cff, #ec6eff);
-            padding: 14px 16px;
-            margin: 12%;
-            width: 73%;
-            font-size: 20px;
-            border-radius: 25px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
+#home>a {
+    float: left;
+    color: #000000;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+#serv>a {
+    float: right;
+    color: #000000;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.title {
+    text-align: center;
+    background: linear-gradient(to right, #7a7cff, #ec6eff);
+    padding: 14px 16px;
+    margin: 12%;
+    width: 73%;
+    font-size: 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.about>a {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    text-decoration: none;
+    color: #000000;
+    padding: 1%;
+}
