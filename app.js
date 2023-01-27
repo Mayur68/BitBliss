@@ -13,11 +13,6 @@ app.get('/sign-up', (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(__dirname+ '/frontend/login.html');
     })
-
-    app.post('/login', (req, res) => {
-        console.log(req.body);
-        var username = req.body;
-    })
     
 app.get('/loby.html', (req, res) => {
     res.sendFile(__dirname+ '/frontend/loby.html');
