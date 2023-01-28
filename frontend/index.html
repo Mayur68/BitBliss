@@ -8,41 +8,28 @@
     <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico">
     <link rel="stylesheet" href="./frontend/css/index.css">
     <title>Nova Star</title>
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body::-webkit-scrollbar {
-            display: none;
-        }
-
-        nav {
-            position: fixed;
-            display: flex;
-            justify-content: space-between;
-            align-self: center;
-            padding: 1%;
-            top: 0;
-            left: 0%;
-            width: 100%;
-            height: 30%;
-            /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
-        }
-    </style>
 </head>
 
 <body>
-    <nav>
-        <div id="home">
-            <img src="/assets/favicon/favicon.ico">
-            <a href="/">Nova Star</a>
+    <!--Navigation -->
+    <header class="header-overlay header-logged">
+        <div class="logo">
+            <a href="#" class="home"><img src="/assets/favicon/favicon.ico"> Nova Star</a>
         </div>
-        <div id="serv">
-            <a href="sign-up">Sign Up</a>
-            <a href="login">Login</a>
+        <!--<div class="nav">
+            <ul>
+                <li><a>Games</a></li>
+            </ul>
+        </div>-->
+        <div class="user">
+            <a href="sign-up">
+                <box-icon type='solid' name='user'></box-icon>Login
+            </a>
+            <a href="login">Sign Up</a>
         </div>
-    </nav>
+    </header>
+
+    <!--Title-->
     <div class="title">
         <img src="/assets/favicon/android-chrome-192x192.png">
         <h1>Nova Star</h1>
@@ -50,11 +37,6 @@
     <div class="title">
         <h1># Open space for you</h1>
         <p> Play 'fun' Games with friends</p>
-    </div>
-    <div class="about">
-        <a href="#">About</a><br>
-        <a href="#">Contact</a><br>
-        <a href="#">Support</a><br>
     </div>
 </body>
 

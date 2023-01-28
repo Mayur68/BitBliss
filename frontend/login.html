@@ -125,20 +125,5 @@
     </form>
   </div>
 </body>
-<script>
-  const usermane = document.getElementById("usermane");
-  const password = document.getElementById("password");
-
-  //function to get user loby page
-  function loby(x) {
-    if (1 == x) {
-      console.log('clicked')
-      console.log(usermane, password)
-      //requesting to server
-      http.open("GET", "loby", true);
-      http.send();
-    }
-  }
-</script>
 
 </html>
