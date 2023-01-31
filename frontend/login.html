@@ -5,46 +5,55 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico">
   <title>Login</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
 
     * {
-      margin: 0;
-      padding: 0;
+      font-family: 'Open Sans', sans-serif;
+      padding: 0%;
+      margin: 0%;
+      text-decoration: none;
+      list-style: none;
       box-sizing: border-box;
     }
 
-    body {
-
-      background: linear-gradient(to right, #585bff, #e957ff);
-      font-family: 'Open Sans', sans-serif;
+    :root {
+      --main1-color: linear-gradient(to right, #585bff, #e957ff);
+      --main2-color: linear-gradient(to right, #7a7cff, #ec6eff);
+      --shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      --text-color: #000000;
     }
 
-    nav {
-      margin: 0 0 200px 0;
+    body {
+      background: var(--main1-color);
+    }
+
+    .menu {
       display: flex;
       justify-content: space-between;
       align-self: center;
-      padding: 2%;
+      width: 100%;
+      top: 0%;
+      left: 0%;
+      padding: 2% 1%;
 
     }
 
-
-    #home>a {
-      color: #000000;
-      text-align: center;
-      padding: 14px 16px;
-      text-decoration: none;
-      font-size: 17px;
+    .home>a {
+      font-size: 150%;
     }
 
-    #serv>a {
-      color: #000000;
-      text-align: center;
-      padding: 0px 16px;
-      text-decoration: none;
-      font-size: 17px;
+    .user {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .user>a {
+      padding-left: 20px;
+      font-size: 20px;
     }
 
     .box {
@@ -58,23 +67,23 @@
       padding: 0 0px 20px 20px;
       width: 230px;
       text-align: left;
-      background: linear-gradient(to right, #7a7cff, #ec6eff);
+      background: var(--main2-color);
       border-radius: 25px;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      box-shadow: var(--shadow);
     }
 
     .field label {
       font-size: 16px;
     }
 
-    .field input[type=button] {
+    .field button {
       margin: 10px 0 0 0;
       width: 90%;
       padding: 4px 6px 4px 6px;
       border-radius: 15px;
-      background: linear-gradient(to right, #7a7cff, #ec6eff);
+      background: var(--main2-color);
       border: 0.5px solid black;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      box-shadow: var(--shadow);
       font-family: 'Open Sans', sans-serif;
     }
 
@@ -99,15 +108,14 @@
 </head>
 
 <body>
-  <nav>
-    <div id="home">
-      <img src="/assets/favicon/favicon.ico">
-      <a href="/">Nova Star</a>
+  <header class="menu">
+    <div class="home">
+      <a href="/" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
     </div>
-    <div id="serv">
+    <div class="user">
       <a href="sign-up">Sign Up</a>
     </div>
-  </nav>
+  </header>
   <div class="box">
     <form class="loginForm" name="loginForm" autocomplete="on">
       <h2 class="SLformHeader">Login</h2>
@@ -120,8 +128,7 @@
       <div class="fp">
         <a href="#">Forgot password?</a>
       </div>
-      <div class="field">
-        <input type="button" value="Login" id="btnLogIn"></div>
+      <div class="field"><button id="btnLogIn" onclick="sendinfo()">Login</div>
     </form>
   </div>
 </body>

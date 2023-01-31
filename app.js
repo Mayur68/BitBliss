@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+
 app.use(express.static(__dirname));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/frontend/index.html');
@@ -16,9 +19,6 @@ app.get('/login', (req, res) => {
 
 app.get('/loby.html', (req, res) => {
     res.sendFile(__dirname + '/frontend/loby.html');
-    res.json({
-        username
-    });
 })
 
 app.listen(3000, () => console.log('running at 3000...'));

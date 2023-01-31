@@ -1,41 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign up</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
-    
-        body {
-          background-color: rgb(217, 217, 217);
-          font-family: 'Open Sans', sans-serif;
-          flex: auto;
-        }
-    
-        #nav {
-          overflow: hidden;
-        }
-    
-        #nav a {
-          float: right;
-          color: #000000;
-          text-align: center;
-          padding: 14px 16px;
-          text-decoration: none;
-          font-size: 17px;
-        }
-      </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico">
+  <title>Login</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
+
+    * {
+      font-family: 'Open Sans', sans-serif;
+      padding: 0%;
+      margin: 0%;
+      text-decoration: none;
+      list-style: none;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --main1-color: linear-gradient(to right, #585bff, #e957ff);
+      --main2-color: linear-gradient(to right, #7a7cff, #ec6eff);
+      --shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      --text-color: #000000;
+    }
+
+    body {
+      background: var(--main1-color);
+    }
+
+    .menu {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    width: 100%;
+    top: 0%;
+    left: 0%;
+    padding: 2% 1%;
+
+    }
+
+
+    .home>a {
+      font-size: 150%;
+    }
+
+    .user {
+      display: flex;
+    align-items: center;
+    justify-content: space-between;
+    }
+    .user>a {
+      padding-left: 20px;
+    font-size: 20px;
+    }
+  </style>
 </head>
+
 <body>
-
-    <div id="nav">
-        <a href="/">Home</a>
-        <a href="login">Login</a>
+  <header class="menu">
+    <div class="home">
+      <a href="/" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
     </div>
-
-
-
+    <div class="user">
+      <a href="login">Login</a>
+    </div>
+  </header>
 </body>
+
 </html>
