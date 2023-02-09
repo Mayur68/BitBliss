@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico">
+  <title>Login</title>
+<link rel = "stylesheet" href="/frontend/index/login/style.css">
+</head>
+
+<body>
+  <header class="menu">
+    <div class="home">
+      <a href="/" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
+    </div>
+    <div class="user">
+      <a href="sign-up">Sign Up</a>
+    </div>
+  </header>
+  <div class="box">
+    <form class="loginForm" id="loginform" name="loginForm" autocomplete="on">
+      <h2 class="SLformHeader">Login</h2>
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter username"></div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="text" id="password" name="password" placeholder="Enter password"></div>
+      <div class="fp">
+        <a href="#">Forgot password?</a>
+      </div>
+      <div class="field"><button id="btnLogIn" onclick="senddata()">Login</button></div>
+    </form>
+  </div>
+</body>
+<script>
+  const input_username = document.getElementById("username");
+  const input_password = document.getElementById("password");
+
+  function senddata() {
+    const username = input_username.value;
+    const password = input_password.value;
+
+    fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password
+        }),
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status === "success") {
+          window.location.href = "/user";
+        } else {
+          alert("Incorrect username or password");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("An error occurred while trying to log in");
+      });
+  }
+</script>
+
+</html>

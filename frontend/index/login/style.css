@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico">
-  <title>Login</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
 
     * {
       font-family: 'Open Sans', sans-serif;
@@ -104,33 +94,3 @@
     .fp a {
       text-decoration: none;
     }
-  </style>
-</head>
-
-<body>
-  <header class="menu">
-    <div class="home">
-      <a href="/" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
-    </div>
-    <div class="user">
-      <a href="sign-up">Sign Up</a>
-    </div>
-  </header>
-  <div class="box">
-    <form class="loginForm" name="loginForm" autocomplete="on">
-      <h2 class="SLformHeader">Login</h2>
-      <div class="field">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter uaername"></div>
-      <div class="field">
-        <label for="">Password</label>
-        <input type="text" id="password" name="password" placeholder="Enter password"></div>
-      <div class="fp">
-        <a href="#">Forgot password?</a>
-      </div>
-      <div class="field"><button id="btnLogIn" onclick="sendinfo()">Login</div>
-    </form>
-  </div>
-</body>
-
-</html>
