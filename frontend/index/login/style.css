@@ -10,7 +10,7 @@
     }
 
     :root {
-      --main1-color: linear-gradient(to right, #585bff, #e957ff);
+      --main1-color: linear-gradient(to right, #1d1c1c, #7446ff);
       --main2-color: linear-gradient(to right, #7a7cff, #ec6eff);
       --shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
       --text-color: #000000;
