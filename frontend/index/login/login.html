@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico">
   <title>Login</title>
-<link rel = "stylesheet" href="/frontend/index/login/style.css">
+  <link rel="stylesheet" href="/frontend/index/login/style.css">
 </head>
 
 <body>
@@ -19,20 +19,28 @@
       <a href="sign-up">Sign Up</a>
     </div>
   </header>
-  <div class="box">
-    <form class="loginForm" id="loginform" name="loginForm" autocomplete="on">
-      <h2 class="SLformHeader">Login</h2>
-      <div class="field">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter username"></div>
-      <div class="field">
-        <label for="password">Password</label>
-        <input type="text" id="password" name="password" placeholder="Enter password"></div>
-      <div class="fp">
-        <a href="#">Forgot password?</a>
+  <div class="UI">
+    <div class="satellite">
+      <!-- <img src="/assets/—Pngtree—vector free buckle cartoon satellite_4671210.png"> -->
+    </div>
+    <div class="planet" id="planet_1">
+      <div class="box">
+        <form class="loginForm" id="loginform" name="loginForm" autocomplete="on">
+          <h2 class="SLformHeader">Login</h2>
+          <div class="field">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter username"></div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="text" id="password" name="password" placeholder="Enter password"></div>
+          <div class="fp">
+            <a href="#">Forgot password?</a>
+          </div>
+          <div class="field"><button id="btnLogIn" onclick="senddata()">Login</button></div>
+        </form>
       </div>
-      <div class="field"><button id="btnLogIn" onclick="senddata()">Login</button></div>
-    </form>
+    </div>
+    <div class="planet" id="planet_2"></div>
   </div>
 </body>
 <script>
