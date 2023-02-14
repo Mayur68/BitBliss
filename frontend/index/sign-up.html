@@ -6,67 +6,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico">
-  <title>Login</title>
-  <link rel="stylesheet" href="/frontend/index/login/style.css">
+  <link rel="stylesheet" href="/frontend/css/index.css">
+  <link rel="stylesheet" href="/frontend/css/animation.css">
+  <title>sign-up</title>
+
 </head>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
-
-  * {
-    font-family: 'Open Sans', sans-serif;
-    padding: 0%;
-    margin: 0%;
-    text-decoration: none;
-    list-style: none;
-    box-sizing: border-box;
-  }
-
   body::-webkit-scrollbar {
     display: none;
-  }
-
-  :root {
-    --main1-color: linear-gradient(to right, #1d1c1c, #7446ff);
-    --main2-color: linear-gradient(to right, #7a7cff, #ec6eff);
-    --shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    --text-color: #000000;
   }
 
   body {
     background: var(--main1-color);
   }
 
-  .menu {
-    display: flex;
-    justify-content: space-between;
-    align-self: center;
-    width: 100%;
-    top: 0%;
-    left: 0%;
-    padding: 2% 1%;
-
-  }
-
-  .home>a {
-    font-size: 150%;
-  }
-
-  .user {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .user>a {
-    padding-left: 20px;
-    font-size: 20px;
-    color: white;
-  }
- 
   .box {
-    top: 0;
-    right: 0;
-    left: 0;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    margin: 12%;
   }
 
   .loginForm {
@@ -114,7 +72,7 @@
 </style>
 
 <body>
-  <header class="menu">
+  <header class="header-overlay header-logged">
     <div class="home">
       <a href="/" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
     </div>
@@ -150,7 +108,7 @@
   function senddata() {
     const username = input_username.value;
     const password = input_password.value;
-    const input_password = connfirmpassword;
+    const con_password = confirm_password.value;
 
     fetch("/sign-up", {
         method: "POST",
@@ -159,7 +117,8 @@
         },
         body: JSON.stringify({
           username,
-          password
+          password,
+          con_password
         }),
       })
       .then((response) => {

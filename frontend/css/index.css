@@ -54,14 +54,11 @@ body {
 
 @media only screen and (max-width: 768px) {
     .planet {
-      width: 100%;
-      margin: 0;
+        width: 100%;
+        margin: 0;
     }
-  
+
     .box {
-      margin: 5%;
+        margin: 5%;
     }
-  }
-
-
-
+}

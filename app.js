@@ -40,6 +40,24 @@ app.post("/login", (req, res) => {
   }
 });
 
+app.post("/sign-up", (req, res) => {
+  const {
+    username,
+    password,
+    con_password
+  } = req.body;
 
+  if (password === con_password) {
+    res.json({
+      status: "success",
+      message: "Login successful!",
+    });
+  } else {
+    res.status(401).json({
+      status: "error",
+      message: "Incorrect username or password.",
+    });
+  }
+});
 
 app.listen(3000, () => console.log('running at 3000...'));
