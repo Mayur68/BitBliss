@@ -9,7 +9,90 @@
   <title>Login</title>
   <link rel="stylesheet" href="/frontend/index/login/style.css">
 </head>
+<style>
+  body {
+  background: var(--main1-color);
+}
 
+.UI {
+  display: flex;
+  justify-content: space-between;
+}
+
+.box {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  padding: 25%;
+  margin-top: 1%;
+  position: fixed;
+}
+
+.loginForm {
+  height: auto;
+  padding: 0 0px 20px 20px;
+  width: 230px;
+  text-align: left;
+  background: var(--main2-color);
+  border-radius: 25px;
+  box-shadow: var(--shadow);
+}
+
+.field label {
+  font-size: 16px;
+}
+
+.field button {
+  margin: 10px 0 0 0;
+  width: 90%;
+  padding: 4px 6px 4px 6px;
+  border-radius: 15px;
+  background: var(--main2-color);
+  border: 0.5px solid black;
+  box-shadow: var(--shadow);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.field input[type=text] {
+  padding: 5px 10px 2px 10px;
+  border-radius: 7px;
+  border: 2px solid rgb(52, 0, 185);
+}
+
+.fp {
+  margin: 0 24px 0 0;
+
+  color: blue;
+  text-align: right;
+  font-size: 12px;
+}
+
+.fp a {
+  text-decoration: none;
+}
+
+#planet_1 {
+  background: url("/assets/—Pngtree—pink\ cartoon\ planet\ illustration_4578322.png") no-repeat;
+  width: 700px;
+  height: 600px;
+  margin-left: 400px;
+  background-size: contain;
+  float: left;
+  animation: move-up-down_1 2s ease-in-out infinite;
+}
+
+#planet_2 {
+  background: url("/assets/—Pngtree—planet\ cartoon\ planet\ cartoon\ planet_7157759.png") no-repeat;
+  width: 250px;
+  height: 150px;
+  margin-left: 100px;
+  margin-top: 5%;
+  background-size: contain;
+  float: right;
+  animation: move-up-down_2 2s ease-in-out infinite;
+}
+
+</style>
 <body>
   <header class="menu">
     <div class="home">

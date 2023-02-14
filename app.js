@@ -10,15 +10,15 @@ app.get('/', (req, res) => {
 })
 
 app.get('/sign-up', (req, res) => {
-  res.sendFile(__dirname + '/frontend/index/register/sign-up.html');
+  res.sendFile(__dirname + '/frontend/index/sign-up.html');
 })
 
 app.get('/login', (req, res) => {
-  res.sendFile(__dirname + '/frontend/index/login/login.html');
+  res.sendFile(__dirname + '/frontend/index/login.html');
 })
 
 app.get('/user', (req, res) => {
-  res.sendFile(__dirname + '/frontend/index/user/user.html');
+  res.sendFile(__dirname + '/frontend/index/user.html');
 })
 
 app.post("/login", (req, res) => {
