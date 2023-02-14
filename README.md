@@ -21,9 +21,3 @@
     <li>CSS</li>
     <li>JavaScript</li>
 </ul>
-<h2>Contributing</h2>
-<ol>
-    <li>Fork the repository.</li>
-    <li>Create a new branch and make your changes.</li>
-    <li>Submit a pull request with a detailed description of your changes.</li>
-</ol>
