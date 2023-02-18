@@ -16,47 +16,57 @@
     display: none;
   }
 
+  .title {
+    text-align: center;
+    padding: 14px 16px;
+    margin-left: 12%;
+    margin-right: 12%;
+    margin-top: 8%;
+    font-size: 120%;
+  }
+
   .box {
-    display: flex;
-    justify-content: center;
-    align-self: center;
-    margin: 12%;
+    margin-left: 40%;
+    margin-right: 40%;
   }
 
   .loginForm {
-    height: auto;
-    padding: 0 0px 20px 20px;
-    width: 230px;
-    text-align: left;
     background: var(--main2-color);
-    border-radius: 25px;
     box-shadow: var(--shadow);
+    padding: 5%;
+    border-radius: 18px;
   }
 
-  .field label {
+  .field {
+    padding: 2%;
+  }
+
+  .field>label {
     font-size: 16px;
+    padding: 2%;
+    display: block;
   }
 
-  .field button {
-    margin: 10px 0 0 0;
-    width: 90%;
-    padding: 4px 6px 4px 6px;
-    border-radius: 15px;
+  .field>input[type=text] {
+    padding: 2%;
+    border-radius: 7px;
+    width: 100%;
+    border: rgb(91, 91, 255) solid;
+  }
+
+  .field>button {
+    padding: 2%;
+    border-radius: 7px;
+    width: 100%;
     background: var(--main2-color);
-    border: 0.5px solid black;
     box-shadow: var(--shadow);
+    border: 0.5px solid black;
+    font-size: 16px;
     font-family: 'Open Sans', sans-serif;
   }
 
-  .field input[type=text] {
-    padding: 5px 10px 2px 10px;
-    border-radius: 7px;
-    border: 2px solid rgb(52, 0, 185);
-  }
 
   .fp {
-    margin: 0 24px 0 0;
-
     color: blue;
     text-align: right;
     font-size: 12px;
@@ -65,35 +75,42 @@
   .fp a {
     text-decoration: none;
   }
+
+  .new-user {
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    padding: 2%;
+    border-radius: 7px;
+    box-shadow: var(--shadow);
+  }
 </style>
 
 <body>
-  <header class="header-overlay header-logged">
-    <div class="home">
-      <a href="/" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
-    </div>
-    <div class="user">
-      <a href="login">Login</a>
-    </div>
-  </header>
+  <div class="title">
+    <a href="/"><img src="/assets/favicon/favicon-32x32.png"></a>
+    <h2 style="color: white;">Sign up</h2>
+  </div>
   <div class="box">
-    <form class="loginForm" id="loginform" name="loginForm" autocomplete="on">
-      <h2 class="SLformHeader">sign-up</h2>
+    <form class="loginForm" id="loginform" name="loginForm">
       <div class="field">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter username">
-      </div>
+        <input type="text" id="username" name="username" placeholder="Enter username"></div>
       <div class="field">
         <label for="password">Password</label>
-        <input type="text" id="password" name="password" placeholder="Enter password">
-        <label for="password">Confirm Password</label>
-        <input type="text" id="con_password" name="password" placeholder="Confirm password">
-      </div>
+        <input type="text" id="password" name="password" placeholder="Enter password"></div>
+      <div class="field">
+        <label for="con-password">Confirm Password</label>
+        <input type="text" id="password" name="con-password" placeholder="Confirm password"></div>
       <div class="fp">
-        <a href="/login">Already have account?</a>
+        <a href="#">Forgot password?</a>
       </div>
-      <div class="field"><button id="btnLogIn" onclick="senddata()">sign-up</button></div>
+      <div class="field"><button id="btnLogIn" onclick="senddata()">Sign Up</button></div>
     </form>
+    <div class="new-user" style="color: white;">
+      <p>Already have an account?</p>
+      <a href="login" style="color: rgb(219, 102, 255); padding-left: 2%;">Login</a>
+    </div>
   </div>
 </body>
 <script>
