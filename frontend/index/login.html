@@ -16,54 +16,57 @@
     display: none;
   }
 
-  .UI {
-    display: flex;
-    justify-content: space-between;
+  .title {
+    text-align: center;
+    padding: 14px 16px;
+    margin-left: 12%;
+    margin-right: 12%;
+    margin-top: 8%;
+    font-size: 120%;
   }
 
   .box {
-    display: flex;
-    justify-content: center;
-    align-self: center;
-    padding: 25%;
-    margin-top: 1%;
-    position: fixed;
+    margin-left: 40%;
+    margin-right: 40%;
   }
 
   .loginForm {
-    height: auto;
-    padding: 0 0px 20px 20px;
-    width: 230px;
-    text-align: left;
     background: var(--main2-color);
-    border-radius: 25px;
     box-shadow: var(--shadow);
+    padding: 5%;
+    border-radius: 18px;
   }
 
-  .field label {
+  .field {
+    padding: 2%;
+  }
+
+  .field>label {
     font-size: 16px;
+    padding: 2%;
+    display: block;
   }
 
-  .field button {
-    margin: 10px 0 0 0;
-    width: 90%;
-    padding: 4px 6px 4px 6px;
-    border-radius: 15px;
+  .field>input[type=text] {
+    padding: 2%;
+    border-radius: 7px;
+    width: 100%;
+    border: rgb(91, 91, 255) solid;
+  }
+
+  .field>button {
+    padding: 2%;
+    border-radius: 7px;
+    width: 100%;
     background: var(--main2-color);
-    border: 0.5px solid black;
     box-shadow: var(--shadow);
+    border: 0.5px solid black;
+    font-size: 16px;
     font-family: 'Open Sans', sans-serif;
   }
 
-  .field input[type=text] {
-    padding: 5px 10px 2px 10px;
-    border-radius: 7px;
-    border: 2px solid rgb(52, 0, 185);
-  }
 
   .fp {
-    margin: 0 24px 0 0;
-
     color: blue;
     text-align: right;
     font-size: 12px;
@@ -73,59 +76,46 @@
     text-decoration: none;
   }
 
-  #planet_1 {
-    background: url("/assets/—Pngtree—pink\ cartoon\ planet\ illustration_4578322.png") no-repeat;
-    width: 700px;
-    height: 600px;
-    margin-left: 400px;
-    background-size: contain;
-    float: left;
-    animation: move-up-down_1 4s ease-in-out infinite;
-  }
-
-  #planet_2 {
-    background: url("/assets/—Pngtree—planet\ cartoon\ planet\ cartoon\ planet_7157759.png") no-repeat;
-    width: 250px;
-    height: 150px;
-    margin-left: 100px;
+  .new-user {
+    display: flex;
+    justify-content:center;
     margin-top: 5%;
-    background-size: contain;
-    float: right;
-    animation: move-up-down_2 4s ease-in-out infinite;
+    padding: 2%;
+    border-radius: 7px;
+    box-shadow: var(--shadow);
   }
 </style>
 
 <body>
-  <header class="header-overlay header-logged">
+  <!-- <header class="header-overlay header-logged">
     <div class="home">
       <a href="/" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
     </div>
     <div class="user">
       <a href="sign-up">Sign Up</a>
     </div>
-  </header>
-  <div class="UI">
-    <div class="satellite">
-      <!-- <img src="/assets/—Pngtree—vector free buckle cartoon satellite_4671210.png"> -->
-    </div>
-    <div class="planet" id="planet_1">
-      <div class="box">
-        <form class="loginForm" id="loginform" name="loginForm" autocomplete="on">
-          <h2 class="SLformHeader">Login</h2>
-          <div class="field">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter username"></div>
-          <div class="field">
-            <label for="password">Password</label>
-            <input type="text" id="password" name="password" placeholder="Enter password"></div>
-          <div class="fp">
-            <a href="#">Forgot password?</a>
-          </div>
-          <div class="field"><button id="btnLogIn" onclick="senddata()">Login</button></div>
-        </form>
+  </header> -->
+  <div class="title">
+    <a href="/frontend/index/index.html"><img src="/assets/favicon/favicon-32x32.png"></a>
+    <h2 style="color: white;">Login</h2>
+  </div>
+  <div class="box">
+    <form class="loginForm" id="loginform" name="loginForm">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter username"></div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="text" id="password" name="password" placeholder="Enter password"></div>
+      <div class="fp">
+        <a href="#">Forgot password?</a>
       </div>
+      <div class="field"><button id="btnLogIn" onclick="senddata()">Login</button></div>
+    </form>
+    <div class="new-user" style="color: white;">
+      <p>Create new account?</p>
+      <a href="sign-up" style="color: rgb(219, 102, 255); padding-left: 2%;">Sign Up</a>
     </div>
-    <div class="planet" id="planet_2"></div>
   </div>
 </body>
 <script>
@@ -136,30 +126,38 @@
     const username = input_username.value;
     const password = input_password.value;
 
-    fetch("/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password
-        }),
-      })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (data.status === "success") {
-          window.location.href = "/user";
-        } else {
-          alert("Incorrect username or password");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        alert("An error occurred while trying to log in");
-      });
+    if (username === "" && password === "")
+      alert("Please enter username and password");
+    else if (username === "")
+      alert("PLease enter username");
+    else if (password === "")
+      alert("PLease enter password");
+    else {
+      fetch("/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password
+          }),
+        })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status === "success") {
+            window.location.href = "/user";
+          } else {
+            alert("Incorrect username or password");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("An error occurred while trying to log in");
+        });
+    }
   }
 </script>
 

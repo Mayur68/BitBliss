@@ -5,13 +5,13 @@
   }
 
   12% {
-    left: 1250px;
+    left: 85%;
     top: 0;
     transform: rotate(90deg);
   }
 
   26% {
-    left: 1250px;
+    left: 85%;
     top: 400px;
     transform: rotate(180deg);
   }
@@ -29,13 +29,13 @@
   }
 
   62% {
-    left: 1250px;
+    left: 85%;
     top: 600px;
     transform: rotate(45deg);
   }
 
   76% {
-    left: 1250px;
+    left: 85%;
     top: 400px;
     transform: rotate(270deg);
   }

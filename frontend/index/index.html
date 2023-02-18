@@ -22,44 +22,35 @@
         margin-left: 12%;
         margin-right: 12%;
         margin-bottom: 6%;
-        margin-top: 1%;
+        margin-top: 8%;
         width: 73%;
-        font-size: 20px;
+        font-size: 120%;
         border-radius: 25px;
         box-shadow: var(--shadow);
+        
     }
-
-    .satellite {
-        background: url("/assets/—Pngtree—vector\ free\ buckle\ cartoon\ satellite_4671210.png") no-repeat;
-        width: 100px;
-        height: 100px;
-        margin-top: 70px;
-        margin-left: 60px;
-        background-size: contain;
-        position: relative;
-        animation: moving-satellite 30s ease-in-out infinite forwards;
+    @media only screen and (max-width: 768px) {
+    .title {
+        margin-top: 25%;
+        margin-left: 8%;
+        margin-right: 8%;
+        margin-bottom: 5%;
+        font-size: 100%;
     }
+}
 </style>
 
-<body>
-    <!--Navigation -->
+<body class="background">
     <header class="header-overlay header-logged">
         <div class="novastar">
             <a href="#" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
         </div>
-        <!--<div class="nav">
-            <ul>
-                <li><a>Games</a></li>
-            </ul>
-        </div>-->
+
         <div class="user">
             <a href="login">Login</a>
             <a href="sign-up">Sign Up</a>
         </div>
     </header>
-    <div class="satellite">
-        <!-- <img src="/assets/—Pngtree—vector free buckle cartoon satellite_4671210.png"> -->
-    </div>
     <!--Title-->
     <div class="title">
         <img src="/assets/favicon/android-chrome-192x192.png">
