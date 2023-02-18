@@ -51,14 +51,3 @@ body {
     font-size: 20px;
     color: white;
 }
-
-@media only screen and (max-width: 768px) {
-    .planet {
-        width: 100%;
-        margin: 0;
-    }
-
-    .box {
-        margin: 5%;
-    }
-}
