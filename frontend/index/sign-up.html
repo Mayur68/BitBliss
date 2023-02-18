@@ -32,10 +32,10 @@
 
   @media only screen and (max-width: 768px) {
     .box {
-        margin-left: 10%;
-        margin-right: 10%;
+      margin-left: 10%;
+      margin-right: 10%;
     }
-}
+  }
 
   .loginForm {
     background: var(--main2-color);
@@ -91,13 +91,19 @@
     <form class="loginForm" id="loginform" name="loginForm">
       <div class="field">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter username"></div>
+        <input type="text" id="username" name="username" placeholder="Enter username">
+        <p id="err-username" for="username"></p>
+      </div>
       <div class="field">
         <label for="password">Password</label>
-        <input type="text" id="password" name="password" placeholder="Enter password"></div>
+        <input type="text" id="password" name="password" placeholder="Enter password">
+        <p id="err-password" for="username"></p>
+      </div>
       <div class="field">
         <label for="con-password">Confirm Password</label>
-        <input type="text" id="password" name="con-password" placeholder="Confirm password"></div>
+        <input type="text" id="con-password" name="con-password" placeholder="Confirm password">
+        <p id="err-con-password" for="username"></p>
+      </div>
       <div class="field"><button id="btnLogIn" onclick="senddata()">Sign up</button></div>
     </form>
     <div class="new-user" style="color: white;">
@@ -109,38 +115,51 @@
 <script>
   const input_username = document.getElementById("username");
   const input_password = document.getElementById("password");
-  const confirm_password = document.getElementById("con_password");
+  const confirm_password = document.getElementById("con-password");
+
+  let err_username1 = document.getElementsById("err-username");
+  let err_password = document.getElementsById("err-password");
+  let err_con_password = document.getElementsById("err-con-password");
 
   function senddata() {
     const username = input_username.value;
     const password = input_password.value;
     const con_password = confirm_password.value;
 
-    fetch("/sign-up", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-          con_password
-        }),
-      })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (data.status === "success") {
-          window.location.href = "/user";
-        } else {
-          alert("Incorrect username or password");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        alert("An error occurred while trying to log in");
-      });
+    if (username === "")
+      alert("Please enter username and password");
+      // err_username1.textcontent = "Please enter";
+    else if (username === "")
+      alert("Please enter username");
+    else if (password === "")
+      alert("Please enter password");
+    else {
+      fetch("/sign-up", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password,
+            con_password
+          }),
+        })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status === "success") {
+            window.location.href = "/user";
+          } else {
+            alert("Please confirm password");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("An error occurred while trying to log in");
+        });
+    }
   }
 </script>
 
