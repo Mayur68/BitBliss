@@ -55,7 +55,7 @@ app.post("/sign-up", (req, res) => {
   } else {
     res.status(401).json({
       status: "error",
-      message: "Incorrect username or password.",
+      message: "Incorrect password.",
     });
   }
 });
