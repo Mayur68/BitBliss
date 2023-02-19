@@ -117,9 +117,9 @@
   const input_password = document.getElementById("password");
   const confirm_password = document.getElementById("con-password");
 
-  let err_username1 = document.getElementsById("err-username");
-  let err_password = document.getElementsById("err-password");
-  let err_con_password = document.getElementsById("err-con-password");
+  var err_username = document.getElementById("err-username");
+  var err_password = document.getElementById("err-password");
+  var err_con_password = document.getElementById("err-con-password");
 
   function senddata() {
     const username = input_username.value;
@@ -127,12 +127,9 @@
     const con_password = confirm_password.value;
 
     if (username === "")
-      alert("Please enter username and password");
-      // err_username1.textcontent = "Please enter";
-    else if (username === "")
-      alert("Please enter username");
+      err_username.textContent = "Please enter username";
     else if (password === "")
-      alert("Please enter password");
+      err_username.textContent = "Please enter password";
     else {
       fetch("/sign-up", {
           method: "POST",
@@ -152,7 +149,7 @@
           if (data.status === "success") {
             window.location.href = "/user";
           } else {
-            alert("Please confirm password");
+            err_username.textContent = "Please confirm password";
           }
         })
         .catch((error) => {
