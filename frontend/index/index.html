@@ -15,9 +15,32 @@
         display: none;
     }
 
+    .header-overlay {
+        position: fixed;
+        display: flex;
+        justify-content: space-between;
+        align-self: center;
+        width: 100%;
+        top: 0%;
+        left: 0%;
+        padding: 2% 1%;
+    }
+
+    .user {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .user>a {
+        padding-left: 20px;
+        font-size: 20px;
+        color: var(--text-color-2);
+    }
+
     .title {
         text-align: center;
-        background: var(--main2-color);
+        background: var(--main-color-2);
         padding: 14px 16px;
         margin: 8% 12% 6% 12%;
         width: 73%;
@@ -28,16 +51,16 @@
 
     @media only screen and (max-width: 768px) {
         .title {
-          margin: 15% 5%;
-          width: 90%;
+            margin: 15% 5%;
+            width: 90%;
         }
 
         .header-overlay {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          position: relative;
-          padding: 2% 1%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            padding: 2% 1%;
         }
     }
 </style>
@@ -45,7 +68,7 @@
 <body class="background">
     <header class="header-overlay header-logged">
         <div class="novastar">
-            <a href="#" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
+            <a href="#"><img src="/assets/favicon/favicon-32x32.png"></a>
         </div>
 
         <div class="user">

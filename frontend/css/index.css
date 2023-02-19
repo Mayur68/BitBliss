@@ -14,39 +14,13 @@ html {
 }
 
 :root {
-    --main1-color: linear-gradient(to right, #0c0c0c, #5d27ff);
-    --main2-color: linear-gradient(to right, #7a7cff, #ec6eff);
+    --main-color-1: linear-gradient(to right, #0c0c0c, #5d27ff);
+    --main-color-2: linear-gradient(to right, #7a7cff, #ec6eff);
     --shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    --text-color: #000000;
+    --text-color-1: #000000;
+    --text-color-2: rgb(255, 255, 255);
 }
 
 body {
-    background: var(--main1-color);
-}
-
-.header-overlay {
-    position: fixed;
-    display: flex;
-    justify-content: space-between;
-    align-self: center;
-    width: 100%;
-    top: 0%;
-    left: 0%;
-    padding: 2% 1%;
-}
-
-.logo {
-    font-size: 150%;
-}
-
-.user {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.user>a {
-    padding-left: 20px;
-    font-size: 20px;
-    color: white;
+    background: var(--main-color-1);
 }
