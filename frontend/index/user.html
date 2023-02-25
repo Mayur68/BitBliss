@@ -7,8 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/frontend/css/index.css">
     <link rel="stylesheet" href="/frontend/css/animation.css">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title>user</title>
 </head>
 <style>
@@ -65,14 +64,24 @@
 
     .games {
         display: flex;
-        justify-content: center;
-        margin: 20% 12% 10%;
+        justify-content: space-around;
+        margin: 5% 5% 5%;
     }
 
     .in-game {
-        width: 60%;
-        height: 40%;
-        background-color: var(--main-bg-color-1);
+        width: 40%;
+        height: 400px;
+    }
+    .r-p-s {
+        background-color: var(--main-bg-color-2);
+        border-radius: 20px;
+        cursor: pointer;
+    }
+
+    .t-t-t {
+        background-color: var(--main-bg-color-2);
+        border-radius: 20px;
+        cursor: pointer;
     }
 </style>
 
@@ -89,7 +98,7 @@
         </nav>
     </header>
     <div class="games">
-        <div class="r-p-c in-game" onclick="r_p_c()">R-p_s</div>
+        <div class="r-p-s in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
         <div class="t-t-t in-game" onclick="t_t_t()">ttt</div>
     </div>
 </body>
