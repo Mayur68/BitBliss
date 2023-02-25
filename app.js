@@ -17,6 +17,10 @@ app.get('/login', (req, res) => {
   res.sendFile(__dirname + '/frontend/index/login.html');
 })
 
+app.get('/Rock-Paper-Scissors', (req, res) => {
+  res.sendFile(__dirname + '/frontend/games/r-p-s.html');
+})
+
 app.get('/user', (req, res) => {
   res.sendFile(__dirname + '/frontend/index/user.html');
 })
