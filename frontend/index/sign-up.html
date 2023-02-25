@@ -35,10 +35,14 @@
       margin-left: 10%;
       margin-right: 10%;
     }
+
+    .title {
+      margin-top: 30%;
+    }
   }
 
   .loginForm {
-    background: var(--main2-color);
+    background: var(--main-color-2);
     box-shadow: var(--shadow);
     padding: 5%;
     border-radius: 18px;
@@ -65,9 +69,9 @@
     padding: 2%;
     border-radius: 7px;
     width: 100%;
-    background: var(--main2-color);
+    background: var(--main-color-2);
     box-shadow: var(--shadow);
-    border:  0.5px rgb(0, 0, 158) solid;
+    border: 0.5px rgb(0, 0, 158) solid;
     font-size: 16px;
     font-family: 'Open Sans', sans-serif;
   }
@@ -85,7 +89,7 @@
 <body>
   <div class="title">
     <a href="/"><img src="/assets/favicon/favicon-32x32.png"></a>
-    <h2 style="color: white;">Sign up</h2>
+    <h2 style="color: var(--text-color-2)">Sign up</h2>
   </div>
   <div class="box">
     <form class="loginForm" id="loginform" name="loginForm">
@@ -104,13 +108,14 @@
         <input type="text" id="con-password" name="con-password" placeholder="Confirm password">
         <p id="err-con-password" for="username"></p>
       </div>
-      <div class="field"><button id="btnLogIn" onclick="senddata()">Sign up</button></div>
+      <div class="field"><button id="btnLogIn" onclick="send_data()">Sign up</button></div>
     </form>
     <div class="new-user" style="color: white;">
       <p>Already have an account?</p>
       <a href="login" style="color: rgb(219, 102, 255); padding-left: 2%;">Login</a>
     </div>
   </div>
+
 </body>
 <script>
   const input_username = document.getElementById("username");
@@ -121,42 +126,36 @@
   var err_password = document.getElementById("err-password");
   var err_con_password = document.getElementById("err-con-password");
 
-  function senddata() {
+  function send_data() {
     const username = input_username.value;
     const password = input_password.value;
     const con_password = confirm_password.value;
-
-    if (username === "")
-      err_username.textContent = "Please enter username";
-    else if (password === "")
-      err_username.textContent = "Please enter password";
-    else {
-      fetch("/sign-up", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username,
-            password,
-            con_password
-          }),
-        })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status === "success") {
-            window.location.href = "/user";
-          } else {
-            err_username.textContent = "Please confirm password";
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          alert("An error occurred while trying to log in");
-        });
-    }
+    
+    fetch("/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          con_password
+        }),
+      })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status === "success") {
+          window.location.href = "/user";
+        } else {
+          err_username.textContent = "Please confirm password";
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("An error occurred while trying to log in");
+      });
   }
 </script>
 

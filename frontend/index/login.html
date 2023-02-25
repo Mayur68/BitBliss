@@ -32,13 +32,17 @@
 
   @media only screen and (max-width: 768px) {
     .box {
-        margin-left: 10%;
-        margin-right: 10%;
+      margin-left: 10%;
+      margin-right: 10%;
     }
-}
+
+    .title {
+      margin-top: 30%;
+    }
+  }
 
   .loginForm {
-    background: var(--main2-color);
+    background: var(--main-color-2);
     box-shadow: var(--shadow);
     padding: 5%;
     border-radius: 18px;
@@ -65,7 +69,7 @@
     padding: 2%;
     border-radius: 7px;
     width: 100%;
-    background: var(--main2-color);
+    background: var(--main-color-2);
     box-shadow: var(--shadow);
     border: 0.5px rgb(0, 0, 158) solid;
     font-size: 16px;
@@ -125,12 +129,8 @@
     const username = input_username.value;
     const password = input_password.value;
 
-    if (username === "" && password === "")
-      alert("Please enter username and password");
-    else if (username === "")
-      alert("PLease enter username");
-    else if (password === "")
-      alert("PLease enter password");
+    if (username === "" || password === "")
+      alert("Incorrect username and password");
     else {
       fetch("/login", {
           method: "POST",
