@@ -130,8 +130,10 @@
     const username = input_username.value;
     const password = input_password.value;
     const con_password = confirm_password.value;
-    
-    fetch("/sign-up", {
+    if(username === "" || password === "") {
+alert("E  nter username and password")
+    }
+    else {fetch("/sign-up", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -149,13 +151,14 @@
         if (data.status === "success") {
           window.location.href = "/user";
         } else {
-          err_username.textContent = "Please confirm password";
+          alert("Please confirm password");
         }
       })
       .catch((error) => {
         console.error(error);
         alert("An error occurred while trying to log in");
       });
+    }
   }
 </script>
 

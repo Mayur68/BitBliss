@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock-Paper-Scissors</title>
 </head>
-<link rel="stylesheet" href="style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;900&display=swap" rel="stylesheet">
@@ -17,135 +16,206 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;900&display=swap');
 
-body {
-    background: linear-gradient(to right, #6b81e2, #cd5be4);
-}
+    body {
+        background: var(--main-color-1);
+    }
 
-#main {
-    border: solid black;
-    padding: 4%;
-    font-family: 'Roboto', sans-serif;
-}
+    .header-overlay {
+        display: flex;
+        justify-content: space-between;
+        align-self: center;
+        background-color: var(--main-bg-color-1);
+        width: 100%;
+        top: 0%;
+        left: 0%;
+        padding: 2% 1%;
+    }
 
-#score {
-    display: flex;
-    border: solid rgb(0, 0, 0);
-    padding: 1%;
-    margin-top: 1px;
-    font-family: 'Roboto', sans-serif;
-}
+    .user {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-#sc-box {
-    border: solid black;
-    background-color: aliceblue;
-    font-family: 'Roboto', sans-serif;
-    margin: 10px;
-    padding: 20px;
-    font-size: 30px;
-}
+    .user>a {
+        padding-left: 20px;
+        font-size: 20px;
+        color: var(--text-color-2);
+    }
 
-#sc-box1 {
-    border: solid black;
-    background-color: aliceblue;
-    font-family: 'Roboto', sans-serif;
-    margin: 10px;
-    padding: 20px;
-    font-size: 30px;
-}
+    ul {
+        display: flex;
+        justify-content: space-between;
+    }
 
-#sc-box2 {
-    border: solid black;
-    background-color: aliceblue;
-    font-family: 'Roboto', sans-serif;
-    margin: 10px;
-    padding: 20px;
-    font-size: 30px;
-}
+    ul>li {
+        padding-left: 5%;
+    }
 
-#stage {
-    border: solid black;
-    padding: 4%;
-    margin-top: 1px;
-}
+    @media only screen and (max-width: 768px) {
+        .title {
+            margin: 15% 5%;
+            width: 90%;
+        }
 
-#computer {
-    display: flex;
-    border: solid black;
-    font-family: 'Roboto', sans-serif;
-    background-color: rgb(255, 209, 140);
-    padding: 10px;
-    font-size: 25px;
-    border-radius: 25px;
-}
+        .header-overlay {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            padding: 2% 1%;
+        }
+    }
 
-#person {
-    border: solid black;
-    font-family: 'Roboto', sans-serif;
-    background-color: rgb(233, 255, 162);
-    display: flex;
-    margin-top: 4px;
-    padding: 10px;
-    font-size: 25px;
-    border-radius: 25px;
-}
+    .games {
+        display: flex;
+        justify-content: center;
+        margin: 20% 12% 10%;
+    }
 
-#rock {
-    padding: 1%;
-    cursor: pointer;
-    margin-right: 678px;
-    margin: 10px;
-    padding: 20px;
-    font-size: 30px;
-}
+    #main {
+        padding: 4%;
+        font-family: 'Roboto', sans-serif;
+    }
 
-#paper {
-    padding: 1%;
-    cursor: pointer;
-    margin-right: 678px;
-    margin: 10px;
-    padding: 20px;
-    font-size: 30px;
-}
+    #score {
+        display: flex;
+        justify-content: center;
+        padding: 1%;
+        margin-top: 1px;
+        font-family: 'Roboto', sans-serif;
+        color: var(--text-color-2);
+    }
 
-#scissor {
-    padding: 1%;
-    cursor: pointer;
-    margin-right: 678px;
-    margin: 10px;
-    padding: 20px;
-    font-size: 30px;
-}
+    #sc-box {
+        border: solid black;
+        background-color: aliceblue;
+        color: var(--text-color-1);
+        font-family: 'Roboto', sans-serif;
+        margin: 10px;
+        padding: 20px;
+        font-size: 30px;
+    }
 
-#rock1 {
-    padding: 1%;
-    cursor: pointer;
-    margin-right: 678px;
-    margin: 10px;
-    padding: 20px;
-    font-size: 30px;
-}
+    #sc-box1 {
+        border: solid black;
+        background-color: aliceblue;
+        color: var(--text-color-1);
+        font-family: 'Roboto', sans-serif;
+        margin: 10px;
+        padding: 20px;
+        font-size: 30px;
+    }
 
-#paper1 {
-    padding: 1%;
-    cursor: pointer;
-    margin-right: 678px;
-    margin: 10px;
-    padding: 20px;
-    font-size: 30px;
-}
+    #sc-box2 {
+        border: solid black;
+        background-color: aliceblue;
+        color: var(--text-color-1);
+        font-family: 'Roboto', sans-serif;
+        margin: 10px;
+        padding: 20px;
+        font-size: 30px;
+    }
 
-#scissor1 {
-    padding: 1%;
-    cursor: pointer;
-    margin-right: 678px;
-    margin: 10px;
-    padding: 20px;
-    font-size: 30px;
-}
+    #stage {
+        padding: 4%;
+        margin-top: 1px;
+    }
+
+    #computer {
+        display: flex;
+        justify-content: space-around;
+        font-family: 'Roboto', sans-serif;
+        background-color: var(--main-bg-color-2);
+        padding: 10px;
+        font-size: 25px;
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+    }
+
+    #person {
+        font-family: 'Roboto', sans-serif;
+        background-color: var(--main-bg-color-1);
+        display: flex;
+        justify-content: space-around;
+        margin-top: 4px;
+        padding: 10px;
+        font-size: 25px;
+        border-radius: 20px;
+        margin-top: 2%;
+    }
+
+    #rock {
+        padding: 1%;
+        cursor: pointer;
+        margin-right: 678px;
+        margin: 10px;
+        padding: 20px;
+        font-size: 30px;
+    }
+
+    #paper {
+        padding: 1%;
+        cursor: pointer;
+        margin-right: 678px;
+        margin: 10px;
+        padding: 20px;
+        font-size: 30px;
+    }
+
+    #scissor {
+        padding: 1%;
+        cursor: pointer;
+        margin-right: 678px;
+        margin: 10px;
+        padding: 20px;
+        font-size: 30px;
+    }
+
+    #rock1 {
+        padding: 1%;
+        cursor: pointer;
+        margin-right: 678px;
+        margin: 10px;
+        padding: 20px;
+        font-size: 30px;
+    }
+
+    #paper1 {
+        padding: 1%;
+        cursor: pointer;
+        margin-right: 678px;
+        margin: 10px;
+        padding: 20px;
+        font-size: 30px;
+    }
+
+    #scissor1 {
+        padding: 1%;
+        cursor: pointer;
+        margin-right: 678px;
+        margin: 10px;
+        padding: 20px;
+        font-size: 30px;
+    }
 </style>
+
 <body>
+    <header class="header-overlay header-logged">
+        <div class="novastar">
+            <a href="/" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a>Games</a></li>
+                <li><a><span class="material-symbols-outlined">account_circle</span></a></li>
+            </ul>
+        </nav>
+    </header>
     <div id="main">
-        <h1><b><center>Rock-Paper-Scissors</center></b></h1>
+        <h1><b>
+                <center>Rock-Paper-Scissors</center>
+            </b></h1>
     </div>
     <div id="score">
         <p><b>Score :</b></p>
@@ -170,143 +240,143 @@ body {
         </div>
     </div>
 </body>
-<script src="script.js">
+<script>
     let s1 = document.getElementById("sc-box");
-let s2 = document.getElementById("sc-box1");
-let s3 = document.getElementById("sc-box2");
+    let s2 = document.getElementById("sc-box1");
+    let s3 = document.getElementById("sc-box2");
 
-var rock = document.getElementById("rock");
-var paper = document.getElementById("paper");
-var scissor = document.getElementById("scissor");
-var rock1 = document.getElementById("rock1");
-var paper1 = document.getElementById("paper1");
-var scissor1 = document.getElementById("scissor1");
+    var rock = document.getElementById("rock");
+    var paper = document.getElementById("paper");
+    var scissor = document.getElementById("scissor");
+    var rock1 = document.getElementById("rock1");
+    var paper1 = document.getElementById("paper1");
+    var scissor1 = document.getElementById("scissor1");
 
-let y = 0;
-let z = 0;
+    let y = 0;
+    let z = 0;
 
-var pr;
-var a = "It's draw";
-var b = "You win";
-var c = "You lose";
+    var pr;
+    var a = "It's draw";
+    var b = "You win";
+    var c = "You lose";
 
-var com = [1, 2, 3];
-var per = [1, 2, 3];
+    var com = [1, 2, 3];
+    var per = [1, 2, 3];
 
-function rps(x) {
-    console.log("clicked");
-    attempt();
-    var cr = computer_turn(com);
-    console.log(cr);
-    var pr = x;
-    console.log(pr);
-    var result = wincheck(cr, pr);
-    console.log(result);
-    score(result);
-}
-
-function attempt() {
-    y++
-    s2.textContent = y;
-}
-
-function score(result) {
-    if (result == b) {
-        z++;
-        s1.textContent = z;
-    }
-}
-
-function computer_turn(com) {
-
-    return com[Math.floor(Math.random() * com.length)];
-
-}
-
-function wincheck(cr, pr) {
-    if (cr == 1 && pr == 1) {
-        rock.style.color = "white";
-        rock1.style.color = "white";
-        paper.style.color = "";
-        paper1.style.color = "";
-        scissor.style.color = "";
-        scissor1.style.color = "";
-        s3.textContent = a;
-        return a;
-    } else if (cr == 2 && pr == 2) {
-        rock.style.color = "";
-        rock1.style.color = "";
-        paper.style.color = "white";
-        paper1.style.color = "white";
-        scissor.style.color = "";
-        scissor1.style.color = "";
-        s3.textContent = a;
-        return a;
-    } else if (cr == 3 && pr == 3) {
-        rock.style.color = "";
-        rock1.style.color = "";
-        paper.style.color = "";
-        paper1.style.color = "";
-        scissor.style.color = "white";
-        scissor1.style.color = "white";
-        s3.textContent = a;
-        return a;
-    } else if (cr == 1 && pr == 2) {
-        rock.style.color = "";
-        rock1.style.color = "red";
-        paper.style.color = "white";
-        paper1.style.color = "";
-        scissor.style.color = "";
-        scissor1.style.color = "";
-        s3.textContent = b;
-        return b;
-    } else if (cr == 1 && pr == 3) {
-        rock.style.color = "";
-        rock1.style.color = "white";
-        paper.style.color = "";
-        paper1.style.color = "";
-        scissor.style.color = "red";
-        scissor1.style.color = "";
-        s3.textContent = c;
-        return c;
-    } else if (cr == 2 && pr == 1) {
-        rock1.style.color = "";
-        paper.style.color = "";
-        paper1.style.color = "white";
-        rock.style.color = "red";
-        scissor.style.color = "";
-        scissor1.style.color = "";
-        s3.textContent = c;
-        return c;
-    } else if (cr == 2 && pr == 3) {
-        rock.style.color = "";
-        rock1.style.color = "";
-        paper.style.color = "";
-        paper1.style.color = "red";
-        scissor.style.color = "white";
-        scissor1.style.color = "";
-        s3.textContent = b;
-        return b;
-    } else if (cr == 3 && pr == 1) {
-        rock1.style.color = "";
-        paper.style.color = "";
-        paper1.style.color = "";
-        scissor.style.color = "";
-        scissor1.style.color = "red";
-        rock.style.color = "white";
-        s3.textContent = b;
-        return b;
-    } else if (cr == 3 && pr == 2) {
-        rock.style.color = "";
-        rock1.style.color = "";
-        paper1.style.color = "";
-        scissor.style.color = "";
-        scissor1.style.color = "red";
-        paper.style.color = "white";
-        s3.textContent = c;
-        return c;
+    function rps(x) {
+        console.log("clicked");
+        attempt();
+        var cr = computer_turn(com);
+        console.log(cr);
+        var pr = x;
+        console.log(pr);
+        var result = wincheck(cr, pr);
+        console.log(result);
+        score(result);
     }
 
-}
+    function attempt() {
+        y++
+        s2.textContent = y;
+    }
+
+    function score(result) {
+        if (result == b) {
+            z++;
+            s1.textContent = z;
+        }
+    }
+
+    function computer_turn(com) {
+
+        return com[Math.floor(Math.random() * com.length)];
+
+    }
+
+    function wincheck(cr, pr) {
+        if (cr == 1 && pr == 1) {
+            rock.style.color = "white";
+            rock1.style.color = "white";
+            paper.style.color = "";
+            paper1.style.color = "";
+            scissor.style.color = "";
+            scissor1.style.color = "";
+            s3.textContent = a;
+            return a;
+        } else if (cr == 2 && pr == 2) {
+            rock.style.color = "";
+            rock1.style.color = "";
+            paper.style.color = "white";
+            paper1.style.color = "white";
+            scissor.style.color = "";
+            scissor1.style.color = "";
+            s3.textContent = a;
+            return a;
+        } else if (cr == 3 && pr == 3) {
+            rock.style.color = "";
+            rock1.style.color = "";
+            paper.style.color = "";
+            paper1.style.color = "";
+            scissor.style.color = "white";
+            scissor1.style.color = "white";
+            s3.textContent = a;
+            return a;
+        } else if (cr == 1 && pr == 2) {
+            rock.style.color = "";
+            rock1.style.color = "red";
+            paper.style.color = "white";
+            paper1.style.color = "";
+            scissor.style.color = "";
+            scissor1.style.color = "";
+            s3.textContent = b;
+            return b;
+        } else if (cr == 1 && pr == 3) {
+            rock.style.color = "";
+            rock1.style.color = "white";
+            paper.style.color = "";
+            paper1.style.color = "";
+            scissor.style.color = "red";
+            scissor1.style.color = "";
+            s3.textContent = c;
+            return c;
+        } else if (cr == 2 && pr == 1) {
+            rock1.style.color = "";
+            paper.style.color = "";
+            paper1.style.color = "white";
+            rock.style.color = "red";
+            scissor.style.color = "";
+            scissor1.style.color = "";
+            s3.textContent = c;
+            return c;
+        } else if (cr == 2 && pr == 3) {
+            rock.style.color = "";
+            rock1.style.color = "";
+            paper.style.color = "";
+            paper1.style.color = "red";
+            scissor.style.color = "white";
+            scissor1.style.color = "";
+            s3.textContent = b;
+            return b;
+        } else if (cr == 3 && pr == 1) {
+            rock1.style.color = "";
+            paper.style.color = "";
+            paper1.style.color = "";
+            scissor.style.color = "";
+            scissor1.style.color = "red";
+            rock.style.color = "white";
+            s3.textContent = b;
+            return b;
+        } else if (cr == 3 && pr == 2) {
+            rock.style.color = "";
+            rock1.style.color = "";
+            paper1.style.color = "";
+            scissor.style.color = "";
+            scissor1.style.color = "red";
+            paper.style.color = "white";
+            s3.textContent = c;
+            return c;
+        }
+    }
 </script>
+
 </html>
