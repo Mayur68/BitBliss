@@ -56,10 +56,16 @@ app.post("/sign-up", (req, res) => {
   } = req.body;
 
   if (password === con_password) {
-    res.json({
-      status: "success",
-      message: "Login successful!",
-    });
+
+    db.collection('accounts')
+    .insertOne({username:username, password:password})
+      .then(() => {
+        res.json({
+          status: "success",
+          message: "Login successful!",
+        });
+      });
+
   } else {
     res.status(401).json({
       status: "error",
