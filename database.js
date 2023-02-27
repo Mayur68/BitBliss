@@ -4,7 +4,7 @@ let dbConnection;
 
 module.exports = {
   connectiondb: (cb) => {
-    MongoClient.connect('mongodb://localhost:27017/webapp')
+    MongoClient.connect('mongodb://127.0.0.1:27017/webapp')
       .then((client) => {
         dbConnection = client.db();
         return cb();
