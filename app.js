@@ -76,3 +76,17 @@ connectiondb((err) => {
   }
   db = getdb();
 });
+
+
+
+app.get('/data', (req, res) => {
+
+  let accounts = []
+
+  db.collection('accounts')
+    .find()
+    .forEach(account => accounts.push(account))
+    .then(() => {
+      res.status(200).json(accounts)
+    })
+});
