@@ -19,11 +19,10 @@
         display: flex;
         justify-content: space-between;
         align-self: center;
-        background-color: var(--main-bg-color-1);
         width: 100%;
         top: 0%;
         left: 0%;
-        padding: 2% 1%;
+        padding: 1% 1%;
     }
 
     .user {
@@ -64,25 +63,27 @@
 
     .games {
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
+        overflow-x: auto;
         margin: 5% 5% 5%;
     }
 
     .in-game {
         width: 40%;
         height: 400px;
+        margin-left: 5%;
     }
     .r-p-s {
         background-color: var(--main-bg-color-2);
         border-radius: 20px;
         cursor: pointer;
-    }
-
-    .t-t-t {
+    }.t-t-t {
         background-color: var(--main-bg-color-2);
         border-radius: 20px;
         cursor: pointer;
     }
+
+    
 </style>
 
 <body>
@@ -100,6 +101,7 @@
     <div class="games">
         <div class="r-p-s in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
         <div class="t-t-t in-game" onclick="t_t_t()">ttt</div>
+        <div class="r-p-s in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
     </div>
 </body>
 <script>

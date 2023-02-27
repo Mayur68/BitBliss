@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const {
+  connectiondb,
+  getdb
+} = require('./database');
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
@@ -26,7 +30,6 @@ app.get('/user', (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-
   const {
     username,
     password
@@ -65,4 +68,11 @@ app.post("/sign-up", (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log('running at 3000...'));
+let db;
+
+connectiondb((err) => {
+  if (!err) {
+    app.listen(3000, () => console.log('running at 3000...'));
+  }
+  db = getdb();
+});
