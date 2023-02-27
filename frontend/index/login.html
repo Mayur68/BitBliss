@@ -128,8 +128,8 @@
   const input_password = document.getElementById("password");
 
   function senddata() {
-    const username = input_username.value;
-    const password = input_password.value;
+    const clientusername = input_username.value;
+    const clientpassword = input_password.value;
 
     if (username === "" || password === "")
       alert("Incorrect username and password");
@@ -140,8 +140,8 @@
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            username,
-            password
+            clientusername,
+            clientpassword
           }),
         })
         .then((response) => {

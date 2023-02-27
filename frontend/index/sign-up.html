@@ -128,8 +128,8 @@
   var err_con_password = document.getElementById("err-con-password");
 
   function send_data() {
-    const username = input_username.value;
-    const password = input_password.value;
+    const clientusername = input_username.value;
+    const clientpassword = input_password.value;
     const con_password = confirm_password.value;
     if(username === "" || password === "") {
 alert("E  nter username and password")
@@ -140,8 +140,8 @@ alert("E  nter username and password")
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username,
-          password,
+          clientusername,
+          clientpassword,
           con_password
         }),
       })
@@ -152,7 +152,7 @@ alert("E  nter username and password")
         if (data.status === "success") {
           window.location.href = "/user";
         } else {
-          alert("Please confirm password");
+          alert(data.message);
         }
       })
       .catch((error) => {

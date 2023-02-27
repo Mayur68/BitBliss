@@ -31,15 +31,33 @@ app.get('/user', (req, res) => {
 
 app.post("/login", (req, res) => {
   const {
-    username,
-    password
+    clientusername,
+    clientpassword
   } = req.body;
 
-  if (username === "admin" && password === "password") {
-    res.json({
-      status: "success",
-      message: "Login successful!",
-    });
+  if (clientusername) {
+    db.collection('accounts')
+      .findone({
+        $in: clientusername
+      }) && db.collection('accounts')
+      .findone({
+        $in: clientpassword
+      })
+      .then((result) => {
+        if (result) {
+          res.status(401).json({
+            status: "error",
+            message: "Login successful!",
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).json({
+          tatus: "error",
+          message: "Internal server error"
+        });
+      });
   } else {
     res.status(401).json({
       status: "error",
@@ -50,29 +68,53 @@ app.post("/login", (req, res) => {
 
 app.post("/sign-up", (req, res) => {
   const {
-    username,
-    password,
+    clientusername,
+    clientpassword,
     con_password
   } = req.body;
 
-  if (password === con_password) {
+  console.log(clientusername, clientpassword, con_password);
 
+  if (clientpassword === con_password) {
     db.collection('accounts')
-    .insertOne({username:username, password:password})
-      .then(() => {
-        res.json({
-          status: "success",
-          message: "Login successful!",
+      .findOne({
+        username: clientusername
+      })
+      .then((result) => {
+        if (result) {
+          res.status(401).json({
+            status: "error",
+            message: "account already exists!",
+          });
+        } else {
+          db.collection('accounts')
+            .insertOne({
+              username: clientusername,
+              password: clientpassword
+            })
+            .then(() => {
+              res.json({
+                status: "success",
+                message: "Login successful!",
+              });
+            });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).json({
+          status: "error",
+          message: "Internal server error",
         });
       });
-
   } else {
     res.status(401).json({
       status: "error",
-      message: "Incorrect password.",
+      message: "Passwords do not match",
     });
   }
 });
+
 
 let db;
 
