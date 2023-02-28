@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb');
 let dbConnection;
 
 module.exports = {
-  connectiondb: (cb) => {
+  connection: (cb) => {
     MongoClient.connect('mongodb://127.0.0.1:27017/webapp')
       .then((client) => {
         dbConnection = client.db();

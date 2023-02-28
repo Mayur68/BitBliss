@@ -66,6 +66,10 @@
     border: rgb(91, 91, 255) solid;
   }
 
+  .field>input:focus {
+    outline: none;
+  }
+
   .field>button {
     padding: 2%;
     border-radius: 7px;
@@ -111,7 +115,7 @@
         <input type="text" id="username" name="username" placeholder="Enter username"></div>
       <div class="field">
         <label for="password">Password</label>
-        <input type="text" id="password" name="password" placeholder="Enter password"></div>
+        <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off"></div>
       <div class="fp">
         <a href="#">Forgot password?</a>
       </div>

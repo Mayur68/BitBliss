@@ -2,9 +2,16 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const {
-  connectiondb,
+  connection,
   getdb
 } = require('./database');
+
+const {
+  login,
+  sign_up
+} = require('./backend/account');
+
+const clientusername = "", clientpassword = "";
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
@@ -65,11 +72,6 @@ app.post("/login", (req, res) => {
     });
 });
 
-
-
-
-
-
 app.post("/sign-up", (req, res) => {
   const {
     clientusername,
@@ -119,10 +121,9 @@ app.post("/sign-up", (req, res) => {
   }
 });
 
-
 let db;
 
-connectiondb((err) => {
+connection((err) => {
   if (!err) {
     app.listen(3000, () => console.log('running at 3000...'));
   }

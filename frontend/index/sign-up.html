@@ -65,6 +65,10 @@
     border: rgb(91, 91, 255) solid;
   }
 
+  .field>input:focus {
+    outline: none;
+  }
+
   .field>button {
     padding: 2%;
     border-radius: 7px;
@@ -101,12 +105,12 @@
       </div>
       <div class="field">
         <label for="password">Password</label>
-        <input type="text" id="password" name="password" placeholder="Enter password">
+        <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off">
         <p id="err-password" for="username"></p>
       </div>
       <div class="field">
         <label for="con-password">Confirm Password</label>
-        <input type="text" id="con-password" name="con-password" placeholder="Confirm password">
+        <input type="text" id="con-password" name="con-password" placeholder="Confirm password" autocomplete="off">
         <p id="err-con-password" for="username"></p>
       </div>
       <div class="field"><button id="btnLogIn" onclick="send_data()">Sign up</button></div>
