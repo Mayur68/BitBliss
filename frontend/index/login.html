@@ -131,7 +131,7 @@
     const clientusername = input_username.value;
     const clientpassword = input_password.value;
 
-    if (username === "" || password === "")
+    if (clientusername === "" || clientpassword === "")
       alert("Incorrect username and password");
     else {
       fetch("/login", {
@@ -151,12 +151,12 @@
           if (data.status === "success") {
             window.location.href = "/user";
           } else {
-            alert("Incorrect username or password");
+            alert(data.message);
           }
         })
         .catch((error) => {
           console.error(error);
-          alert("An error occurred while trying to log in");
+          alert("error");
         });
     }
   }

@@ -35,36 +35,40 @@ app.post("/login", (req, res) => {
     clientpassword
   } = req.body;
 
-  if (clientusername) {
-    db.collection('accounts')
-      .findone({
-        $in: clientusername
-      }) && db.collection('accounts')
-      .findone({
-        $in: clientpassword
-      })
-      .then((result) => {
-        if (result) {
-          res.status(401).json({
-            status: "error",
-            message: "Login successful!",
-          });
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).json({
-          tatus: "error",
-          message: "Internal server error"
+  console.log(clientusername, clientpassword);
+
+  db.collection('accounts')
+    .find({
+      username: clientusername,
+      password: clientpassword
+    })
+    .toArray()
+    .then((result) => {
+      if (result.length > 0) {
+        res.status(200).json({
+          status: "success",
+          message: "Login successful!",
         });
+      } else {
+        res.status(401).json({
+          status: "error",
+          message: "Incorrect username or password.",
+        });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({
+        status: "error",
+        message: "Internal server error"
       });
-  } else {
-    res.status(401).json({
-      status: "error",
-      message: "Incorrect username or password.",
     });
-  }
 });
+
+
+
+
+
 
 app.post("/sign-up", (req, res) => {
   const {
