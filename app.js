@@ -6,13 +6,6 @@ const {
   getdb
 } = require('./database');
 
-const {
-  login,
-  sign_up
-} = require('./backend/account');
-
-const clientusername = "", clientpassword = "";
-
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 
@@ -36,6 +29,7 @@ app.get('/user', (req, res) => {
   res.sendFile(__dirname + '/frontend/index/user.html');
 })
 
+//checking login details
 app.post("/login", (req, res) => {
   const {
     clientusername,
@@ -72,6 +66,7 @@ app.post("/login", (req, res) => {
     });
 });
 
+//checking signup details
 app.post("/sign-up", (req, res) => {
   const {
     clientusername,
@@ -123,6 +118,7 @@ app.post("/sign-up", (req, res) => {
 
 let db;
 
+//connecting to database and runnning server
 connection((err) => {
   if (!err) {
     app.listen(3000, () => console.log('running at 3000...'));
@@ -131,7 +127,8 @@ connection((err) => {
 });
 
 
-
+//view collection at `/data`
+//
 app.get('/data', (req, res) => {
 
   let accounts = []
