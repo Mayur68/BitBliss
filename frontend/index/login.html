@@ -112,10 +112,12 @@
     <form class="loginForm" id="loginform" name="loginForm">
       <div class="field">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter username"></div>
+        <input type="text" id="username" name="username" placeholder="Enter username">
+      </div>
       <div class="field">
         <label for="password">Password</label>
-        <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off"></div>
+        <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off">
+      </div>
       <div class="fp">
         <a href="#">Forgot password?</a>
       </div>
@@ -139,21 +141,30 @@
       alert("Incorrect username and password");
     else {
       fetch("/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            clientusername,
-            clientpassword
-          }),
-        })
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientusername,
+          clientpassword
+        }),
+      })
         .then((response) => {
           return response.json();
         })
         .then((data) => {
           if (data.status === "success") {
-            window.location.href = "/user";
+            fetch("/user", {
+              method: "post",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                clientusername
+              }),
+            })
+            window.location.href = "/"+clientusername;
           } else {
             alert(data.message);
           }

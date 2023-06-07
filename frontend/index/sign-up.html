@@ -135,10 +135,10 @@
     const clientusername = input_username.value;
     const clientpassword = input_password.value;
     const con_password = confirm_password.value;
-    if(username === "" || password === "") {
-alert("E  nter username and password")
-    }
-    else {fetch("/sign-up", {
+    if (username === "" || password === "") {
+      alert("Enter username and password")
+    } else {
+      fetch("/sign-up", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -149,20 +149,20 @@ alert("E  nter username and password")
           con_password
         }),
       })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (data.status === "success") {
-          window.location.href = "/user";
-        } else {
-          alert(data.message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        alert("An error occurred while trying to log in");
-      });
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status === "success") {
+            window.location.href = "/" + clientusername;
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("An error occurred while trying to log in");
+        });
     }
   }
 </script>
