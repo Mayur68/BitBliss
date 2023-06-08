@@ -102,91 +102,78 @@
     }
   </style>
 
-  <body>
-    <div class="title">
-      <a href="/"><img src="/assets/favicon/favicon-32x32.png" /></a>
-      <h1>Login</h1>
-    </div>
-    <div class="box">
-      <form class="loginForm" id="loginform" name="loginForm">
-        <div class="field">
-          <label for="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Enter username"
-            autocomplete="on"
-          />
-        </div>
-        <div class="field">
-          <label for="password">Password</label>
-          <input
-            type="text"
-            id="password"
-            name="password"
-            placeholder="Enter password"
-            autocomplete="off"
-          />
-        </div>
-        <div class="fp">
-          <a href="#">Forgot password?</a>
-        </div>
-        <div class="field">
-          <button id="btnLogIn" onclick="senddata()">Login</button>
-        </div>
-      </form>
-      <div class="new-user">
-        <p>Create new account?</p>
-        <a href="sign-up">Sign up</a>
+<body>
+  <div class="title">
+    <a href="/"><img src="/assets/favicon/favicon-32x32.png"></a>
+    <h2 style="color: white;">Login</h2>
+  </div>
+  <div class="box">
+    <form class="loginForm" id="loginform" name="loginForm">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter username">
       </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off">
+      </div>
+      <div class="fp">
+        <a href="#">Forgot password?</a>
+      </div>
+      <div class="field"><button id="btnLogIn" onclick="senddata()">Login</button></div>
+    </form>
+    <div class="new-user" style="color: white;">
+      <p>Create new account?</p>
+      <a href="sign-up" style="color: rgb(219, 102, 255); padding-left: 2%;">Sign up</a>
     </div>
-  </body>
-  <script>
-    const input_username = document.getElementById("username");
-    const input_password = document.getElementById("password");
+  </div>
+</body>
+<script>
+  const input_username = document.getElementById("username");
+  const input_password = document.getElementById("password");
 
     function senddata() {
       const clientusername = input_username.value;
       const clientpassword = input_password.value;
 
-      if (clientusername === "" || clientpassword === "")
-        alert("Incorrect username and password");
-      else {
-        fetch("/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            clientusername,
-            clientpassword,
-          }),
+    if (clientusername === "" || clientpassword === "")
+      alert("Incorrect username and password");
+    else {
+      fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientusername,
+          clientpassword
+        }),
+      })
+        .then((response) => {
+          return response.json();
         })
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            if (data.status === "success") {
-              fetch("/user", {
-                method: "post",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  clientusername,
-                }),
-              });
-              window.location.href = "/" + clientusername;
-            } else {
-              alert(data.message);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            alert("error");
-          });
-      }
+        .then((data) => {
+          if (data.status === "success") {
+            fetch("/user", {
+              method: "post",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                clientusername
+              }),
+            })
+            window.location.href = "/"+clientusername;
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("error");
+        });
     }
-  </script>
+  }
+</script>
+
 </html>

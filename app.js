@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const { connection, getdb } = require("./database");
+const path = require("path");
 
 //connecting to database and runnning server
 connection((err) => {
@@ -11,14 +12,12 @@ connection((err) => {
   db = getdb();
 });
 
-
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 
-const path = require('path');
 // Set the view engine to EJS
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/frontend/index/index.html");
@@ -112,8 +111,6 @@ app.post("/sign-up", (req, res) => {
   }
 });
 
-let db;
-
 //view collection at `/data`
 app.get("/data", (req, res) => {
   let accounts = [];
@@ -126,11 +123,24 @@ app.get("/data", (req, res) => {
     });
 });
 
+//user page
 app.get("/:username", (req, res) => {
   const username = req.params.username;
-  res.render("user", { username: username });
+  db.collection("accounts")
+    .find({
+      username: username,
+    })
+    .toArray()
+    .then((result) => {
+      if (result.length > 0) {
+        res.render("user", { username: username });
+      } else {
+        res.render("notfound");
+      }
+    });
 });
 
+//user>>>game page
 app.get("/:username/Rock-Paper-Scissors", (req, res) => {
   const username = req.params.username;
   res.render("Rock-Paper-Scissors", { username: username });
