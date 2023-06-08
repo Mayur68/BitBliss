@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const { connection, getdb } = require("./database");
+const path = require("path");
 
 //connecting to database and runnning server
 connection((err) => {
@@ -14,7 +15,6 @@ connection((err) => {
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 
-const path = require("path");
 // Set the view engine to EJS
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -111,8 +111,6 @@ app.post("/sign-up", (req, res) => {
   }
 });
 
-let db;
-
 //view collection at `/data`
 app.get("/data", (req, res) => {
   let accounts = [];
@@ -125,6 +123,7 @@ app.get("/data", (req, res) => {
     });
 });
 
+//user page
 app.get("/:username", (req, res) => {
   const username = req.params.username;
   db.collection("accounts")
@@ -136,11 +135,12 @@ app.get("/:username", (req, res) => {
       if (result.length > 0) {
         res.render("user", { username: username });
       } else {
-        res.render("notfound")
+        res.render("notfound");
       }
     });
 });
 
+//user>>>game page
 app.get("/:username/Rock-Paper-Scissors", (req, res) => {
   const username = req.params.username;
   res.render("Rock-Paper-Scissors", { username: username });
