@@ -11,14 +11,13 @@ connection((err) => {
   db = getdb();
 });
 
-
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 
-const path = require('path');
+const path = require("path");
 // Set the view engine to EJS
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/frontend/index/index.html");
@@ -128,7 +127,18 @@ app.get("/data", (req, res) => {
 
 app.get("/:username", (req, res) => {
   const username = req.params.username;
-  res.render("user", { username: username });
+  db.collection("accounts")
+    .find({
+      username: username,
+    })
+    .toArray()
+    .then((result) => {
+      if (result.length > 0) {
+        res.render("user", { username: username });
+      } else {
+        res.render("notfound")
+      }
+    });
 });
 
 app.get("/:username/Rock-Paper-Scissors", (req, res) => {
