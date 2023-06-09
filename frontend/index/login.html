@@ -1,140 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico" />
-    <link rel="stylesheet" href="/frontend/css/index.css" />
-    <link rel="stylesheet" href="/frontend/css/animation.css" />
-    <title>Login</title>
-  </head>
-  <style>
-    .title {
-      text-align: center;
-      padding: 14px 16px;
-      margin: 0 12%;
-      margin-top: 8%;
-    }
 
-    .title h1 {
-      color: var(--text-color-2);
-    }
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico" />
+  <link rel="stylesheet" href="/frontend/css/index.css" />
+  <link rel="stylesheet" href="/frontend/css/animation.css" />
+  <title>Login</title>
+</head>
+<style>
+  #container {
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+  }
 
+  .title {
+    text-align: center;
+    padding: 14px 16px;
+    margin: 0 12%;
+    margin-top: 8%;
+  }
+#mid{
+  margin-top: 50px;
+}
+  .title h1 {
+    color: var(--text-color-2);
+  }
+
+  .box {
+    margin: auto;
+    width: 350px;
+    height: auto;
+  }
+
+  .loginForm {
+    background: var(--main-color-2);
+    box-shadow: var(--shadow);
+    padding: 5%;
+    border-radius: 18px;
+  }
+
+  .field {
+    padding: 2%;
+  }
+
+  .field>label {
+    margin: 0 0 -8px;
+    padding: 2%;
+    display: block;
+  }
+
+  .field>input[type="text"] {
+    padding: 2%;
+    border-radius: 7px;
+    width: 100%;
+    border: rgb(91, 91, 255) solid;
+  }
+
+  .field>input:focus {
+    outline: none;
+  }
+
+  .field>button {
+    padding: 2%;
+    border-radius: 7px;
+    width: 100%;
+    background: var(--main-color-2);
+    box-shadow: var(--shadow);
+    font: inherit;
+    border: 0.5px rgb(0, 0, 158) solid;
+    font-family: "Open Sans", sans-serif;
+    cursor: pointer;
+  }
+
+  .fp {
+    margin: -7px 10px 0;
+    color: blue;
+    text-align: right;
+    font-size: 12px;
+  }
+
+  .fp a {
+    text-decoration: none;
+  }
+
+  .new-user {
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    padding: 2%;
+    border-radius: 7px;
+    color: white;
+    box-shadow: var(--shadow);
+  }
+
+  .new-user a {
+    color: rgb(219, 102, 255);
+    padding-left: 2%;
+  }
+
+  #planet-1 {
+    background: url("../../assets/planet-1.png") no-repeat;
+    background-size: contain;
+    width: 300px;
+    animation: move-up-down_1 4s ease-in-out infinite;
+  }
+
+  #planet-2 {
+    background: url("../../assets/planet-2.png") no-repeat;
+    background-size: contain;
+    width: 500px;
+    animation: move-up-down_2 4s ease-in-out infinite;
+  }
+
+  @media only screen and (max-width: 768px) {
     .box {
-      margin: 0 30%;
+      margin: 0 20% 0;
     }
 
-    .loginForm {
-      background: var(--main-color-2);
-      box-shadow: var(--shadow);
-      padding: 5%;
-      border-radius: 18px;
+    .title {
+      margin-top: 20%;
     }
-
-    .field {
-      padding: 2%;
-    }
-
-    .field > label {
-      margin: 0 0 -8px;
-      padding: 2%;
-      display: block;
-    }
-
-    .field > input[type="text"] {
-      padding: 2%;
-      border-radius: 7px;
-      width: 100%;
-      border: rgb(91, 91, 255) solid;
-    }
-
-    .field > input:focus {
-      outline: none;
-    }
-
-    .field > button {
-      padding: 2%;
-      border-radius: 7px;
-      width: 100%;
-      background: var(--main-color-2);
-      box-shadow: var(--shadow);
-      font: inherit;
-      border: 0.5px rgb(0, 0, 158) solid;
-      font-family: "Open Sans", sans-serif;
-      cursor: pointer;
-    }
-
-    .fp {
-      margin: -7px 10px 0;
-      color: blue;
-      text-align: right;
-      font-size: 12px;
-    }
-
-    .fp a {
-      text-decoration: none;
-    }
-
-    .new-user {
-      display: flex;
-      justify-content: center;
-      margin-top: 5%;
-      padding: 2%;
-      border-radius: 7px;
-      color: white;
-      box-shadow: var(--shadow);
-    }
-
-    .new-user a {
-      color: rgb(219, 102, 255);
-      padding-left: 2%;
-    }
-
-    @media only screen and (max-width: 768px) {
-      .box {
-        margin: 0 20% 0;
-      }
-
-      .title {
-        margin-top: 20%;
-      }
-    }
-  </style>
+  }
+</style>
 
 <body>
-  <div class="title">
-    <a href="/"><img src="/assets/favicon/favicon-32x32.png"></a>
-    <h2 style="color: white;">Login</h2>
-  </div>
-  <div class="box">
-    <form class="loginForm" id="loginform" name="loginForm">
-      <div class="field">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter username">
+  <div id="container">
+    <div id="planet-1"></div>
+    <div id="mid">
+      <div class="title">
+        <a href="/"><img src="/assets/favicon/favicon-32x32.png"></a>
+        <h2 style="color: white;">Login</h2>
       </div>
-      <div class="field">
-        <label for="password">Password</label>
-        <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off">
+      <div class="box">
+        <form class="loginForm" id="loginform" name="loginForm">
+          <div class="field">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter username">
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off">
+          </div>
+          <div class="fp">
+            <a href="#">Forgot password?</a>
+          </div>
+          <div class="field"><button id="btnLogIn" onclick="senddata()">Login</button></div>
+        </form>
+        <div class="new-user" style="color: white;">
+          <p>Create new account?</p>
+          <a href="sign-up" style="color: rgb(219, 102, 255); padding-left: 2%;">Sign up</a>
+        </div>
       </div>
-      <div class="fp">
-        <a href="#">Forgot password?</a>
-      </div>
-      <div class="field"><button id="btnLogIn" onclick="senddata()">Login</button></div>
-    </form>
-    <div class="new-user" style="color: white;">
-      <p>Create new account?</p>
-      <a href="sign-up" style="color: rgb(219, 102, 255); padding-left: 2%;">Sign up</a>
     </div>
+    <div id="planet-2"></div>
   </div>
 </body>
 <script>
   const input_username = document.getElementById("username");
   const input_password = document.getElementById("password");
 
-    function senddata() {
-      const clientusername = input_username.value;
-      const clientpassword = input_password.value;
+  function senddata() {
+    const clientusername = input_username.value;
+    const clientpassword = input_password.value;
 
     if (clientusername === "" || clientpassword === "")
       alert("Incorrect username and password");
@@ -163,7 +194,7 @@
                 clientusername
               }),
             })
-            window.location.href = "/"+clientusername;
+            window.location.href = "/" + clientusername;
           } else {
             alert(data.message);
           }

@@ -1,186 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico" />
-    <link rel="stylesheet" href="/frontend/css/index.css" />
-    <link rel="stylesheet" href="/frontend/css/animation.css" />
-    <title>sign-up</title>
-  </head>
-  <style>
-    .title {
-      text-align: center;
-      padding: 14px 16px;
-      margin: 0 12%;
-      margin-top: 8%;
-    }
 
-    .title h1 {
-      color: var(--text-color-2);
-    }
-    
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico" />
+  <link rel="stylesheet" href="/frontend/css/index.css" />
+  <link rel="stylesheet" href="/frontend/css/animation.css" />
+  <title>sign-up</title>
+</head>
+<style>
+  #container {
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+  }
+
+  .title {
+    text-align: center;
+    padding: 14px 16px;
+    margin: 0 12%;
+    margin-top: 8%;
+  }
+
+  .title h1 {
+    color: var(--text-color-2);
+  }
+
+  .box {
+    margin: auto;
+    width: 350px;
+    height: auto;
+  }
+
+  .loginForm {
+    background: var(--main-color-2);
+    box-shadow: var(--shadow);
+    padding: 5%;
+    border-radius: 18px;
+  }
+
+  .field {
+    padding: 2%;
+  }
+
+  .field>label {
+    margin: 0 0 -8px;
+    padding: 2%;
+    display: block;
+  }
+
+  .field>input[type="text"] {
+    padding: 2%;
+    border-radius: 7px;
+    width: 100%;
+    border: rgb(91, 91, 255) solid;
+  }
+
+  .field>input:focus {
+    outline: none;
+  }
+
+  .field>button {
+    padding: 2%;
+    border-radius: 7px;
+    width: 100%;
+    background: var(--main-color-2);
+    box-shadow: var(--shadow);
+    border: 0.5px rgb(0, 0, 158) solid;
+    font-size: 16px;
+    font-family: "Open Sans", sans-serif;
+    cursor: pointer;
+  }
+
+  .new-user {
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    padding: 2%;
+    border-radius: 7px;
+    color: white;
+    box-shadow: var(--shadow);
+  }
+
+  .new-user>a {
+    color: rgb(219, 102, 255);
+    padding-left: 2%;
+  }
+
+  #planet-1 {
+    background: url("../../assets/planet-1.png") no-repeat;
+    background-size: contain;
+    width: 300px;
+    animation: move-up-down_1 4s ease-in-out infinite;
+  }
+
+  #planet-2 {
+    background: url("../../assets/planet-2.png") no-repeat;
+    background-size: contain;
+    width: 500px;
+    animation: move-up-down_2 4s ease-in-out infinite;
+  }
+
+  @media only screen and (max-width: 768px) {
     .box {
-      margin: 0 30%;
+      margin: 0 20% 0;
     }
 
-    .loginForm {
-      background: var(--main-color-2);
-      box-shadow: var(--shadow);
-      padding: 5%;
-      border-radius: 18px;
+    .title {
+      margin-top: 20%;
     }
+  }
+</style>
 
-    .field {
-      padding: 2%;
-    }
-
-    .field > label {
-      margin: 0 0 -8px;
-      padding: 2%;
-      display: block;
-    }
-
-    .field > input[type="text"] {
-      padding: 2%;
-      border-radius: 7px;
-      width: 100%;
-      border: rgb(91, 91, 255) solid;
-    }
-
-    .field > input:focus {
-      outline: none;
-    }
-
-    .field > button {
-      padding: 2%;
-      border-radius: 7px;
-      width: 100%;
-      background: var(--main-color-2);
-      box-shadow: var(--shadow);
-      border: 0.5px rgb(0, 0, 158) solid;
-      font-size: 16px;
-      font-family: "Open Sans", sans-serif;
-      cursor: pointer;
-    }
-
-    .new-user {
-      display: flex;
-      justify-content: center;
-      margin-top: 5%;
-      padding: 2%;
-      border-radius: 7px;
-      color: white;
-      box-shadow: var(--shadow);
-    }
-    .new-user {
-      color: rgb(219, 102, 255);
-      padding-left: 2%;
-    }
-
-    @media only screen and (max-width: 768px) {
-      .box {
-        margin: 0 20% 0;
-      }
-
-      .title {
-        margin-top: 20%;
-      }
-    }
-  </style>
-
-  <body>
-    <div class="title">
-      <a href="/"><img src="/assets/favicon/favicon-32x32.png" /></a>
-      <h1>Sign up</h1>
-    </div>
-    <div class="box">
-      <form class="loginForm" id="loginform" name="loginForm">
-        <div class="field">
-          <label for="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Enter username"
-          />
-          <p id="err-username" for="username"></p>
+<body>
+  <div id="container">
+    <div id="planet-1"></div>
+    <div id="mid">
+      <div class="title">
+        <a href="/"><img src="/assets/favicon/favicon-32x32.png" /></a>
+        <h1>Sign up</h1>
+      </div>
+      <div class="box">
+        <form class="loginForm" id="loginform" name="loginForm">
+          <div class="field">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter username" />
+            <p id="err-username" for="username"></p>
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off" />
+            <p id="err-password" for="username"></p>
+          </div>
+          <div class="field">
+            <label for="con-password">Confirm Password</label>
+            <input type="text" id="con-password" name="con-password" placeholder="Confirm password"
+              autocomplete="off" />
+            <p id="err-con-password" for="username"></p>
+          </div>
+          <div class="field">
+            <button id="btnLogIn" onclick="send_data()">Sign up</button>
+          </div>
+        </form>
+        <div class="new-user">
+          <p>Already have an account?</p>
+          <a href="login">Login</a>
         </div>
-        <div class="field">
-          <label for="password">Password</label>
-          <input
-            type="text"
-            id="password"
-            name="password"
-            placeholder="Enter password"
-            autocomplete="off"
-          />
-          <p id="err-password" for="username"></p>
-        </div>
-        <div class="field">
-          <label for="con-password">Confirm Password</label>
-          <input
-            type="text"
-            id="con-password"
-            name="con-password"
-            placeholder="Confirm password"
-            autocomplete="off"
-          />
-          <p id="err-con-password" for="username"></p>
-        </div>
-        <div class="field">
-          <button id="btnLogIn" onclick="send_data()">Sign up</button>
-        </div>
-      </form>
-      <div class="new-user">
-        <p>Already have an account?</p>
-        <a href="login">Login</a>
       </div>
     </div>
-  </body>
-  <script>
-    const input_username = document.getElementById("username");
-    const input_password = document.getElementById("password");
-    const confirm_password = document.getElementById("con-password");
+    <div id="planet-2"></div>
+  </div>
+</body>
+<script>
+  const input_username = document.getElementById("username");
+  const input_password = document.getElementById("password");
+  const confirm_password = document.getElementById("con-password");
 
-    var err_username = document.getElementById("err-username");
-    var err_password = document.getElementById("err-password");
-    var err_con_password = document.getElementById("err-con-password");
+  var err_username = document.getElementById("err-username");
+  var err_password = document.getElementById("err-password");
+  var err_con_password = document.getElementById("err-con-password");
 
-    function send_data() {
-      const clientusername = input_username.value;
-      const clientpassword = input_password.value;
-      const con_password = confirm_password.value;
-      if (username === "" || password === "") {
-        alert("Enter username and password");
-      } else {
-        fetch("/sign-up", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            clientusername,
-            clientpassword,
-            con_password,
-          }),
+  function send_data() {
+    const clientusername = input_username.value;
+    const clientpassword = input_password.value;
+    const con_password = confirm_password.value;
+    if (username === "" || password === "") {
+      alert("Enter username and password");
+    } else {
+      fetch("/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientusername,
+          clientpassword,
+          con_password,
+        }),
+      })
+        .then((response) => {
+          return response.json();
         })
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            if (data.status === "success") {
-              window.location.href = "/" + clientusername;
-            } else {
-              alert(data.message);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            alert("An error occurred while trying to log in");
-          });
-      }
+        .then((data) => {
+          if (data.status === "success") {
+            window.location.href = "/" + clientusername;
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("An error occurred while trying to log in");
+        });
     }
-  </script>
+  }
+</script>
+
 </html>
