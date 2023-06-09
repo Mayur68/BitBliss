@@ -1,9 +1,10 @@
 const express = require("express");
-const app = express();
 const bodyParser = require("body-parser");
 const { connection, getdb } = require("./database");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+
+const app = express();
 
 //connecting to database and runnning server
 connection((err) => {
@@ -22,7 +23,21 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/frontend/index/index.html");
+  const sessionNo = parseInt(req.cookies.sessionToken);
+  db.collection("accounts")
+    .find()
+    .toArray()
+    .then((result) => {
+      if (result.length > 0) {
+        for (i = 0; i < result.length; i++) {
+          if (result[i].session === sessionNo) {
+            res.render("user", { username: result[0].username });
+          }
+        }
+      } else {
+        res.sendFile(__dirname + "/frontend/index/index.html");
+      }
+    });
 });
 
 app.get("/sign-up", (req, res) => {
