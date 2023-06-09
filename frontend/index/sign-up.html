@@ -15,6 +15,7 @@
     display: flex;
     justify-content: space-between;
     margin: auto;
+    margin-top: 10%;
   }
 
   .title {
@@ -185,7 +186,7 @@
         })
         .then((data) => {
           if (data.status === "success") {
-            window.location.href = "/" + clientusername;
+            window.location.href = "/";
           } else {
             alert(data.message);
           }

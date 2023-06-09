@@ -15,17 +15,16 @@
     display: flex;
     justify-content: space-between;
     margin: auto;
+    margin-top: 10%;
   }
 
   .title {
     text-align: center;
     padding: 14px 16px;
     margin: 0 12%;
-    margin-top: 8%;
+    margin-top: 1%;
   }
-#mid{
-  margin-top: 50px;
-}
+
   .title h1 {
     color: var(--text-color-2);
   }
@@ -133,7 +132,7 @@
     <div id="mid">
       <div class="title">
         <a href="/"><img src="/assets/favicon/favicon-32x32.png"></a>
-        <h2 style="color: white;">Login</h2>
+        <h1 style="color: white;">Login</h1>
       </div>
       <div class="box">
         <form class="loginForm" id="loginform" name="loginForm">
@@ -194,7 +193,7 @@
                 clientusername
               }),
             })
-            window.location.href = "/" + clientusername;
+            window.location.href = "/";
           } else {
             alert(data.message);
           }

@@ -161,7 +161,7 @@ app.get("/data", (req, res) => {
     });
 });
 
-//user page
+//user profile page
 app.get("/:username", (req, res) => {
   const username = req.params.username;
   const sessionNo = parseInt(req.cookies.sessionToken);
@@ -173,7 +173,7 @@ app.get("/:username", (req, res) => {
     .toArray()
     .then((result) => {
       if (result.length > 0) {
-        res.render("user", { username: username });
+        res.render("userProfile", { username: username });
       } else {
         res.render("notfound");
       }
@@ -181,9 +181,8 @@ app.get("/:username", (req, res) => {
 });
 
 //user>>>game page
-app.get("/:username/Rock-Paper-Scissors", (req, res) => {
-  const username = req.params.username;
-  res.render("Rock-Paper-Scissors", { username: username });
+app.get("/Rock-Paper-Scissors", (req, res) => {
+  res.render("Rock-Paper-Scissors");
 });
 
 //genetare session
