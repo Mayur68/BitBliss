@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const { connection, getdb } = require("./database");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 
 //connecting to database and runnning server
@@ -14,6 +15,7 @@ connection((err) => {
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 // Set the view engine to EJS
 app.set("view engine", "ejs");
@@ -32,11 +34,10 @@ app.get("/login", (req, res) => {
 });
 
 //checking login details
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { clientusername, clientpassword } = req.body;
-
-  console.log(clientusername, clientpassword);
-
+  const expirationTime = 30 * 60 * 1000;
+  const expirationDate = new Date(Date.now() + expirationTime);
   db.collection("accounts")
     .find({
       username: clientusername,
@@ -45,6 +46,12 @@ app.post("/login", (req, res) => {
     .toArray()
     .then((result) => {
       if (result.length > 0) {
+        const sessionToken = result[0].session;
+        console.log(result);
+        res.cookie("sessionToken", sessionToken, {
+          expires: expirationDate,
+          httpOnly: true,
+        });
         res.status(200).json({
           status: "success",
           message: "Login successful!",
@@ -66,11 +73,12 @@ app.post("/login", (req, res) => {
 });
 
 //checking signup details
-app.post("/sign-up", (req, res) => {
+app.post("/sign-up", async (req, res) => {
   const { clientusername, clientpassword, con_password } = req.body;
-
-  console.log(clientusername, clientpassword, con_password);
-
+  const sessionNo = await generateSession();
+  const sessionToken = sessionNo;
+  const expirationTime = 30 * 60 * 1000;
+  const expirationDate = new Date(Date.now() + expirationTime);
   if (clientpassword === con_password) {
     db.collection("accounts")
       .findOne({
@@ -87,11 +95,23 @@ app.post("/sign-up", (req, res) => {
             .insertOne({
               username: clientusername,
               password: clientpassword,
+              session: sessionNo,
             })
             .then(() => {
+              res.cookie("sessionToken", sessionToken, {
+                expires: expirationDate,
+                httpOnly: true,
+              });
               res.json({
                 status: "success",
                 message: "Login successful!",
+              });
+            })
+            .catch((err) => {
+              console.error(err);
+              res.status(500).json({
+                status: "error",
+                message: "Internal server error",
               });
             });
         }
@@ -126,9 +146,11 @@ app.get("/data", (req, res) => {
 //user page
 app.get("/:username", (req, res) => {
   const username = req.params.username;
+  const sessionNo = parseInt(req.cookies.sessionToken);
   db.collection("accounts")
     .find({
       username: username,
+      session: sessionNo,
     })
     .toArray()
     .then((result) => {
@@ -145,3 +167,25 @@ app.get("/:username/Rock-Paper-Scissors", (req, res) => {
   const username = req.params.username;
   res.render("Rock-Paper-Scissors", { username: username });
 });
+
+//genetare session
+function generateSession() {
+  return new Promise((resolve, reject) => {
+    let x = 1111;
+    db.collection("accounts")
+      .find({ session: x })
+      .toArray()
+      .then((result) => {
+        if (result.length > 0) {
+          x++;
+          resolve(x);
+        } else {
+          resolve(x);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      });
+  });
+}
