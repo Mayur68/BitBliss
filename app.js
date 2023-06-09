@@ -149,6 +149,11 @@ app.post("/sign-up", async (req, res) => {
   }
 });
 
+app.post("/logout", (req, res) => {
+  res.clearCookie("sessionToken");
+  res.sendStatus(200);
+});
+
 //view collection at `/data`
 app.get("/data", (req, res) => {
   let accounts = [];
@@ -181,8 +186,9 @@ app.get("/:username", (req, res) => {
 });
 
 //user>>>game page
-app.get("/Rock-Paper-Scissors", (req, res) => {
-  res.render("Rock-Paper-Scissors");
+app.get("/:username/Rock-Paper-Scissors", (req, res) => {
+  const username = req.params.username;
+  res.render("Rock-Paper-Scissors", { username: username });
 });
 
 //genetare session

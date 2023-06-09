@@ -10,8 +10,32 @@
         <%= username %>
     </title>
 </head>
+<button onclick="logout()">log out</button>
 
 <body>
 </body>
+<script>
+    function logout() {
+        fetch('/logout', {
+            method: 'POST',
+            credentials: 'same-origin'
+        })
+            .then(response => {
+
+                if (response.ok) {
+                    window.location.href = "/";
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("An error occurred while trying to log in");
+            });
+    }
+
+
+
+</script>
 
 </html>

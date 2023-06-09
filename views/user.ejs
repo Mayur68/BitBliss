@@ -121,7 +121,9 @@
         </div>
         <nav>
             <ul>
-                <li><a href="/<%= username %>""><span class="material-symbols-outlined">account_circle</span><%= username %></a></li>
+                <li><a href="/<%= username %>""><span class=" material-symbols-outlined">account_circle</span>
+                        <%= username %>
+                    </a></li>
             </ul>
         </nav>
     </header>
@@ -134,7 +136,7 @@
 </body>
 <script>
     function r_p_c() {
-        window.location.href = "/Rock-Paper-Scissors";
+        window.location.href = "/<%= username %>/Rock-Paper-Scissors";
     }
 </script>
 
