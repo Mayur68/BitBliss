@@ -29,9 +29,12 @@ app.get("/", (req, res) => {
     .toArray()
     .then((result) => {
       if (result.length > 0) {
+        let i;
         for (i = 0; i < result.length; i++) {
           if (result[i].session === sessionNo) {
-            res.render("user", { username: result[0].username });
+            res.render("user", { username: result[i].username });
+          } else {
+            res.sendFile(__dirname + "/frontend/index/index.html");
           }
         }
       } else {
