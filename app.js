@@ -20,7 +20,10 @@ app.use(cookieParser());
 
 // Set the view engine to EJS
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", [
+  path.join(__dirname, "views"),
+  path.join(__dirname, "games"),
+]);
 
 app.get("/", (req, res) => {
   const sessionNo = parseInt(req.cookies.sessionToken);
@@ -189,6 +192,11 @@ app.get("/:username", (req, res) => {
 app.get("/:username/Rock-Paper-Scissors", (req, res) => {
   const username = req.params.username;
   res.render("Rock-Paper-Scissors", { username: username });
+});
+
+app.get("/:username/shootDown", (req, res) => {
+  const username = req.params.username;
+  res.render("shootDown", { username: username });
 });
 
 //genetare session
