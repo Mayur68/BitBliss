@@ -6,14 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/frontend/css/index.css" />
     <link rel="stylesheet" href="/frontend/css/animation.css" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title>
         <%= username %>
     </title>
+    <style>
+        body {
+            color: white;
+        }
+    </style>
 </head>
-<button onclick="logout()">log out</button>
 
 <body>
 </body>
+<header class="header-overlay header-logged">
+    <div class="novastar">
+        <a href="/" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="/<%= username %>""><span class=" material-symbols-outlined">account_circle</span>
+                    <%= username %>
+                </a></li>
+        </ul>
+    </nav>
+</header>
+<button onclick="logout()">log out</button>
 <script>
     function logout() {
         fetch('/logout', {
