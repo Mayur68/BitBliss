@@ -37,21 +37,21 @@ app.get("/", (req, res) => {
           if (result[i].session === sessionNo) {
             res.render("user", { username: result[i].username });
           } else {
-            res.sendFile(__dirname + "/frontend/index/index.html");
+            res.sendFile(__dirname + "/frontend/pages/index.html");
           }
         }
       } else {
-        res.sendFile(__dirname + "/frontend/index/index.html");
+        res.sendFile(__dirname + "/frontend/pages/index.html");
       }
     });
 });
 
 app.get("/sign-up", (req, res) => {
-  res.sendFile(__dirname + "/frontend/index/sign-up.html");
+  res.sendFile(__dirname + "/frontend/pages/sign-up.html");
 });
 
 app.get("/login", (req, res) => {
-  res.sendFile(__dirname + "/frontend/index/login.html");
+  res.sendFile(__dirname + "/frontend/pages/login.html");
 });
 
 //checking login details
