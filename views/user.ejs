@@ -74,7 +74,7 @@
         </div>
         <nav>
             <ul>
-                <li><a href="/<%= username %>""><span class=" material-symbols-outlined">account_circle</span>
+                <li><a href="/<%= username %>""><span class=" material-symbols-outlined" style="color: white;">account_circle</span>
                         <%= username %>
                     </a></li>
             </ul>
@@ -82,17 +82,19 @@
     </header>
     <div class="games">
         <div class="r-p-s in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
-        <div class="t-t-t in-game" onclick="t_t_t()">ttt</div>
-        <div class="r-p-s in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
-        <div class="t-t-t in-game" onclick="t_t_t()">ttt</div>
+        <div class="t-t-t in-game" onclick="shootDown()">shootDown</div>
+        <div class="t-t-t in-game" onclick="t_t_t()">Tic Tac Toe</div>
     </div>
 </body>
 <script>
     function r_p_c() {
         window.location.href = "/<%= username %>/Rock-Paper-Scissors";
     }
-    function t_t_t(){
+    function shootDown(){
         window.location.href = "/<%= username %>/shootDown";
+    }
+    function t_t_t(){
+        window.location.href = "/<%= username %>/TicTacToe";
     }
 </script>
 

@@ -57,7 +57,7 @@ app.get("/login", (req, res) => {
 //checking login details
 app.post("/login", async (req, res) => {
   const { clientusername, clientpassword } = req.body;
-  const expirationTime = 30 * 60 * 1000;
+  const expirationTime = 4320 * 60 * 60 * 1000;
   const expirationDate = new Date(Date.now() + expirationTime);
   db.collection("accounts")
     .find({
@@ -98,7 +98,7 @@ app.post("/sign-up", async (req, res) => {
   const { clientusername, clientpassword, con_password } = req.body;
   const sessionNo = await generateSession();
   const sessionToken = sessionNo;
-  const expirationTime = 30 * 60 * 1000;
+  const expirationTime = 4320 * 60 * 60 * 1000;
   const expirationDate = new Date(Date.now() + expirationTime);
   if (clientpassword === con_password) {
     db.collection("accounts")
@@ -152,6 +152,7 @@ app.post("/sign-up", async (req, res) => {
   }
 });
 
+//logout
 app.post("/logout", (req, res) => {
   res.clearCookie("sessionToken");
   res.sendStatus(200);
@@ -173,19 +174,19 @@ app.get("/data", (req, res) => {
 app.get("/:username", (req, res) => {
   const username = req.params.username;
   const sessionNo = parseInt(req.cookies.sessionToken);
-  db.collection("accounts")
-    .find({
-      username: username,
-      session: sessionNo,
-    })
-    .toArray()
-    .then((result) => {
-      if (result.length > 0) {
-        res.render("userProfile", { username: username });
-      } else {
-        res.render("notfound");
-      }
-    });
+    db.collection("accounts")
+      .find({
+        username: username,
+        session: sessionNo,
+      })
+      .toArray()
+      .then((result) => {
+        if (result.length > 0) {
+          res.render("userProfile", { username: username });
+        } else {
+          res.render("notfound");
+        }
+      });
 });
 
 //user>>>game page
@@ -197,6 +198,11 @@ app.get("/:username/Rock-Paper-Scissors", (req, res) => {
 app.get("/:username/shootDown", (req, res) => {
   const username = req.params.username;
   res.render("shootDown", { username: username });
+});
+
+app.get("/:username/TicTacToe", (req, res) => {
+  const username = req.params.username;
+  res.render("ticTacToe", { username: username });
 });
 
 //genetare session

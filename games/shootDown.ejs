@@ -4,22 +4,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/frontend/css/index.css" rel="stylesheet">
+    <!-- <link href="/frontend/css/index.css" rel="stylesheet"> -->
     <link href="/frontend/css/animation.css" rel="stylesheet">
     <title>Shoot Down</title>
     <style>
-        canvas {
-            height: max-content;
-            width: max-content;
+        body {
+            background-color: rgb(255, 255, 255);
+        }
+
+        svg {
+            height: 700px;
+            width: 1500px;
+            border: 1px solid black;
+            /* background-color: black; */
         }
     </style>
 </head>
 
 <body>
-    <canvas id="canvas"></canvas>
+    <svg id="svg" width="400" height="400">
+        <rect id="rect" x="100" y="50" width="30" height="30" fill="blue " />
+        <line id="line" x1="0" y1="0" x2="0" y2="0" stroke="orange" stroke-width="2" />
+    </svg>
 </body>
 <script>
-    const canvas = document.getElementById("canvas")
+    const svg = document.getElementById("svg");
+    const rect = document.getElementById("rect");
+    const line = document.getElementById("line");
+
+    let x = 100;
+    let y = 50;
+
+    function drawRectangle() {
+        rect.setAttribute("x", x);
+        rect.setAttribute("y", y);
+    }
+
+    document.addEventListener("keydown", keyDown);
+    document.addEventListener("keyup", keyUp);
+    document.addEventListener("mousedown", mouseDown);
+    document.addEventListener("mouseup", mouseUp);
+
+    function keyDown(event) {
+        const keyCode = event.keyCode;
+
+        if (keyCode === 65) {
+            x -= 10;
+        } else if (keyCode === 68) {
+            x += 10;
+        } else if (keyCode === 87) {
+            y -= 10;
+        } else if (keyCode === 83) {
+            y += 10;
+        }
+        drawRectangle();
+    }
+
+    function keyUp(event) {
+        x = x;
+        y = y;
+        drawRectangle();
+    }
+
+    drawRectangle();
+
+    let startX = x;
+    let startY = y;
+    function mouseDown() {
+        line.setAttribute("x1",startX);
+        line.setAttribute("y1",startX);
+        line.setAttribute("x2",startX+10);
+        line.setAttribute("y2",startY);
+    }
+
+    function mouseUp() {
+        line.remove();
+        startX = x;
+        startY = y;
+    }
+
 </script>
 
 </html>
