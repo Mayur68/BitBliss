@@ -1,8 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const { connection, getdb } = require("./database");
+const { connection, getdb } = require("./database/database");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const arcade = require("./routes/arcade")
 
 const app = express();
 
@@ -17,6 +18,7 @@ connection((err) => {
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use('/:username/',arcade)
 
 // Set the view engine to EJS
 app.set("view engine", "ejs");
@@ -187,22 +189,6 @@ app.get("/:username", (req, res) => {
           res.render("notfound");
         }
       });
-});
-
-//user>>>game page
-app.get("/:username/Rock-Paper-Scissors", (req, res) => {
-  const username = req.params.username;
-  res.render("Rock-Paper-Scissors", { username: username });
-});
-
-app.get("/:username/shootDown", (req, res) => {
-  const username = req.params.username;
-  res.render("shootDown", { username: username });
-});
-
-app.get("/:username/TicTacToe", (req, res) => {
-  const username = req.params.username;
-  res.render("ticTacToe", { username: username });
 });
 
 //genetare session
