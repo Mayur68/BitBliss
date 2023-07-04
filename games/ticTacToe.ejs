@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/frontend/global.css" rel="stylesheet">
+    <link href="/frontend/animation.css" rel="stylesheet">
     <title>Tic Tac Toe</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
@@ -34,14 +36,9 @@
             flex-direction: column;
         }
 
-        body {
-            background-color: rgb(44, 194, 194);
-            font-family: 'Nunito', sans-serif;
-        }
-
         p {
             font-size: 36px;
-            color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
             font-style: italic;
             font-weight: bold;
             font-family: 'Nunito', sans-serif;
@@ -53,11 +50,6 @@
             border: none;
             font-size: 33px;
             margin-left: 646px;
-        }
-
-        #displayMessage {
-            -webkit-text-stroke: 0.6px rgb(238, 232, 232);
-            font-family: 'Nunito', sans-serif;
         }
     </style>
 </head>
@@ -81,7 +73,9 @@
         </div>
     </div>
     <p id="displayMessage"></p>
-    <p><%= username %></p>
+    <p>
+        <%= username %>
+    </p>
     <p id="pstat" class="stat"></p>
     <p>Computer</p>
     <p id="bstat" class="stat"></p>

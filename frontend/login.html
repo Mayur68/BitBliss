@@ -6,9 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico" />
-  <link rel="stylesheet" href="/frontend/css/global.css" />
-  <link rel="stylesheet" href="/frontend/css/animation.css" />
-  <title>sign-up</title>
+  <link rel="stylesheet" href="/frontend/global.css" />
+  <link rel="stylesheet" href="/frontend/animation.css" />
+  <title>Login</title>
 </head>
 <style>
   #container {
@@ -22,7 +22,7 @@
     text-align: center;
     padding: 14px 16px;
     margin: 0 12%;
-    margin-top: 8%;
+    margin-top: 1%;
   }
 
   .title h1 {
@@ -69,10 +69,21 @@
     width: 100%;
     background: var(--main-color-2);
     box-shadow: var(--shadow);
+    font: inherit;
     border: 0.5px rgb(0, 0, 158) solid;
-    font-size: 16px;
     font-family: "Open Sans", sans-serif;
     cursor: pointer;
+  }
+
+  .fp {
+    margin: -7px 10px 0;
+    color: blue;
+    text-align: right;
+    font-size: 12px;
+  }
+
+  .fp a {
+    text-decoration: none;
   }
 
   .new-user {
@@ -85,7 +96,7 @@
     box-shadow: var(--shadow);
   }
 
-  .new-user>a {
+  .new-user a {
     color: rgb(219, 102, 255);
     padding-left: 2%;
   }
@@ -117,68 +128,55 @@
 
 <body>
   <div id="container">
-    <div id="planet-1"></div>
+    <div id="planet-1" loading="lazy"></div>
     <div id="mid">
       <div class="title">
-        <a href="/"><img src="/assets/favicon/favicon-32x32.png" /></a>
-        <h1>Sign up</h1>
+        <a href="/"><img src="/assets/favicon/favicon-32x32.png"></a>
+        <h1 style="color: white;">Login</h1>
       </div>
       <div class="box">
         <form class="loginForm" id="loginform" name="loginForm">
           <div class="field">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter username" />
-            <p id="err-username" for="username"></p>
+            <input type="text" id="username" name="username" placeholder="Enter username">
           </div>
           <div class="field">
             <label for="password">Password</label>
-            <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off" />
-            <p id="err-password" for="username"></p>
+            <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off">
           </div>
-          <div class="field">
-            <label for="con-password">Confirm Password</label>
-            <input type="text" id="con-password" name="con-password" placeholder="Confirm password"
-              autocomplete="off" />
-            <p id="err-con-password" for="username"></p>
+          <div class="fp">
+            <a href="#">Forgot password?</a>
           </div>
-          <div class="field">
-            <button id="btnLogIn" onclick="send_data()">Sign up</button>
-          </div>
+          <div class="field"><button id="btnLogIn" onclick="senddata()">Login</button></div>
         </form>
-        <div class="new-user">
-          <p>Already have an account?</p>
-          <a href="login">Login</a>
+        <div class="new-user" style="color: white;">
+          <p>Create new account?</p>
+          <a href="sign-up" style="color: rgb(219, 102, 255); padding-left: 2%;">Sign up</a>
         </div>
       </div>
     </div>
-    <div id="planet-2"></div>
+    <div id="planet-2" loading="lazy"></div>
   </div>
 </body>
 <script>
   const input_username = document.getElementById("username");
   const input_password = document.getElementById("password");
-  const confirm_password = document.getElementById("con-password");
 
-  var err_username = document.getElementById("err-username");
-  var err_password = document.getElementById("err-password");
-  var err_con_password = document.getElementById("err-con-password");
-
-  function send_data() {
+  function senddata() {
     const clientusername = input_username.value;
     const clientpassword = input_password.value;
-    const con_password = confirm_password.value;
-    if (username === "" || password === "") {
-      alert("Enter username and password");
-    } else {
-      fetch("/sign-up", {
+
+    if (clientusername === "" || clientpassword === "")
+      alert("Incorrect username and password");
+    else {
+      fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           clientusername,
-          clientpassword,
-          con_password,
+          clientpassword
         }),
       })
         .then((response) => {
@@ -186,6 +184,15 @@
         })
         .then((data) => {
           if (data.status === "success") {
+            fetch("/user", {
+              method: "post",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                clientusername
+              }),
+            })
             window.location.href = "/";
           } else {
             alert(data.message);
@@ -193,7 +200,7 @@
         })
         .catch((error) => {
           console.error(error);
-          alert("An error occurred while trying to log in");
+          alert("error");
         });
     }
   }
