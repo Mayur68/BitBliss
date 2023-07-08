@@ -20,4 +20,6 @@
     <li>HTML</li>
     <li>CSS</li>
     <li>JavaScript</li>
+    <li>MongoDB</li>
+    <li>Embedded JavaScript Templating</li>
 </ul>
