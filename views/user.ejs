@@ -96,18 +96,39 @@
             <li>1</li>
         </ul>
     </div>
-</body>
-<script>s
+    <script src="../node_modules/socket.io/client-dist/socket.io.js"></script>
+    <script>
+        // Connect to the Socket.IO server
+        const socket = io();
 
-    function r_p_c() {
-        window.location.href = "/<%= username %>/Rock-Paper-Scissors";
-    }
-    function shootDown() {
-        window.location.href = "/<%= username %>/shootDown";
-    }
-    function t_t_t() {
-        window.location.href = "/<%= username %>/TicTacToe";
-    }
-</script>
+        // Event listener for 'connect' event
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        // Event listener for 'message' event
+        socket.on('message', (data) => {
+            console.log('Received message:', data);
+            // Handle the received message as needed
+        });
+
+        // Send a message to the server
+        function sendMessage() {
+            const message = 'Hello, server!';
+            socket.emit('message', message);
+        }
+
+        function r_p_c() {
+            window.location.href = "/<%= username %>/Rock-Paper-Scissors";
+        }
+        function shootDown() {
+            window.location.href = "/<%= username %>/shootDown";
+        }
+        function t_t_t() {
+            window.location.href = "/<%= username %>/TicTacToe";
+        }
+
+    </script>
+</body>
 
 </html>

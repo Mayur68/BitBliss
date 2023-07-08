@@ -2,12 +2,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-
 const { connection, getdb } = require("./database/database");
 const arcade = require("./routes/arcade");
 const user = require("./routes/user");
 
 const app = express();
+const server = require("http").createServer(app)
+const setupSocket = require('./socket/socket');
+setupSocket(server);
 
 //connecting to database and runnning server
 connection((err) => {
@@ -52,3 +54,4 @@ app.get("/", (req, res) => {
       }
     });
 });
+
