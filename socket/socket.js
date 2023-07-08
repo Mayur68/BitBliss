@@ -14,7 +14,7 @@ function setupSocket(server) {
     });
 
     socket.on('disconnect', () => {
-      console.log('A user disconnected...');
+      console.log('A user disconnected.....');
     });
   });
 }
