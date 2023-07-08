@@ -89,30 +89,19 @@
     <div class="friends" id="friends">
         <ul>
             <li>1</li>
-            <li>1</li>
-            <li>1</li>
-            <li>1</li>
-            <li>1</li>
-            <li>1</li>
         </ul>
     </div>
-    <script src="../node_modules/socket.io/client-dist/socket.io.js"></script>
-    <script>
-        // Connect to the Socket.IO server
+    <script src="../node_modules/socket.io/client-dist/socket.io.js">
         const socket = io();
 
-        // Event listener for 'connect' event
         socket.on('connect', () => {
             console.log('Connected to server');
         });
 
-        // Event listener for 'message' event
         socket.on('message', (data) => {
             console.log('Received message:', data);
-            // Handle the received message as needed
         });
 
-        // Send a message to the server
         function sendMessage() {
             const message = 'Hello, server!';
             socket.emit('message', message);
@@ -129,6 +118,7 @@
         }
 
     </script>
+    
 </body>
 
 </html>

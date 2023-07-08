@@ -7,7 +7,7 @@ const arcade = require("./routes/arcade");
 const user = require("./routes/user");
 
 const app = express();
-const server = require("http").createServer(app)
+const server = require("http").Server(app)
 const setupSocket = require('./socket/socket');
 setupSocket(server);
 
