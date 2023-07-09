@@ -21,6 +21,7 @@ connection((err) => {
         console.log("Server is running at 3000...");
       }
     });
+    db = getdb();
   }
 });
 
