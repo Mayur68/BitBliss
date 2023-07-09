@@ -8,13 +8,10 @@ function setupSocket(server) {
 
     socket.on('message', (data) => {
       console.log('Received message:', data);
-
-      // Broadcast the message to all connected clients
-      io.emit('message', data);
     });
 
     socket.on('disconnect', () => {
-      console.log('A user disconnected');
+      console.log('A user disconnected.....');
     });
   });
 }

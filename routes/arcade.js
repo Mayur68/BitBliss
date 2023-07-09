@@ -7,6 +7,11 @@ router.get("/Rock-Paper-Scissors", (req, res) => {
   res.render("Rock-Paper-Scissors", { username: username });
 });
 
+router.get("/Rock-Paper-scissors-online", (req, res) => {
+  const username = req.params.username;
+  res.render("R-p-s-online", { username: username });
+});
+
 router.get("/shootDown", (req, res) => {
   const username = req.params.username;
   res.render("shootDown", { username: username });
