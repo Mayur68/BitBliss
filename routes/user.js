@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 
-const { connection, getdb } = require("../database/database");
+const { getdb } = require("../database/database");
 db = getdb();
 
 // Route for the sign-up page

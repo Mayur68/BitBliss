@@ -83,6 +83,7 @@
     </header>
     <div class="games">
         <div class="r-p-s in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
+        <div class="r-p-s in-game" onclick="r_p_c_online()">Rock-Paper-scissors-online</div>
         <div class="t-t-t in-game" onclick="shootDown()">shootDown</div>
         <div class="t-t-t in-game" onclick="t_t_t()">Tic Tac Toe</div>
     </div>
@@ -95,6 +96,9 @@
         function r_p_c() {
             window.location.href = "/<%= username %>/Rock-Paper-Scissors";
         }
+        function r_p_c_online() {
+            window.location.href = "/<%= username %>/Rock-Paper-scissors-online";
+        }
         function shootDown() {
             window.location.href = "/<%= username %>/shootDown";
         }
@@ -102,11 +106,6 @@
             window.location.href = "/<%= username %>/TicTacToe";
         }
 
-    </script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        socket.emit("connection");
     </script>
 </body>
 
