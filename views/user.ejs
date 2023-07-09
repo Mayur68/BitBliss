@@ -36,12 +36,6 @@
         flex-shrink: 0;
     }
 
-    .r-p-s {
-        background-color: var(--main-bg-color-2);
-        border-radius: 20px;
-        cursor: pointer;
-    }
-
     .t-t-t {
         background-color: var(--main-bg-color-2);
         border-radius: 20px;
@@ -84,6 +78,7 @@
     <div class="games">
         <div class="r-p-s in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
         <div class="r-p-s in-game" onclick="r_p_c_online()">Rock-Paper-scissors-online</div>
+        <div class="t-t-t in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
         <div class="t-t-t in-game" onclick="shootDown()">shootDown</div>
         <div class="t-t-t in-game" onclick="t_t_t()">Tic Tac Toe</div>
     </div>
@@ -105,8 +100,11 @@
         function t_t_t() {
             window.location.href = "/<%= username %>/TicTacToe";
         }
-
+function t_t_t() {
+        window.location.href = "/<%= username %>/chess";
+    }
     </script>
+
 </body>
 
 </html>
