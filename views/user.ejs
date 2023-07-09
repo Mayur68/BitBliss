@@ -91,22 +91,7 @@
             <li>1</li>
         </ul>
     </div>
-    <script src="../node_modules/socket.io/client-dist/socket.io.js">
-        const socket = io();
-
-        socket.on('connect', () => {
-            console.log('Connected to server');
-        });
-
-        socket.on('message', (data) => {
-            console.log('Received message:', data);
-        });
-
-        function sendMessage() {
-            const message = 'Hello, server!';
-            socket.emit('message', message);
-        }
-
+    <script>
         function r_p_c() {
             window.location.href = "/<%= username %>/Rock-Paper-Scissors";
         }
@@ -118,7 +103,11 @@
         }
 
     </script>
-    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.emit("connection");
+    </script>
 </body>
 
 </html>
