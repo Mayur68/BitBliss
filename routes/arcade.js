@@ -1,15 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-//user>>>game page
 router.get("/Rock-Paper-Scissors", (req, res) => {
   const username = req.params.username;
   res.render("Rock-Paper-Scissors", { username: username });
 });
 
-router.get("/Rock-Paper-scissors-online", (req, res) => {
+router.get("/TicTacToe-online", (req, res) => {
   const username = req.params.username;
-  res.render("R-p-s-online", { username: username });
+  res.render("tic-tac-toe-online", { username: username });
 });
 
 router.get("/shootDown", (req, res) => {

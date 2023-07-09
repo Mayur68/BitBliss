@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/frontend/global.css">
+    <title>TicTacToe-online</title>
+    <style>
+        .container{
+            margin: 100px auto;
+            width: 300px;
+            background-color: black;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .row{
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0  10px;
+        }
+        input{
+            width: 90px;
+            height: 90px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+<div class="row">
+    <input type="text" id="box-0" onclick="clik(0)"/>
+    <input type="text" id="box-1" onclick="clik(1)"/>
+    <input type="text" id="box-2" onclick="clik(2)"/>
+</div>
+<div class="row">
+    <input type="text" id="box-3" onclick="clik(3)"/>
+    <input type="text" id="box-4" onclick="clik(4)"/>
+    <input type="text" id="box-5" onclick="clik(5)"/>
+</div>
+<div class="row">
+    <input type="text" id="box-6" onclick="clik(6)"/>
+    <input type="text" id="box-7" onclick="clik(7)"/>
+    <input type="text" id="box-8" onclick="clik(8)"/>
+</div>
+</div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.emit("connection");</script>
+</body>
+
+</html>

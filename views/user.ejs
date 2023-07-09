@@ -77,8 +77,7 @@
     </header>
     <div class="games">
         <div class="t-t-t in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
-        <div class="t-t-t in-game" onclick="r_p_c_online()">Rock-Paper-scissors-online</div>
-        <div class="t-t-t in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
+        <div class="t-t-t in-game" onclick="TicTacToe_online()">TicTacToe-online</div>
         <div class="t-t-t in-game" onclick="shootDown()">shootDown</div>
         <div class="t-t-t in-game" onclick="t_t_t()">Tic Tac Toe</div>
     </div>
@@ -91,8 +90,8 @@
         function r_p_c() {
             window.location.href = "/<%= username %>/Rock-Paper-Scissors";
         }
-        function r_p_c_online() {
-            window.location.href = "/<%= username %>/Rock-Paper-scissors-online";
+        function TicTacToe_online() {
+            window.location.href = "/<%= username %>/TicTacToe-online";
         }
         function shootDown() {
             window.location.href = "/<%= username %>/shootDown";
@@ -100,9 +99,9 @@
         function t_t_t() {
             window.location.href = "/<%= username %>/TicTacToe";
         }
-function t_t_t() {
-        window.location.href = "/<%= username %>/chess";
-    }
+        function t_t_t() {
+            window.location.href = "/<%= username %>/chess";
+        }
     </script>
 
 </body>
