@@ -16,7 +16,6 @@ connection((err) => {
   if (!err) {
     app.listen(3000, () => console.log("running at 3000..."));
   }
-  db = getdb();
 });
 
 app.use(express.static(__dirname));
