@@ -73,19 +73,18 @@
         padding: 2%;
     }
 
-    #computer {
+    #player1 {
+        width:250px;
         display: flex;
         justify-content: space-around;
-        font-family: 'Roboto', sans-serif;
         background-color: var(--main-bg-color-2);
         padding: 1%;
-        font-size: 25px;
         border-radius: 20px;
         box-shadow: var(--shadow);
     }
 
-    #person {
-        font-family: 'Roboto', sans-serif;
+    #player2 {
+        width:250px;
         background-color: var(--main-bg-color-3);
         display: flex;
         justify-content: space-around;
@@ -122,33 +121,6 @@
         padding: 20px;
         font-size: 30px;
     }
-
-    #rock1 {
-        padding: 1%;
-        cursor: pointer;
-        margin-right: 678px;
-        margin: 10px;
-        padding: 20px;
-        font-size: 30px;
-    }
-
-    #paper1 {
-        padding: 1%;
-        cursor: pointer;
-        margin-right: 678px;
-        margin: 10px;
-        padding: 20px;
-        font-size: 30px;
-    }
-
-    #scissor1 {
-        padding: 1%;
-        cursor: pointer;
-        margin-right: 678px;
-        margin: 10px;
-        padding: 20px;
-        font-size: 30px;
-    }
 </style>
 
 <body>
@@ -171,25 +143,25 @@
     <div id="score">
         <p><b>Score :</b></p>
         <p id="sc-box"></p>
-        <p><b>Attempt :</b></p>
+        <p><b>Score :</b></p>
+        <p id="sc-box"></p>
+        <p><b>Attempt left:</b></p>
         <p id="sc-box1"></p>
         <p><b>Result :</b></p>
         <p id="sc-box2"></p>
     </div>
     <div id="stage">
-        <div id="computer">
-            <p><b>Computer : </b></p>
-            <div id="rock1"><span class="material-icons">circle</span></div>
-            <div id="paper1"><span class="material-icons">note</span></div>
-            <div id="scissor1"><span class="material-icons">content_cut</span></div>
-        </div>
-        <div id="person">
-            <p><b>
-                    <%= username %>
-                </b></p>
+        <p style="color:white"><b>player1 </b></p>
+        <div id="player1">
             <div id="rock" onclick="rps('1')"><span class="material-icons">circle</span></div>
             <div id="paper" onclick="rps('2')"><span class="material-icons">note</span></div>
             <div id="scissor" onclick="rps('3')"><span class="material-icons">content_cut</span></div>
+        </div>
+        <p style="color:white"><b>player2</b></p>
+        <div id="player2">
+            <div id="rock" ><span class="material-icons">circle</span></div>
+            <div id="paper" ><span class="material-icons">note</span></div>
+            <div id="scissor" ><span class="material-icons">content_cut</span></div>
         </div>
     </div>
 </body>
@@ -201,9 +173,6 @@
     var rock = document.getElementById("rock");
     var paper = document.getElementById("paper");
     var scissor = document.getElementById("scissor");
-    var rock1 = document.getElementById("rock1");
-    var paper1 = document.getElementById("paper1");
-    var scissor1 = document.getElementById("scissor1");
 
     let y = 0;
     let z = 0;
@@ -213,8 +182,8 @@
     var b = "You win";
     var c = "You lose";
 
-    var com = [1, 2, 3];
-    var per = [1, 2, 3];
+    var player1 = [1, 2, 3];
+    var player2 = [1, 2, 3];
 
     function rps(x) {
         console.log("clicked");
@@ -238,12 +207,6 @@
             z++;
             s1.textContent = z;
         }
-    }
-
-    function computer_turn(com) {
-
-        return com[Math.floor(Math.random() * com.length)];
-
     }
 
     function wincheck(cr, pr) {
@@ -335,6 +298,10 @@
 <script>
     const socket = io();
     socket.emit("connection");
+
+    const recipientId = 'admin'; 
+    const message = 'Hello, how are you?';
+    socket.emit('send_message', { recipient: recipientId, content: message });
 </script>
 
 </html>
