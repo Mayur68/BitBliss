@@ -7,14 +7,20 @@ const arcade = require("./routes/arcade");
 const user = require("./routes/user");
 
 const app = express();
-const server = require("http").createServer(app)
-const setupSocket = require('./socket/socket');
+const server = require("http").Server(app);
+const setupSocket = require("./socket/socket");
 setupSocket(server);
 
 //connecting to database and runnning server
 connection((err) => {
   if (!err) {
-    app.listen(3000, () => console.log("running at 3000..."));
+    server.listen(3000, (err) => {
+      if (err) {
+        console.error("Error starting server:", err);
+      } else {
+        console.log("Server is running at 3000...");
+      }
+    });
   }
 });
 
@@ -53,4 +59,3 @@ app.get("/", (req, res) => {
       }
     });
 });
-
