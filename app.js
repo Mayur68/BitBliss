@@ -3,32 +3,21 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const { connection, getdb } = require("./database/database");
+
 const arcade = require("./routes/arcade");
 const user = require("./routes/user");
 
 const app = express();
 const server = require("http").Server(app);
+
+//socket.io
 const setupSocket = require("./socket/socket");
 setupSocket(server);
-
-//connecting to database and runnning server
-connection((err) => {
-  if (!err) {
-    server.listen(3000, (err) => {
-      if (err) {
-        console.error("Error starting server:", err);
-      } else {
-        console.log("Server is running at 3000...");
-      }
-    });
-    db = getdb();
-  }
-});
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use("/:username/", arcade);
+app.use("/", arcade);
 app.use("/", user);
 
 // Set the view engine to EJS
@@ -59,4 +48,18 @@ app.get("/", (req, res) => {
         res.sendFile(__dirname + "/frontend/index.html");
       }
     });
+});
+
+//connecting to database and runnning server
+connection((err) => {
+  if (!err) {
+    server.listen(3000, (err) => {
+      if (err) {
+        console.error("Error starting server:", err);
+      } else {
+        console.log("Server is running at 3000...");
+      }
+    });
+    db = getdb();
+  }
 });

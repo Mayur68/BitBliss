@@ -7,19 +7,26 @@
     <link rel="stylesheet" href="/frontend/global.css">
     <title>TicTacToe-online</title>
     <style>
-        .container{
+        h2 {
+            color: white;
+            margin: auto;
+        }
+
+        .container {
             margin: 100px auto;
             width: 300px;
             background-color: black;
             padding: 10px;
             border-radius: 10px;
         }
-        .row{
+
+        .row {
             display: flex;
             justify-content: space-between;
-            margin: 10px 0  10px;
+            margin: 10px 0 10px;
         }
-        button{
+
+        button {
             width: 90px;
             height: 90px;
             border-radius: 10px;
@@ -29,27 +36,70 @@
 </head>
 
 <body>
-<div class="container">
-<div class="row">
-    <button id="box-0" onclick="clik(0)"></button>
-    <button id="box-1" onclick="clik(1)"></button>
-    <button id="box-2" onclick="clik(2)"></button>
-</div>
-<div class="row">
-    <button id="box-3" onclick="clik(3)"></button>
-    <button id="box-4" onclick="clik(4)"></button>
-    <button id="box-5" onclick="clik(5)"></button>
-</div>
-<div class="row">
-    <button id="box-6" onclick="clik(6)"></button>
-    <button id="box-7" onclick="clik(7)"></button>
-    <button id="box-8" onclick="clik(8)"></button>
-</div>
-</div>
+    <h2>
+        <%= username %>
+    </h2>
+    <input type="text" id="p2" />
+    <div class="container">
+        <div class="row">
+            <button id="box-0" onclick="clik(0)"></button>
+            <button id="box-1" onclick="clik(1)"></button>
+            <button id="box-2" onclick="clik(2)"></button>
+        </div>
+        <div class="row">
+            <button id="box-3" onclick="clik(3)"></button>
+            <button id="box-4" onclick="clik(4)"></button>
+            <button id="box-5" onclick="clik(5)"></button>
+        </div>
+        <div class="row">
+            <button id="box-6" onclick="clik(6)"></button>
+            <button id="box-7" onclick="clik(7)"></button>
+            <button id="box-8" onclick="clik(8)"></button>
+        </div>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        socket.emit("connection");</script>
+        const userId = '<%= username %>';
+        socket.emit("connection");
+        
+        a = document.getElementById("box-0");
+        b = document.getElementById("box-1");
+        c = document.getElementById("box-2");
+        d = document.getElementById("box-3");
+        e = document.getElementById("box-4");
+        f = document.getElementById("box-5");
+        g = document.getElementById("box-6");
+        h = document.getElementById("box-7");
+        i = document.getElementById("box-8");
+
+        let box = [a, b, c, d, e, f, g, h, i];
+        p1Win = false;
+        p2Win = false;
+
+        const player2 = document.getElementById("p2");
+        function clik(x) {
+            if (p1Win == false && p2Win == false) {
+                console.log("inside clik()");
+                if (box[x].innerText == "") {
+                    box[x].innerText = "X";
+
+                    const message = x;
+                    socket.emit('send_message', { recipientId: player2.text, content: message });
+                }
+            }
+        }
+
+        // Receive messages from the server
+        socket.on('new_message', (data) => {
+            const { sender, content } = data;
+            console.log(`New message from ${sender}: ${content}`);
+            if (box[content].innerText == "") {
+                box[content].innerText = "X";
+            }
+        });
+
+    </script>
 </body>
 
 </html>

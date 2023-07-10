@@ -1,22 +1,22 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/Rock-Paper-Scissors", (req, res) => {
+router.get("/:username/Rock-Paper-Scissors", (req, res) => {
   const username = req.params.username;
   res.render("Rock-Paper-Scissors", { username: username });
 });
 
-router.get("/TicTacToe-online", (req, res) => {
+router.get("/:username/TicTacToe-online", (req, res) => {
   const username = req.params.username;
   res.render("tic-tac-toe-online", { username: username });
 });
 
-router.get("/shootDown", (req, res) => {
+router.get("/:username/shootDown", (req, res) => {
   const username = req.params.username;
   res.render("shootDown", { username: username });
 });
 
-router.get("/TicTacToe", (req, res) => {
+router.get("/:username/TicTacToe", (req, res) => {
   const username = req.params.username;
   res.render("ticTacToe", { username: username });
 });
