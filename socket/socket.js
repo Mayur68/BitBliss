@@ -13,23 +13,22 @@ function setupSocket(server) {
       socket.broadcast.emit("new_message", data);
     });
 
-    // Handle incoming messages
+    // Handle incoming messages 
     // socket.on("send_message", (data) => {
     //   const { recipient, content } = data;
-
     //   const recipientId = recipient;
 
-    // Get the sender's and recipient's sockets
-    // const senderSocket = connectedUsers[senderId]?.socket;
-    // const recipientSocket = connectedUsers[recipientId]?.socket;
+    //   // Get the sender's and recipient's sockets
+    //   const senderSocket = connectedUsers[senderId]?.socket;
+    //   const recipientSocket = connectedUsers[recipientId]?.socket;
 
-    // socket.broadcast.to('ID').emit( 'send msg', {somedata : somedata_server} );
-    // if (senderSocket && recipientSocket) {
-    //   // Send the message to the recipient
-    //   console.log("sending....");
-    //   recipientSocket.emit("new_message", { sender: senderId, content });
-    // }
-
+    //   socket.broadcast.to("ID").emit("send msg", { somedata: somedata_server });
+    //   if (senderSocket && recipientSocket) {
+    //     // Send the message to the recipient
+    //     console.log("sending....");
+    //     recipientSocket.emit("new_message", { sender: senderId, content });
+    //   }
+    // });
     socket.on("disconnect", () => {
       console.log("A user disconnected.....");
     });
