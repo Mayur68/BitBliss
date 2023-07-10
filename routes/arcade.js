@@ -21,7 +21,7 @@ router.get("/:username/TicTacToe", (req, res) => {
   res.render("ticTacToe", { username: username });
 });
 
-router.get("/chess", (req, res) => {
+router.get("/:username/chess", (req, res) => {
   const username = req.params.username;
   res.render("chess", { username: username });
 });
