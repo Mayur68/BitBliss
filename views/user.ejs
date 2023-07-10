@@ -80,6 +80,7 @@
         <div class="t-t-t in-game" onclick="TicTacToe_online()">TicTacToe-online</div>
         <div class="t-t-t in-game" onclick="shootDown()">shootDown</div>
         <div class="t-t-t in-game" onclick="t_t_t()">Tic Tac Toe</div>
+        <div class="t-t-t in-game" onclick="chess()">chess</div>
     </div>
     <div class="friends" id="friends">
         <ul>
@@ -99,9 +100,9 @@
         function t_t_t() {
             window.location.href = "/<%= username %>/TicTacToe";
         }
-        function t_t_t() {
-            window.location.href = "/<%= username %>/chess";
-        }
+        function chess() {
+        window.location.href = "/<%= username %>/chess";
+    }
     </script>
 
 </body>
