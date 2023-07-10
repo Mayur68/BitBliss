@@ -19,7 +19,7 @@
             border-radius: 8px;
             display: flex;
             justify-content: space-between;
-            width: 1200px;
+            width: 90%;
             height: 500px;
         }
 
@@ -48,6 +48,33 @@
             border-radius: 10px;
             border: none;
             margin: 10px 10px 10px 10px;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .container {
+                margin: 40px auto;
+                background-color: rgb(46, 44, 44);
+                padding: 10px;
+                border-radius: 8px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                width: 90%;
+                height: 500%;
+            }
+
+            .scoreBoard {
+                padding: 10px;
+                color: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            .gameBoard {
+                padding: 10px;
+                margin: auto;
+            }
         }
     </style>
 </head>
@@ -157,7 +184,7 @@
                 // score_1.innerText = ++scoreP1;
                 attempt++;
                 attempts.innerText = attempt;
-               
+
             } else if (box[x].innerText == "O" && box[y].innerText == "O" && box[z].innerText == "O") {
                 //checks left to right diag line for bot
                 bWin = true;
