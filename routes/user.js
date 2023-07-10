@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 
-const { connection, getdb } = require("../database/database");
+const { getdb } = require("../database/database");
 db = getdb();
 
 // Route for the sign-up page
@@ -119,6 +119,22 @@ router.post("/logout", (req, res) => {
   res.sendStatus(200);
 });
 
+//view collection at `/data`
+router.get("/data", (req, res) => {
+  let accounts = [];
+
+  db.collection("accounts")
+    .find()
+    .toArray()
+    .then((accounts) => {
+      res.status(200).json(accounts);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    });
+});
+
 //user profile page
 router.get("/:username", (req, res) => {
   const username = req.params.username;
@@ -159,17 +175,5 @@ function generateSession() {
       });
   });
 }
-
-//view collection at `/data`
-router.get("/data", (req, res) => {
-  let accounts = [];
-
-  db.collection("accounts")
-    .find()
-    .forEach((account) => accounts.push(account))
-    .then(() => {
-      res.status(200).json(accounts);
-    });
-});
 
 module.exports = router;

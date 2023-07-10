@@ -77,6 +77,7 @@
     </header>
     <div class="games">
         <div class="t-t-t in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
+        <div class="t-t-t in-game" onclick="TicTacToe_online()">TicTacToe-online</div>
         <div class="t-t-t in-game" onclick="shootDown()">shootDown</div>
         <div class="t-t-t in-game" onclick="t_t_t()">Tic Tac Toe</div>
         <div class="t-t-t in-game" onclick="chess()">chess</div>
@@ -84,27 +85,26 @@
     <div class="friends" id="friends">
         <ul>
             <li>1</li>
-            <li>1</li>
-            <li>1</li>
-            <li>1</li>
-            <li>1</li>
-            <li>1</li>
         </ul>
     </div>
-</body>
-<script>
-    function r_p_c() {
-        window.location.href = "/<%= username %>/Rock-Paper-Scissors";
-    }
-    function shootDown() {
-        window.location.href = "/<%= username %>/shootDown";
-    }
-    function t_t_t() {
-        window.location.href = "/<%= username %>/TicTacToe";
-    }
-    function chess() {
+    <script>
+        function r_p_c() {
+            window.location.href = "/<%= username %>/Rock-Paper-Scissors";
+        }
+        function TicTacToe_online() {
+            window.location.href = "/<%= username %>/TicTacToe-online";
+        }
+        function shootDown() {
+            window.location.href = "/<%= username %>/shootDown";
+        }
+        function t_t_t() {
+            window.location.href = "/<%= username %>/TicTacToe";
+        }
+        function chess() {
         window.location.href = "/<%= username %>/chess";
     }
-</script>
+    </script>
+
+</body>
 
 </html>
