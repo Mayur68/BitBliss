@@ -7,23 +7,39 @@
     <link rel="stylesheet" href="/frontend/global.css">
     <title>TicTacToe-online</title>
     <style>
-        h2 {
+        h1 {
             color: white;
-            margin: auto;
+            text-align: center;
         }
 
         .container {
-            margin: 100px auto;
-            width: 300px;
-            background-color: black;
+            margin: 40px auto;
+            background-color: rgb(46, 44, 44);
             padding: 10px;
-            border-radius: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            width: 1200px;
+            height: 500px;
+        }
+
+        .scoreBoard {
+            padding: 10px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .gameBoard {
+            padding: 10px;
+            margin: auto;
         }
 
         .row {
             display: flex;
             justify-content: space-between;
-            margin: 10px 0 10px;
+            margin: 10px 10px 10px 10px;
         }
 
         button {
@@ -31,38 +47,53 @@
             height: 90px;
             border-radius: 10px;
             border: none;
+            margin: 10px 10px 10px 10px;
         }
     </style>
 </head>
 
 <body>
-    <h2>
-        <%= username %>
-    </h2>
+    <h1>Tic Tac Toe</h1>
     <input type="text" id="p2" />
     <div class="container">
-        <div class="row">
-            <button id="box-0" onclick="clik(0)"></button>
-            <button id="box-1" onclick="clik(1)"></button>
-            <button id="box-2" onclick="clik(2)"></button>
+        <div class="scoreBoard">
+            <label>Attempts :</label><label id="attempts"></label>
+            <label id="result"></label>
+            <h2>
+                <%= username %> :
+            </h2>
+            <label id="score-1"></label>
+            <h2>
+                player2 :
+            </h2>
+            <label id="score-2"></label>
         </div>
-        <div class="row">
-            <button id="box-3" onclick="clik(3)"></button>
-            <button id="box-4" onclick="clik(4)"></button>
-            <button id="box-5" onclick="clik(5)"></button>
-        </div>
-        <div class="row">
-            <button id="box-6" onclick="clik(6)"></button>
-            <button id="box-7" onclick="clik(7)"></button>
-            <button id="box-8" onclick="clik(8)"></button>
+        <div class="gameBoard">
+            <div class="row">
+                <button id="box-0" onclick="clik(0)"></button>
+                <button id="box-1" onclick="clik(1)"></button>
+                <button id="box-2" onclick="clik(2)"></button>
+            </div>
+            <div class="row">
+                <button id="box-3" onclick="clik(3)"></button>
+                <button id="box-4" onclick="clik(4)"></button>
+                <button id="box-5" onclick="clik(5)"></button>
+            </div>
+            <div class="row">
+                <button id="box-6" onclick="clik(6)"></button>
+                <button id="box-7" onclick="clik(7)"></button>
+                <button id="box-8" onclick="clik(8)"></button>
+            </div>
         </div>
     </div>
+
+
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
         const userId = '<%= username %>';
         socket.emit("connection");
-        
+
         a = document.getElementById("box-0");
         b = document.getElementById("box-1");
         c = document.getElementById("box-2");
@@ -76,28 +107,76 @@
         let box = [a, b, c, d, e, f, g, h, i];
         p1Win = false;
         p2Win = false;
+        cliked = false;
+        toss = 'X';
+        attempt = 0;
+        scoreP1 = 0;
+        scoreP2 = 0;
 
         const player2 = document.getElementById("p2");
+        const attempts = document.getElementById("attempts");
+        const result = document.getElementById("result");
+        const score_1 = document.getElementById("score-1");
+        const score_2 = document.getElementById("score-2");
+
         function clik(x) {
-            if (p1Win == false && p2Win == false) {
+            if (p1Win == false && p2Win == false && cliked == false) {
                 console.log("inside clik()");
                 if (box[x].innerText == "") {
-                    box[x].innerText = "X";
-
+                    box[x].innerText = toss;
+                    cliked = true;
+                    winCheck();
                     const message = x;
-                    socket.emit('send_message', { recipientId: player2.text, content: message });
+                    socket.emit('send_message', { recipientId: player2.text, content1: message, content2: toss });
                 }
             }
         }
 
         // Receive messages from the server
         socket.on('new_message', (data) => {
-            const { sender, content } = data;
-            console.log(`New message from ${sender}: ${content}`);
-            if (box[content].innerText == "") {
-                box[content].innerText = "X";
+            const { sender, content1, content2 } = data;
+            console.log(`New message from ${sender}: ${content1}`);
+            if (box[content1].innerText == "") {
+                box[content1].innerText = content2;
+                cliked = false;
+                winCheck();
+            }
+            if (content2 == 'X') {
+                toss = 'O'
+            } else {
+                toss = 'X'
             }
         });
+
+        function checkWin(x, y, z) {
+            if (box[x].innerText == "X" && box[y].innerText == "X" && box[z].innerText == "X") {
+                //checks left to right diag line for player
+                console.log("You WIN");
+                pWin = true;
+                result.innerText = "X Wins";
+                // score_1.innerText = ++scoreP1;
+                attempt++;
+                attempts.innerText = attempt;
+               
+            } else if (box[x].innerText == "O" && box[y].innerText == "O" && box[z].innerText == "O") {
+                //checks left to right diag line for bot
+                bWin = true;
+                result.innerText = "O Wins";
+                attempt++;
+                attempts.innerText = attempt;
+            }
+        }
+
+        function winCheck() {
+            checkWin(0, 4, 8);
+            checkWin(1, 4, 7);
+            checkWin(0, 1, 2);
+            checkWin(2, 4, 6);
+            checkWin(2, 5, 8);
+            checkWin(3, 4, 5);
+            checkWin(0, 3, 6);
+            checkWin(6, 7, 8);
+        }
 
     </script>
 </body>
