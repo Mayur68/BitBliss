@@ -21,4 +21,9 @@ router.get("/TicTacToe", (req, res) => {
   res.render("ticTacToe", { username: username });
 });
 
+router.get("/chess", (req, res) => {
+  const username = req.params.username;
+  res.render("chess", { username: username });
+});
+
 module.exports = router;
