@@ -20,22 +20,15 @@
         display: flex;
         justify-content: space-between;
         width: 90%;
-        height: 50%;;
-        /* overflow-x: scroll; */
+        height: 50%;
+        ;
         margin: 5% 5% 5%;
-        /* scroll-behavior: smooth; */
     }
-
-
-    /* .games::-webkit-scrollbar {
-        display: none;
-    } */
 
     .in-game {
         width: 40%;
         height: 250px;
         margin-left: 2%;
-        /* flex-shrink: 0; */
     }
 
     .t-t-t {
@@ -48,17 +41,16 @@
         .games {
             display: flex;
             justify-content: space-between;
-            overflow-x: scroll;
-            margin: 12% 1% 1%;
-            -webkit-overflow-scrolling: scroll;
+            width: 90%;
+            height: 50%;
+            margin: 5% 5% 5%;
 
         }
 
         .in-game {
-            width: 400px;
-            height: 500px;
-            margin-left: 1%;
-            flex-shrink: 0;
+            width: 40%;
+            height: 250px;
+            margin-left: 2%;
         }
     }
 </style>
@@ -103,8 +95,8 @@
             window.location.href = "/<%= username %>/TicTacToe";
         }
         function chess() {
-        window.location.href = "/<%= username %>/chess";
-    }
+            window.location.href = "/<%= username %>/chess";
+        }
     </script>
 
 </body>
