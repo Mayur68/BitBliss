@@ -29,28 +29,43 @@
         width: 40%;
         height: 250px;
         margin-left: 2%;
+        background-color: var(--main-bg-color-2);
+        border-radius: 7px;
+        cursor: pointer;
     }
 
-    .t-t-t {
+    .friends {
         background-color: var(--main-bg-color-2);
-        border-radius: 20px;
-        cursor: pointer;
+        width: 10%;
+        height: max-content;
+        border-radius: 4px;
+        margin-left: 10%;
+        padding-left: 2%;
     }
 
     @media only screen and (max-width: 768px) {
         .games {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             width: 90%;
-            height: 50%;
-            margin: 5% 5% 5%;
+            height: 40%;
+            margin: auto;
 
         }
 
         .in-game {
-            width: 40%;
+            width: 90%;
             height: 250px;
-            margin-left: 2%;
+            margin: 2% auto;
+        }
+
+        .friends {
+            background-color: var(--main-bg-color-2);
+            width: 80%;
+            height: max-content;
+            border-radius: 4px;
+            margin-left: 10%;
+            padding-left: 2%;
         }
     }
 </style>
@@ -70,15 +85,18 @@
         </nav>
     </header>
     <div class="games">
-        <div class="t-t-t in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
-        <div class="t-t-t in-game" onclick="TicTacToe_online()">TicTacToe-online</div>
-        <div class="t-t-t in-game" onclick="shootDown()">shootDown</div>
-        <div class="t-t-t in-game" onclick="t_t_t()">Tic Tac Toe</div>
-        <div class="t-t-t in-game" onclick="chess()">chess</div>
+        <div class="in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
+        <div class="in-game" onclick="TicTacToe_online()">TicTacToe-online</div>
+        <div class="in-game" onclick="shootDown()">shootDown</div>
+        <div class="in-game" onclick="t_t_t()">Tic Tac Toe</div>
+        <div class="in-game" onclick="chess()">chess</div>
     </div>
     <div class="friends" id="friends">
+        <label>Friends:</label>
         <ul>
-            <li>1</li>
+            <li>jithesh</li>
+            <li>vijeth</li>
+            <li>mayur</li>
         </ul>
     </div>
     <script>
