@@ -18,7 +18,7 @@ router.get("/login", (req, res) => {
 //login details
 router.post("/login", async (req, res) => {
   const { clientusername, clientpassword } = req.body;
-  const expirationTime = 4320 * 30 * 30 * 1000;
+  const expirationTime = 24 * 60 * 60 * 1000;
   const expirationDate = new Date(Date.now() + expirationTime);
   db.collection("accounts")
     .find({
@@ -59,7 +59,7 @@ router.post("/sign-up", async (req, res) => {
   const { clientusername, clientpassword, con_password } = req.body;
   const sessionNo = await generateSession();
   const sessionToken = sessionNo;
-  const expirationTime = 4320 * 30 * 30 * 1000;
+  const expirationTime = 24 * 60 * 60 * 1000;
   const expirationDate = new Date(Date.now() + expirationTime);
   if (clientpassword === con_password) {
     db.collection("accounts")

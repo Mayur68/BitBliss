@@ -1,36 +1,77 @@
 const socketIO = require("socket.io");
-
-// Store user information
-const connectedUsers = {};
+const { getdb } = require("../database/database");
+db = getdb();
 
 function setupSocket(server) {
   const io = socketIO(server);
 
   io.on("connection", (socket) => {
-    console.log("A user connected.");
-
-    socket.on("send_message", (data) => {
-      socket.broadcast.emit("new_message", data);
+    socket.on("authenticate", (data) => {
+      const { userID } = data;
+      socket.userID = userID;
+      db.collection("connectedUsers")
+        .findOne({ userID: userID })
+        .then((result) => {
+          if (result) {
+            console.log(socket.userID, "already connected.");
+          } else {
+            db.collection("connectedUsers")
+              .insertOne({ userID: userID })
+              .then(() => {
+                console.log(socket.userID, "connected.");
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     });
 
-    // Handle incoming messages 
-    // socket.on("send_message", (data) => {
-    //   const { recipient, content } = data;
-    //   const recipientId = recipient;
+    socket.on("send_message", async (data) => {
+      const { senderID, recipientID, content1, content2 } = data;
 
-    //   // Get the sender's and recipient's sockets
-    //   const senderSocket = connectedUsers[senderId]?.socket;
-    //   const recipientSocket = connectedUsers[recipientId]?.socket;
+      try {
+        const senderUser = await db
+          .collection("connectedUsers")
+          .findOne({ userID: senderID });
+        const recipientUser = await db
+          .collection("connectedUsers")
+          .findOne({ userID: recipientID });
 
-    //   socket.broadcast.to("ID").emit("send msg", { somedata: somedata_server });
-    //   if (senderSocket && recipientSocket) {
-    //     // Send the message to the recipient
-    //     console.log("sending....");
-    //     recipientSocket.emit("new_message", { sender: senderId, content });
-    //   }
-    // });
+        if (senderUser && recipientUser) {
+          const senderSocket = senderUser.socket;
+          const recipientSocket = recipientUser.socket;
+
+          if (senderSocket && recipientSocket) {
+            // Send the message to the recipient
+            recipientSocket.emit("new_message", {
+              senderID,
+              content1,
+              content2,
+            });
+          }
+        } else {
+          console.log(
+            "Sender or recipient not found in the connectedUsers collection."
+          );
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    });
+
     socket.on("disconnect", () => {
-      console.log("A user disconnected.....");
+      db.collection("connectedUsers")
+        .deleteOne({ userID: socket.userID })
+        .then(() => {
+          console.log(socket.userID, "disconnected.....");
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     });
   });
 }
