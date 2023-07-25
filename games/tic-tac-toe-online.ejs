@@ -169,7 +169,7 @@
         // Receive messages from the server
         socket.on('new_message', (data) => {
             const { senderID, content1, content2 } = data;
-            console.log(`New message from ${sender}: ${content1}`);
+            console.log(`New message from ${senderID}: ${content1} :${content2}`);
             if (box[content1].innerText == "") {
                 box[content1].innerText = content2;
                 cliked = false;

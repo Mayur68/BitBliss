@@ -47,7 +47,7 @@ function setupSocket(server) {
 
           if (senderSocket && recipientSocket) {
             // Send the message to the recipient
-            recipientSocket.emit("new_message", {
+            io.to(recipientSocket.id).emit("new_message", {
               senderID,
               content1,
               content2,
