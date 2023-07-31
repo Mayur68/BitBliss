@@ -121,6 +121,7 @@
     <script>
         const socket = io();
         socket.emit("connection");
+        console.log('Connected to server. Socket ID:', socket.id);
         socket.emit("authenticate", { userID: "<%= username %>" });
 
         a = document.getElementById("box-0");

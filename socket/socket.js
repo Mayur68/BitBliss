@@ -6,9 +6,11 @@ function setupSocket(server) {
   const io = socketIO(server);
 
   io.on("connection", (socket) => {
+    console.log("New client connected. Socket ID:", socket.id);
     socket.on("authenticate", (data) => {
       const { userID } = data;
       socket.userID = userID;
+      console.log(socket);
       db.collection("connectedUsers")
         .findOne({ userID: userID })
         .then((result) => {
@@ -16,7 +18,7 @@ function setupSocket(server) {
             console.log(socket.userID, "already connected.");
           } else {
             db.collection("connectedUsers")
-              .insertOne({ userID: userID })
+              .insertOne({ userID: userID, socket: socket.id })
               .then(() => {
                 console.log(socket.userID, "connected.");
               })
@@ -45,9 +47,11 @@ function setupSocket(server) {
           const senderSocket = senderUser.socket;
           const recipientSocket = recipientUser.socket;
 
+          console.log(senderSocket);
+
           if (senderSocket && recipientSocket) {
             // Send the message to the recipient
-            io.to(recipientSocket.id).emit("new_message", {
+            io.to(recipientSocket).emit("new_message", {
               senderID,
               content1,
               content2,
