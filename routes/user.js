@@ -138,11 +138,11 @@ router.get("/data", (req, res) => {
 //user profile page
 router.get("/:username", (req, res) => {
   const username = req.params.username;
-  const sessionNo = parseInt(req.cookies.sessionToken);
+  const sessionString = req.cookies.sessionToken;
   db.collection("accounts")
     .find({
       username: username,
-      session: sessionNo,
+      session: sessionString,
     })
     .toArray()
     .then((result) => {
@@ -157,16 +157,20 @@ router.get("/:username", (req, res) => {
 //genetare session
 function generateSession() {
   return new Promise((resolve, reject) => {
-    let x = 1111;
+    const characters ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let sessionString = "";
+    for (let i = 0; i < 20; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      sessionString += characters.charAt(randomIndex);
+    }
     db.collection("accounts")
-      .find({ session: x })
+      .find({ session: sessionString })
       .toArray()
       .then((result) => {
         if (result.length > 0) {
-          x++;
-          resolve(x);
+          resolve(sessionString);
         } else {
-          resolve(x);
+          resolve(sessionString);
         }
       })
       .catch((error) => {

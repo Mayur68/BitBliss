@@ -30,7 +30,7 @@ app.set("views", [
 
 //root
 app.get("/", (req, res) => {
-  const sessionNo = parseInt(req.cookies.sessionToken);
+  const sessionString = req.cookies.sessionToken;
   db.collection("accounts")
     .find()
     .toArray()
@@ -38,8 +38,10 @@ app.get("/", (req, res) => {
       if (result.length > 0) {
         let i;
         for (i = 0; i < result.length; i++) {
-          if (result[i].session === sessionNo) {
-            res.render("user", { username: result[i].username });
+          let username = result[i].username;
+          if (result[i].session === sessionString) {
+          console.log("logined user : " + username)
+            res.render("user", { username: username });
           } else {
             res.sendFile(__dirname + "/frontend/index.html");
           }
