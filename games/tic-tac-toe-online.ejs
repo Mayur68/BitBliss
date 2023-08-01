@@ -167,24 +167,14 @@
             if (scriptToRemove1) {
                 scriptToRemove1.remove();
             }
+            
             document.getElementById("container").innerHTML = `
-            <div class="gameBoard">
-                <h1>Tic Tac Toe</h1>
-                <div class="row">
-                    <button id="box-0" class="boardBox"></button>
-                    <button id="box-1" class="boardBox"></button>
-                    <button id="box-2" class="boardBox"></button>
-                </div>
-                <div class="row">
-                    <button id="box-3" class="boardBox"></button>
-                    <button id="box-4" class="boardBox"></button>
-                    <button id="box-5" class="boardBox"></button>
-                </div>
-                <sdiv class="row">
-                    <button id="box-6" class="boardBox"></button>
-                    <button id="box-7" class="boardBox"></button>
-                    <button id="box-8" class="boardBox"></button>
-                </div>
+            <div class="friends">
+                <h1>Friends</h1>
+                <ul>
+                    <li></li>
+                </ul>
+                
             </div>`
             const script = document.createElement("script");
             script.src = "../frontend/tictactoeonline.js";
