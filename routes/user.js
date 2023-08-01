@@ -29,7 +29,6 @@ router.post("/login", async (req, res) => {
     .then((result) => {
       if (result.length > 0) {
         const sessionToken = result[0].session;
-        console.log(result);
         res.cookie("sessionToken", sessionToken, {
           expires: expirationDate,
           httpOnly: true,
@@ -157,7 +156,7 @@ router.get("/:username", (req, res) => {
 //genetare session
 function generateSession() {
   return new Promise((resolve, reject) => {
-    const characters ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let sessionString = "";
     for (let i = 0; i < 20; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
@@ -181,3 +180,55 @@ function generateSession() {
 }
 
 module.exports = router;
+
+router.post("/addFriend", (req, res) => {
+  const { userId, friendId } = req.body;
+  if (userId) {
+    db.collection("accounts")
+      .findOne({
+        username: userId, friendId
+      })
+      .then((result) => {
+        if (result > 0 && result < 2) {
+          res.status(401).json({
+            status: "error",
+            message: "account already exists!",
+          });
+        } else {
+          db.collection("accounts")
+            .insertOne({
+              username: clientusername,
+            })
+            .then(() => {
+              res.cookie("sessionToken", sessionToken, {
+                expires: expirationDate,
+                httpOnly: true,
+              });
+              res.json({
+                status: "success",
+                message: "Login successful!",
+              });
+            })
+            .catch((err) => {
+              console.error(err);
+              res.status(500).json({
+                status: "error",
+                message: "Internal server error",
+              });
+            });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).json({
+          status: "error",
+          message: "Internal server error",
+        });
+      });
+  } else {
+    res.status(401).json({
+      status: "error",
+      message: "Passwords do not match",
+    });
+  }
+});

@@ -79,7 +79,7 @@
         <nav>
             <ul>
                 <li><a href="/<%= username %>"><span class=" material-symbols-outlined"
-                        style="color: white;">account_circle</span>
+                            style="color: white;">account_circle</span>
                         <%= username %>
                     </a></li>
             </ul>
@@ -90,6 +90,10 @@
         <div class="in-game" onclick="TicTacToe_online()">TicTacToe-online</div>
         <div class="in-game" onclick="shootDown()">shootDown</div>
         <div class="in-game" onclick="chess()">chess</div>
+    </div>
+    <div>
+        <input type="text" id="addFriend" placeholder="enter user ID" />
+        <button onclick="addFriend()">Add</button>
     </div>
     <script>
         function r_p_c() {
@@ -103,6 +107,35 @@
         }
         function chess() {
             window.location.href = "/<%= username %>/chess";
+        }
+
+        function addFriend() {
+            const friendId = document.getElementById("addFriend").value
+            const userId = "/<%= username %>"
+            fetch("/addFriend", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userId,
+                    friendId
+                }),
+            })
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.status === "success") {
+                        console.log("added")
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                    alert("error");
+                });
         }
     </script>
 

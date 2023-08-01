@@ -40,7 +40,6 @@ app.get("/", (req, res) => {
         for (i = 0; i < result.length; i++) {
           let username = result[i].username;
           if (result[i].session === sessionString) {
-          console.log("logined user : " + username)
             res.render("user", { username: username });
           } else {
             res.sendFile(__dirname + "/frontend/index.html");
