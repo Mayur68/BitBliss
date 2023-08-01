@@ -1,12 +1,12 @@
-let a = document.getElementById("box1-0");
-let b = document.getElementById("box1-1");
-let c = document.getElementById("box1-2");
-let d = document.getElementById("box1-3");
-let e = document.getElementById("box1-4");
-let f = document.getElementById("box1-5");
-let g = document.getElementById("box1-6");
-let h = document.getElementById("box1-7");
-let i = document.getElementById("box1-8");
+ a = document.getElementById("box1-0");
+ b = document.getElementById("box1-1");
+ c = document.getElementById("box1-2");
+ d = document.getElementById("box1-3");
+ e = document.getElementById("box1-4");
+ f = document.getElementById("box1-5");
+ g = document.getElementById("box1-6");
+ h = document.getElementById("box1-7");
+ i = document.getElementById("box1-8");
 
 // Check if any element is null before proceeding
 if (a && b && c && d && e && f && g && h && i) {

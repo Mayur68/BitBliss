@@ -16,11 +16,6 @@ router.get("/:username/shootDown", (req, res) => {
   res.render("shootDown", { username: username });
 });
 
-router.get("/:username/TicTacToe", (req, res) => {
-  const username = req.params.username;
-  res.render("ticTacToe", { username: username });
-});
-
 router.get("/:username/chess", (req, res) => {
   const username = req.params.username;
   res.render("chess", { username: username });
