@@ -10,17 +10,10 @@ let i = document.getElementById("box1-8");
 
 // Check if any element is null before proceeding
 if (a && b && c && d && e && f && g && h && i) {
-    let box1 = [a, b, c, d, e, f, g, h, i];
-
-    tr = document.querySelector("#retry");
-    let req = true;
-    pstat = document.getElementById("pstat");
-    bstat = document.getElementById("bstat");
+    box1 = [a, b, c, d, e, f, g, h, i];
+    let req = false;
     pWin = false;
     bWin = false;
-    pStat = 0;
-    bStat = 0;
-    let msg = document.querySelector("#displayMessage");
 
     // Attach event listeners to buttons here
     for (let x = 0; x < box1.length; x++) {
@@ -31,10 +24,10 @@ if (a && b && c && d && e && f && g && h && i) {
 } else {
     console.error("One or more elements with IDs 'box1-0' to 'box1-8' were not found.");
 }
+
 function clik1(x) {
     if (pWin == false && bWin == false) {
         if (box1[x].innerText == "") {
-            console.log("inside if");
             box1[x].innerText = "X";
             checkWin();
             if (pWin == false && bWin == false) {
@@ -46,8 +39,6 @@ function clik1(x) {
     }
 }
 
-
-
 function botValue() {
     console.log("inside botValue()");
     req = true;
@@ -58,13 +49,9 @@ function botValue() {
 function mcheckWin(x, y, z) {
     if (box1[x].innerText == "X" && box1[y].innerText == "X" && box1[z].innerText == "X") {
         //checks left to right diag line for player
-        console.log("You WIN");
         pWin = true;
-        msg.textContent = "You Win ";
-        msg.style.color = "blue";
-        pStat++;
-        pstat.textContent = pStat;
-        retry();
+        document.getElementById("container").innerHTML = `<div class="result"><h2>You WIN</h2>
+        <button id="retry" onclick="resetValues()">Try Again?</button></div>`
     } else if (
         box1[x].innerText == "O" &&
         box1[y].innerText == "O" &&
@@ -72,24 +59,12 @@ function mcheckWin(x, y, z) {
     ) {
         //checks left to right diag line for bot
         bWin = true;
-        bStat++;
-        bstat.textContent = bStat;
-        msg.textContent = "You lose";
-        msg.style.color = "Red";
-
-        retry();
+        document.getElementById("container").innerHTML = `<div class="result"><h2>You Lose</h2>
+        <button id="retry" onclick="resetValues()">Try Again?</button></div>`
     }
 }
 
 function checkWin() {
-    mcheckWin(0, 4, 8);
-    mcheckWin(1, 4, 7);
-    mcheckWin(0, 1, 2);
-    mcheckWin(2, 4, 6);
-    mcheckWin(2, 5, 8);
-    mcheckWin(3, 4, 5);
-    mcheckWin(0, 3, 6);
-    mcheckWin(6, 7, 8);
     if (
         box1[0].innerText != "" &&
         box1[1].innerText != "" &&
@@ -101,27 +76,22 @@ function checkWin() {
         box1[7].innerText != "" &&
         box1[8].innerText != ""
     ) {
-        retry();
+        document.getElementById("container").innerHTML = `<div><button class="result" id="retry" onclick="resetValues()">Try Again?</button></div>`
     }
-}
-
-function retry() {
-    tr.style.color = "black";
-    tr.style.backgroundColor = "white"; //for background-color write in camel case without'-'
-    tr.style.border = "black 3px solid";
+    mcheckWin(0, 4, 8);
+    mcheckWin(1, 4, 7);
+    mcheckWin(0, 1, 2);
+    mcheckWin(2, 4, 6);
+    mcheckWin(2, 5, 8);
+    mcheckWin(3, 4, 5);
+    mcheckWin(0, 3, 6);
+    mcheckWin(6, 7, 8);
 }
 
 function resetValues() {
     bWin = false;
     pWin = false;
-    msg.textContent = "";
-
-    for (i = 0; i < box1.length; i++) {
-        box1[i].innerText = "";
-    }
-    tr.style.color = "transparent";
-    tr.style.backgroundColor = "transparent";
-    tr.style.border = "transparent";
+    playWithBot()
 }
 
 function subValue(i, j, k) {
@@ -182,14 +152,8 @@ function mainValue() {
     if (req === true) {
         a = Math.floor(Math.random() * 9);
         {
-            if (box[a].innerText == "") {
-                console.log(
-                    "inside bot value if condition for random" +
-                    "valueof box[" +
-                    a +
-                    "] is O"
-                );
-                box[a].innerText = "O";
+            if (box1[a].innerText == "") {
+                box1[a].innerText = "O";
                 checkWin();
             } else botValue();
         }
@@ -198,25 +162,25 @@ function mainValue() {
 
 function xValue(i, j, k) {
     if (req == true) {
-        if (box[i].innerText == "X" && box[j].innerText == "X") {
-            if (box[k].innerText == "") {
-                box[k].innerText = "O";
+        if (box1[i].innerText == "X" && box1[j].innerText == "X") {
+            if (box1[k].innerText == "") {
+                box1[k].innerText = "O";
                 req = false;
             }
         }
     }
     if (req == true) {
-        if (box[j].innerText == "X" && box[k].innerText == "X") {
-            if (box[i].innerText == "") {
-                box[i].innerText = "O";
+        if (box1[j].innerText == "X" && box1[k].innerText == "X") {
+            if (box1[i].innerText == "") {
+                box1[i].innerText = "O";
                 req = false;
             }
         }
     }
     if (req == true) {
-        if (box[i].innerText == "X" && box[k].innerText == "X") {
-            if (box[j].innerText == "") {
-                box[j].innerText = "O";
+        if (box1[i].innerText == "X" && box1[k].innerText == "X") {
+            if (box1[j].innerText == "") {
+                box1[j].innerText = "O";
                 req = false;
             }
         }
