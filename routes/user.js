@@ -57,8 +57,8 @@ router.post("/login", async (req, res) => {
 //checking signup details
 router.post("/sign-up", async (req, res) => {
   const { clientusername, clientpassword, con_password } = req.body;
-  const sessionNo = await generateSession();
-  const sessionToken = sessionNo;
+  const sessionString = await generateSession();
+  const sessionToken = sessionString;
   const expirationTime = 24 * 60 * 60 * 1000;
   const expirationDate = new Date(Date.now() + expirationTime);
   if (clientpassword === con_password) {
@@ -77,7 +77,7 @@ router.post("/sign-up", async (req, res) => {
             .insertOne({
               username: clientusername,
               password: clientpassword,
-              session: sessionNo,
+              session: sessionString,
             })
             .then(() => {
               res.cookie("sessionToken", sessionToken, {
