@@ -113,15 +113,8 @@
     <script>
         function playWithBot() {
             document.getElementById("container").innerHTML = `
-            <div>
-                <p id="displayMessage"></p>
-    <p>you</p>
-    <p id="pstat" class="stat"></p>
-    <p>Computer</p>
-    <p id="bstat" class="stat"></p>
-    <button id="retry" onclick="resetValues()">Retry??</button></div>
             <div class="gameBoard">
-    <h1>Tic Tac Toe</h1>
+            <h1>Tic Tac Toe</h1>
             <div class="row">
                 <button id="box1-0" class="boardBox" onclick="clik1(0)"></button>
                 <button id="box1-1" class="boardBox" onclick="clik1(1)"></button>
@@ -156,8 +149,6 @@
         let req = true;
         pstat = document.getElementById("pstat");
         bstat = document.getElementById("bstat");
-        pstat.textContent = "0";
-        bstat.textContent = "0";
         pWin = false;
         bWin = false;
         pStat = 0;
@@ -169,7 +160,7 @@
 
         function clik1(x) {
             if (pWin == false && bWin == false) {
-                console.log("inside clik()");
+                console.log("inside clik()"+box1[x].innerText);
                 if (box1[x].innerText == "") {
                     console.log("inside if");
                     box1[x].innerText = "X";
@@ -362,6 +353,25 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         function playWithFriends() {
+            document.getElementById("container").innerHTML = `
+            <div class="gameBoard">
+            <h1>Tic Tac Toe</h1>
+            <div class="row">
+                <button id="box-0" class="boardBox" onclick="clik(0)"></button>
+                <button id="box-1" class="boardBox" onclick="clik(1)"></button>
+                <button id="box-2" class="boardBox" onclick="clik(2)"></button>
+            </div>
+            <div class="row">
+                <button id="box-3" class="boardBox" onclick="clik(3)"></button>
+                <button id="box-4" class="boardBox" onclick="clik(4)"></button>
+                <button id="box-5" class="boardBox" onclick="clik(5)"></button>
+            </div>
+            <div class="row">
+                <button id="box-6" class="boardBox" onclick="clik(6)"></button>
+                <button id="box-7" class="boardBox" onclick="clik(7)"></button>
+                <button id="box-8" class="boardBox" onclick="clik(8)"></button>
+            </div>
+        </div>`
             const socket = io();
             socket.emit("connection");
             console.log('Connected to server. Socket ID:', socket.id);
@@ -392,10 +402,6 @@
             const result = document.getElementById("result");
             const score_1 = document.getElementById("score-1");
             const score_2 = document.getElementById("score-2");
-
-            function aclick() {
-                players = player2.value;
-            }
 
             function clik(x) {
                 if (p1Win == false && p2Win == false && cliked == false) {
