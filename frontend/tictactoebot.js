@@ -76,16 +76,20 @@ function checkWin() {
         box1[7].innerText != "" &&
         box1[8].innerText != ""
     ) {
-        document.getElementById("container").innerHTML = `<div><button class="result" id="retry" onclick="resetValues()">Try Again?</button></div>`
+        pWin = true;
+        bWin = true;
+        document.getElementById("container").innerHTML = `<div class="result"><button id="retry" onclick="resetValues()">Try Again?</button></div>`
+    } else {
+        mcheckWin(0, 4, 8);
+        mcheckWin(1, 4, 7);
+        mcheckWin(0, 1, 2);
+        mcheckWin(2, 4, 6);
+        mcheckWin(2, 5, 8);
+        mcheckWin(3, 4, 5);
+        mcheckWin(0, 3, 6);
+        mcheckWin(6, 7, 8);
     }
-    mcheckWin(0, 4, 8);
-    mcheckWin(1, 4, 7);
-    mcheckWin(0, 1, 2);
-    mcheckWin(2, 4, 6);
-    mcheckWin(2, 5, 8);
-    mcheckWin(3, 4, 5);
-    mcheckWin(0, 3, 6);
-    mcheckWin(6, 7, 8);
+
 }
 
 function resetValues() {
