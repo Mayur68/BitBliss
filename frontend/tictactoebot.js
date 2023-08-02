@@ -1,12 +1,12 @@
- a = document.getElementById("box1-0");
- b = document.getElementById("box1-1");
- c = document.getElementById("box1-2");
- d = document.getElementById("box1-3");
- e = document.getElementById("box1-4");
- f = document.getElementById("box1-5");
- g = document.getElementById("box1-6");
- h = document.getElementById("box1-7");
- i = document.getElementById("box1-8");
+a = document.getElementById("box1-0");
+b = document.getElementById("box1-1");
+c = document.getElementById("box1-2");
+d = document.getElementById("box1-3");
+e = document.getElementById("box1-4");
+f = document.getElementById("box1-5");
+g = document.getElementById("box1-6");
+h = document.getElementById("box1-7");
+i = document.getElementById("box1-8");
 
 // Check if any element is null before proceeding
 if (a && b && c && d && e && f && g && h && i) {
@@ -51,7 +51,8 @@ function mcheckWin(x, y, z) {
         //checks left to right diag line for player
         pWin = true;
         document.getElementById("container").innerHTML = `<div class="result"><h2>You WIN</h2>
-        <button id="retry" onclick="resetValues()">Try Again?</button></div>`
+        <button id="retry" onclick="resetValues()">Try Again?</button>
+        <button id="goBack" onclick="cancel()">Go Back</button></div>`
     } else if (
         box1[x].innerText == "O" &&
         box1[y].innerText == "O" &&
@@ -60,7 +61,8 @@ function mcheckWin(x, y, z) {
         //checks left to right diag line for bot
         bWin = true;
         document.getElementById("container").innerHTML = `<div class="result"><h2>You Lose</h2>
-        <button id="retry" onclick="resetValues()">Try Again?</button></div>`
+        <button id="retry" onclick="resetValues()">Try Again?</button>
+        <button id="goBack" onclick="cancel()">Go Back</button></div></div>`
     }
 }
 
@@ -78,7 +80,9 @@ function checkWin() {
     ) {
         pWin = true;
         bWin = true;
-        document.getElementById("container").innerHTML = `<div class="result"><button id="retry" onclick="resetValues()">Try Again?</button></div>`
+        document.getElementById("container").innerHTML = `<div class="result">
+        <button id="retry" onclick="resetValues()">Try Again?</button>
+        <button id="goBack" onclick="cancel()">Go Back</button></div></div>`
     } else {
         mcheckWin(0, 4, 8);
         mcheckWin(1, 4, 7);

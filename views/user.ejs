@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico" />
-    <link rel="stylesheet" href="/frontend/global.css">
+    <!-- <link rel="stylesheet" href="/frontend/global.css"> -->
     <link rel="stylesheet" href="/frontend/animation.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -14,52 +14,89 @@
 </head>
 <style>
     body {
-        color: white;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #333;
+        color: #fff;
     }
 
-    .games {
+    header {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+    }
+
+    nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav li {
+        display: inline;
+        margin-right: 20px;
+    }
+
+    nav a {
+        text-decoration: none;
+        color: #fff;
+    }
+
+    #hero {
+        background-image: url('space_bg.jpg');
+        background-size: cover;
+        height: 400px;
         display: flex;
-        justify-content: space-between;
-        width: 90%;
-        height: 50%;
-        ;
-        margin: 5% 5% 5%;
+        justify-content: center;
+        align-items: center;
     }
 
-    .in-game {
-        width: 40%;
-        height: 250px;
-        margin-left: 2%;
-        background-color: var(--main-bg-color-2);
-        border-radius: 7px;
+    #hero h1 {
+        font-size: 3em;
+        margin-bottom: 10px;
+    }
+
+    .cta-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #ff9900;
+        color: #fff;
+        text-decoration: none;
         cursor: pointer;
+        border-radius: 4px;
+        font-weight: bold;
     }
 
-    .friends {
-        background-color: var(--main-bg-color-2);
-        width: 10%;
-        height: max-content;
+    #featured-games {
+        text-align: center;
+        padding: 40px 0;
+    }
+
+    .game-card {
+        display: inline-block;
+        width: 200px;
+        padding: 20px;
+        margin: 10px;
+        border: 1px solid #ccc;
         border-radius: 4px;
-        margin-left: 10%;
-        padding-left: 2%;
+    }
+
+    .game-card img {
+        width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 10px;
+        background-color: #333;
+        color: #fff;
     }
 
     @media only screen and (max-width: 768px) {
-        .games {
-            display: flex;
-            flex-direction: column;
-            width: 90%;
-            height: 40%;
-            margin: auto;
-
-        }
-
-        .in-game {
-            width: 90%;
-            height: 250px;
-            margin: 2% auto;
-        }
-
         .friends {
             background-color: var(--main-bg-color-2);
             width: 80%;
@@ -85,16 +122,33 @@
             </ul>
         </nav>
     </header>
-    <div class="games">
-        <div class="in-game" onclick="r_p_c()">Rock-Paper-scissors</div>
-        <div class="in-game" onclick="TicTacToe_online()">TicTacToe-online</div>
-        <div class="in-game" onclick="shootDown()">shootDown</div>
-        <div class="in-game" onclick="chess()">chess</div>
-    </div>
-    <div>
-        <input type="text" id="addFriend" placeholder="enter user ID" />
+    <section id="featured-games">
+        <h2>Featured Games</h2>
+        <div class="game-card">
+            <img src="../assets/tictactoewlp.png" alt="Game 1">
+            <h3>Tic Tac Toe</h3>
+            <a onclick="TicTacToe_online()" class="cta-button">Play Now</a>
+        </div>
+        <div class="game-card">
+            <img src="game2.jpg" alt="Game 2">
+            <h3>Cosmic shoot</h3>
+            <a onclick="shootDown()" class="cta-button">Play Now</a>
+        </div>
+        <div class="game-card">
+            <img src="../assets/rpswlp.png" alt="Game 2">
+            <h3>Rock Paper Scissors</h3>
+            <a onclick="r_p_c()" class="cta-button">Play Now</a>
+        </div>
+        <div class="game-card">
+            <img src="../assets/chesswlp.png" alt="Game 2">
+            <h3>Chess</h3>
+            <a onclick="chess()" class="cta-button">Play Now</a>
+        </div>
+    </section>
+    <!-- <div>
+        <input type="text" id="addFriend" placeholder="Add Friend" />
         <button onclick="addFriend()">Add</button>
-    </div>
+    </div> -->
     <script>
         function r_p_c() {
             window.location.href = "/<%= username %>/Rock-Paper-Scissors";

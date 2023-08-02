@@ -14,7 +14,7 @@ html {
 }
 
 :root {
-  --main-color-1: linear-gradient(to right, #3b3b3b, #3d297a);
+  --main-color-1: linear-gradient(to right, #4d4d4d, #3a3a3d);
   --main-color-2: linear-gradient(to right, #7a7cff, #ec6eff);
   --main-bg-color-1: rgb(34, 34, 158);
   --main-bg-color-2: rgb(162, 36, 212);
