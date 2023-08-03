@@ -13,7 +13,7 @@ router.get("/:username/TicTacToe-online", (req, res) => {
 
 router.get("/:username/shootDown", (req, res) => {
   const username = req.params.username;
-  res.render("shootDown", { username: username });
+  res.render("cosmicShoot", { username: username });
 });
 
 router.get("/:username/chess", (req, res) => {
