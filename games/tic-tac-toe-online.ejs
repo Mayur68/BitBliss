@@ -203,6 +203,7 @@
             <button onclick="findMatch()">Find match</button>
             <button onclick="playWithFriends()">Play with friend</button>
         </div>
+        <button id="goBack" onclick="home()">Exit</button>
     </div>
     <script>
         let box1;
@@ -264,6 +265,9 @@
 
     </script>
     <script>
+        function home(){
+            window.location.href = "/";
+        }
         function goBack() {
             document.getElementById("container").innerHTML = `<div class="findMatch">
                     <h1>Tic Tac Toe</h1>

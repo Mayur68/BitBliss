@@ -14,7 +14,51 @@
     </title>
     <style>
         body {
-            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .profile-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-header h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background-color: #f9bf3b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .profile-info h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .profile-info p {
+            color: #777;
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -25,15 +69,18 @@
     <div class="novastar">
         <a href="/" class="logo"><img src="/assets/favicon/favicon-32x32.png"></a>
     </div>
-    <nav>
-        <ul>
-            <li><a href="/<%= username %>""><span class=" material-symbols-outlined">account_circle</span>
-                    <%= username %>
-                </a></li>
-        </ul>
-    </nav>
 </header>
-<button onclick="logout()">log out</button>
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>User Profile</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+    <div class="profile-info">
+        <h2>
+            <%= username %>
+        </h2>
+    </div>
+</div>
 <script>
     function logout() {
         fetch('/logout', {
