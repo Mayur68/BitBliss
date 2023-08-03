@@ -10,27 +10,6 @@ function setupSocket(server) {
     socket.on("authenticate", (data) => {
       const { userID } = data;
       socket.userID = userID;
-
-      // db.collection("connectedUsers")
-      //   .findOne({ userID: userID })
-      //   .then((result) => {
-      //     if (result) {
-      //       console.log(socket.userID, "already connected.");
-      //     } else {
-      //       db.collection("connectedUsers")
-      //         .insertOne({ userID: userID, socket: socket.id })
-      //         .then(() => {
-      //           console.log(socket.userID, "connected.");
-      //         })
-      //         .catch((error) => {
-      //           console.error("Error:", error);
-      //         });
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error:", error);
-      //   });
-
       socket.on("findMatch", (data) => {
         availableUsers.push(socket.id);
         console.log(availableUsers)
@@ -99,7 +78,6 @@ function setupSocket(server) {
           });
       });
     });
-
 
     socket.on("disconnect", () => {
       db.collection("connectedUsers")
