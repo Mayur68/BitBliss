@@ -51,6 +51,11 @@
         border-radius: 8px;
     }
 
+    #score div{
+        display: flex;
+        justify-content:space-evenly;
+    }
+
     #stage {
         display: flex;
         flex-direction: column;
@@ -59,6 +64,11 @@
         padding: 2%;
         background-color: rgb(47, 47, 47);
         border-radius: 8px;
+    }
+
+    #stage p {
+        text-align: center;
+        color: white;
     }
 
     .sc {
@@ -150,6 +160,60 @@
         padding: 20px;
         font-size: 30px;
     }
+
+    @media only screen and (max-width: 768px) {
+        .container {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            width: 90%;
+            margin: 6% auto;
+        }
+
+        #score {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 5%;
+            text-align: center;
+            color: var(--text-color-2);
+            background-color: rgb(47, 47, 47);
+            border-radius: 8px;
+        }
+
+        #stage {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 5%;
+            margin-top: 20px;
+            background-color: rgb(47, 47, 47);
+            border-radius: 8px;
+        }
+
+        #computer {
+            display: flex;
+            justify-content: space-around;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--main-bg-color-2);
+            padding: 1%;
+            font-size: 15px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        #person {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--main-bg-color-3);
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1%;
+            padding: 1%;
+            font-size: 15px;
+            border-radius: 20px;
+            margin-top: 2%;
+        }
+    }
 </style>
 
 <body>
@@ -164,29 +228,35 @@
             </ul>
         </nav> -->
     </header>
-    <h1>Rock-Paper-Scissors</h1>
+    <h1>Rock Paper Scissors</h1>
     </div>
     </div>
     <div class="container">
         <div id="score">
-            <p><b>Score :</b></p>
-            <p id="sc-box" class="sc"></p>
-            <p><b>Attempt :</b></p>
-            <p id="sc-box1" class="sc"></p>
-            <p><b>Result :</b></p>
-            <p id="sc-box2" class="sc"></p>
+            <div>
+                <p><b>Score</b></p>
+                <p id="sc-box" class="sc"></p>
+            </div>
+            <div>
+                <p><b>Attempt</b></p>
+                <p id="sc-box1" class="sc"></p>
+            </div>
+            <div>
+                <p><b>Result</b></p>
+                <p id="sc-box2" class="sc"></p>
+            </div>
         </div>
         <div id="stage">
+            <p><b>Computer</b></p>
             <div id="computer">
-                <p><b>Computer : </b></p>
                 <div id="rock1"><span class="material-icons">circle</span></div>
                 <div id="paper1"><span class="material-icons">note</span></div>
                 <div id="scissor1"><span class="material-icons">content_cut</span></div>
             </div>
+            <p><b>
+                    <%= username %>
+                </b></p>
             <div id="person">
-                <p><b>
-                        <%= username %>
-                    </b></p>
                 <div id="rock" onclick="rps('1')"><span class="material-icons">circle</span></div>
                 <div id="paper" onclick="rps('2')"><span class="material-icons">note</span></div>
                 <div id="scissor" onclick="rps('3')"><span class="material-icons">content_cut</span></div>
