@@ -15,7 +15,6 @@ if (a && b && c && d && e && f && g && h && i) {
     pWin = false;
     bWin = false;
 
-    // Attach event listeners to buttons here
     for (let x = 0; x < box1.length; x++) {
         box1[x].addEventListener('click', function () {
             clik1(x);
