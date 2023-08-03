@@ -10,7 +10,7 @@ function setupSocket(server) {
     socket.on("authenticate", (data) => {
       const { userID } = data;
       socket.userID = userID;
-      connectedUsers[socket.id] = data;
+
       // db.collection("connectedUsers")
       //   .findOne({ userID: userID })
       //   .then((result) => {
@@ -74,10 +74,31 @@ function setupSocket(server) {
           );
         }
       });
+
+      connectedUsers[socket.id] = data;
+      socket.on("loadFriends", (data) => {
+        const { userID } = data;
+        let online = [];
+        let friends = [];
+        db.collection("accounts")
+          .findOne({ userID: userID })
+          .then((result) => {
+            if (result) {
+              friends.push(...result.friends);
+            }
+            friends.forEach((friend) => {
+              if (connectedUsers.hasOwnProperty(friend)) {
+                online.push(friend);
+              }
+            });
+            console.log("Online friends:", online);
+            socket.emit("onlineFriends", { online });
+          })
+          .catch((error) => {
+            console.error("Error loading friends:", error);
+          });
+      });
     });
-
-
-
 
 
     socket.on("disconnect", () => {

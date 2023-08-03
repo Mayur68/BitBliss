@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/frontend/animation.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <title>Nova Star</title>
+    <title>Cosmic Arcade</title>
 </head>
 <style>
     body {
@@ -89,6 +89,27 @@
         border-radius: 4px;
     }
 
+    .addFriend {
+        display: inline-block;
+        width: 200px;
+        padding: 20px;
+        margin: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .addFriend button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #ff9900;
+        color: #fff;
+        border-style: none;
+        text-decoration: none;
+        cursor: pointer;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
     footer {
         text-align: center;
         padding: 10px;
@@ -145,10 +166,11 @@
             <a onclick="chess()" class="cta-button">Play Now</a>
         </div>
     </section>
-    <!-- <div>
-        <input type="text" id="addFriend" placeholder="Add Friend" />
+    <div class="addFriend">
+        <label>Add Friend</label>
+        <input type="text" id="addFriend" placeholder="Enter User Id" />
         <button onclick="addFriend()">Add</button>
-    </div> -->
+    </div>
     <script>
         function r_p_c() {
             window.location.href = "/<%= username %>/Rock-Paper-Scissors";
@@ -165,30 +187,31 @@
 
         function addFriend() {
             const friendId = document.getElementById("addFriend").value
-            const userId = "/<%= username %>"
+            const userId = "<%= username %>"
+            const data = {
+                userId: userId,
+                friendId: friendId,
+            };
             fetch("/addFriend", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    userId,
-                    friendId
-                }),
+                body: JSON.stringify(data),
             })
-                .then((response) => {
-                    return response.json();
-                })
+                .then((response) => response.json())
                 .then((data) => {
+                    console.log(data);
                     if (data.status === "success") {
-                        console.log("added")
+                        alert("Friend added successfully!");
                     } else {
-                        alert(data.message);
+                        alert("Failed to add friend: " + data.message);
                     }
                 })
                 .catch((error) => {
-                    console.error(error);
-                    alert("error");
+                    console.error("Error adding friend:", error);
+                    // Handle the error
+                    alert("An error occurred while adding friend. Please try again later.");
                 });
         }
     </script>

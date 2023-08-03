@@ -179,44 +179,65 @@ function generateSession() {
   });
 }
 
-module.exports = router;
-
 router.post("/addFriend", (req, res) => {
   const { userId, friendId } = req.body;
-  if (userId) {
+
+  if (userId && friendId) {
+    if (userId === friendId) {
+      return res.status(400).json({
+        status: "error",
+        message: "Cannot add yourself as a friend!",
+      });
+    }
+  }
+
+  if (userId && friendId) {
     db.collection("accounts")
-      .findOne({
-        username: userId, friendId
-      })
-      .then((result) => {
-        if (result > 0 && result < 2) {
-          res.status(401).json({
+      .findOne({ username: friendId })
+      .then((friend) => {
+        if (!friend) {
+          return res.status(401).json({
             status: "error",
-            message: "account already exists!",
+            message: "Friend not found!",
           });
-        } else {
-          db.collection("accounts")
-            .insertOne({
-              username: clientusername,
-            })
-            .then(() => {
-              res.cookie("sessionToken", sessionToken, {
-                expires: expirationDate,
-                httpOnly: true,
-              });
-              res.json({
-                status: "success",
-                message: "Login successful!",
-              });
-            })
-            .catch((err) => {
-              console.error(err);
-              res.status(500).json({
-                status: "error",
-                message: "Internal server error",
-              });
-            });
         }
+
+        db.collection("accounts")
+          .findOne({ username: userId, friends: { $in: [friendId] } })
+          .then((result) => {
+            if (result) {
+              return res.status(401).json({
+                status: "error",
+                message: "Friend already exists!",
+              });
+            }
+
+            db.collection("accounts")
+              .updateOne(
+                { username: userId },
+                { $addToSet: { friends: friendId } }
+              )
+              .then(() => {
+                res.json({
+                  status: "success",
+                  message: "Friend added successfully!",
+                });
+              })
+              .catch((err) => {
+                console.error(err);
+                res.status(500).json({
+                  status: "error",
+                  message: "Internal server error",
+                });
+              });
+          })
+          .catch((err) => {
+            console.error(err);
+            res.status(500).json({
+              status: "error",
+              message: "Internal server error",
+            });
+          });
       })
       .catch((err) => {
         console.error(err);
@@ -226,9 +247,15 @@ router.post("/addFriend", (req, res) => {
         });
       });
   } else {
-    res.status(401).json({
+    res.status(400).json({
       status: "error",
-      message: "Passwords do not match",
+      message: "Invalid request. Both userId and friendId are required.",
     });
   }
 });
+
+
+
+
+
+module.exports = router;
