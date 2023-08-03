@@ -93,6 +93,14 @@ function winCheck() {
         box[7].innerText != "" &&
         box[8].innerText != ""
     ) {
+        checkWin(0, 4, 8);
+        checkWin(1, 4, 7);
+        checkWin(0, 1, 2);
+        checkWin(2, 4, 6);
+        checkWin(2, 5, 8);
+        checkWin(3, 4, 5);
+        checkWin(0, 3, 6);
+        checkWin(6, 7, 8);
         pWin = true;
         bWin = true;
         document.getElementById("container").innerHTML = `<div class="result">
