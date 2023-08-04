@@ -13,85 +13,105 @@
             background-color: rgb(58, 58, 58);
         }
 
-        svg {
-            height: 600px;
-            width: 1500px;
+        .spaceship {
+            position: relative;
+            width: 100%;
+            height: 900px;
+            overflow: hidden;
         }
 
-        .spaceship {
+        .spaceship img {
+            position: absolute;
+            top: 550px;
+            left: 550px;
             width: 60px;
             height: 50px;
-            object-fit: contain;
+            transform-origin: center center;
+            transition: transform 0.2s;
+        }
+
+        .beam {
+            position: absolute;
+            width: 4px;
+            height: 40px;
+            background-color: rgb(193, 112, 0);
+            transform-origin: center center;
+            transition: transform 0.3s;
+            animation: none;
+        }
+
+        @keyframes beam-animation {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(1000px);
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="spaceship">
-        <img src="../assets/spaceship1.png">
+    <div class="spaceship" id="spaceship">
+        <img src="../assets/spaceship1.png" id="spaceship-img">
     </div>
 
-    <!-- <svg id="svg" width="400" height="400">
-        <rect id="rect" x="100" y="50" width="30" height="30" fill="red " />
-        <line id="line" x1="0" y1="0" x2="0" y2="0" stroke="orange" stroke-width="2" />
-    </svg> -->
+
 </body>
-<!-- <script>
-    const svg = document.getElementById("svg");
-    const rect = document.getElementById("rect");
-    const line = document.getElementById("line");
+<script>
+    const spaceship = document.getElementById('spaceship-img');
+    const space = document.getElementById('spaceship');
+    let rotation = 0;
+    let posX = 0;
+    let posY = 0;
 
-    let x = 100;
-    let y = 50;
-
-    function drawRectangle() {
-        rect.setAttribute("x", x);
-        rect.setAttribute("y", y);
-    }
-
-    document.addEventListener("keydown", keyDown);
-    document.addEventListener("keyup", keyUp);
-    document.addEventListener("mousedown", mouseDown);
-    document.addEventListener("mouseup", mouseUp);
-
-    function keyDown(event) {
-        const keyCode = event.keyCode;
-
-        if (keyCode === 65) {
-            x -= 20;
-        } else if (keyCode === 68) {
-            x += 20;
-        } else if (keyCode === 87) {
-            y -= 20;
-        } else if (keyCode === 83) {
-            y += 20;
+    document.addEventListener('keydown', (event) => {
+        switch (event.key) {
+            case 'a':
+                posX -= 10;
+                rotation = -90;
+                break;
+            case 'd':
+                posX += 10;
+                rotation = 90;
+                break;
+            case 'w':
+                posY -= 10;
+                rotation = 0;
+                break;
+            case 's':
+                posY += 10;
+                rotation = 180;
+                break;
         }
-        drawRectangle();
+
+        spaceship.style.transform = `translate(${posX}px, ${posY}px) rotate(${rotation}deg)`;
+        console.log(posX, posY)
+    });
+
+    space.addEventListener('click', () => {
+        shootBeam();
+    });
+
+    function shootBeam() {
+        const beam = document.createElement('div');
+        beam.className = 'beam';
+        bposX = 550 ;
+        bposY = 550 ;
+        console.log(bposX, bposY)
+        beam.style.transform = `translate(${bposX}px, ${bposY}px) rotate(${rotation}deg)`;
+        space.appendChild(beam);
+
+        // Start the animation
+        beam.style.animation = 'beam-animation 1s linear';
+
+        setTimeout(() => {
+            beam.remove();
+        }, 1000);
     }
 
-    function keyUp(event) {
-        x = x;
-        y = y;
-        drawRectangle();
-    }
 
-    drawRectangle();
-
-    let startX = x;
-    let startY = y;
-    function mouseDown() {
-        line.setAttribute("x1", startX);
-        line.setAttribute("y1", startX);
-        line.setAttribute("x2", startX + 10);
-        line.setAttribute("y2", startY);
-    }
-
-    function mouseUp() {
-        line.remove();
-        startX = x;
-        startY = y;
-    }
-
-</script> -->
+</script>
 
 </html>
