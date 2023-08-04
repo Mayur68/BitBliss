@@ -117,15 +117,57 @@
         color: #fff;
     }
 
-    @media only screen and (max-width: 768px) {
-        .game-card {
+    .chattingBox {
         display: inline-block;
-        width: 70%;
+        width: 60%;
+        height: 600px;
         padding: 20px;
-        margin: 10px;
+        margin: 10px auto;
         border: 1px solid #ccc;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         border-radius: 4px;
     }
+
+    #history {
+        background-color: #ccc;
+        width: 90%;
+        height: 550px;
+        border-radius: 6px;
+        margin: auto;
+    }
+.typeMsg{
+display: flex;
+justify-content: space-between;
+margin:10px auto;
+}
+    .typeMsg input {
+        height: 45px;
+        width: 700px;
+        border-radius: 6px;
+        border-style: none;
+    }
+
+    .typeMsg button {
+        height: 47px;
+        width: 100px;
+        border-radius: 6px;
+        border-style: none;
+        margin-left: 2px;
+        background-color: #ff9900;
+    }
+
+    @media only screen and (max-width: 768px) {
+        .game-card {
+            display: inline-block;
+            width: 70%;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
         .friends {
             background-color: var(--main-bg-color-2);
             width: 80%;
@@ -178,6 +220,13 @@
         <label>Add Friend</label>
         <input type="text" id="addFriend" placeholder="Enter User Id" />
         <button onclick="addFriend()">Add</button>
+    </div>
+    <div class="chattingBox">
+        <div id="history"></div>
+        <div class="typeMsg"> 
+            <input type="text" id="message" />
+            <button id="send" onclick="send()">Send</button>
+        </div>
     </div>
     <script>
         function r_p_c() {

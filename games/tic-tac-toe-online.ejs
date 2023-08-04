@@ -274,7 +274,8 @@
                     <button onclick="playWithBot()">Play with bot</button>
                     <button onclick="findMatch()">Find match</button>
                     <button onclick="playWithFriends()">Play with friends</button>
-                </div>`
+                </div>
+                <button id="goBack" onclick="home()">Exit</button>`
         }
         function cancel() {
             document.getElementById("container").innerHTML = `<div class="findMatch">
@@ -282,7 +283,8 @@
                     <button onclick="playWithBot()">Play with bot</button>
                     <button onclick="findMatch()">Find match</button>
                     <button onclick="playWithFriends()">Play with friends</button>
-                </div>`
+                </div>
+                <button id="goBack" onclick="home()">Exit</button>`
             socket.emit('removeAvailable', { senderID: "<%= username %>" });
         }
     </script>
