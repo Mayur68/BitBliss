@@ -94,6 +94,11 @@ function setupSocket(server) {
         availableUsers.splice(index, 1);
       }
     });
+
+    socket.on("sendMsg", (data) => {
+      const { senderId, message } = data
+socket.emit("recieveMsg",{data})
+    })
   });
 }
 

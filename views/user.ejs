@@ -137,11 +137,13 @@
         border-radius: 6px;
         margin: auto;
     }
-.typeMsg{
-display: flex;
-justify-content: space-between;
-margin:10px auto;
-}
+
+    .typeMsg {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px auto;
+    }
+
     .typeMsg input {
         height: 45px;
         width: 700px;
@@ -175,6 +177,49 @@ margin:10px auto;
             border-radius: 4px;
             margin-left: 10%;
             padding-left: 2%;
+        }
+
+        .chattingBox {
+            display: inline-block;
+            width: 90%;
+            height: 600px;
+            padding: 10px;
+            margin: 10px auto;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 4px;
+        }
+
+        #history {
+            background-color: #ccc;
+            width: 95%;
+            height: 550px;
+            border-radius: 6px;
+            margin: auto;
+        }
+
+        .typeMsg {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px auto;
+        }
+
+        .typeMsg input {
+            height: 45px;
+            width: 300px;
+            border-radius: 6px;
+            border-style: none;
+        }
+
+        .typeMsg button {
+            height: 47px;
+            width: 60px;
+            border-radius: 6px;
+            border-style: none;
+            margin-left: 2px;
+            background-color: #ff9900;
         }
     }
 </style>
@@ -222,8 +267,11 @@ margin:10px auto;
         <button onclick="addFriend()">Add</button>
     </div>
     <div class="chattingBox">
+        <div class="friends">
+
+        </div>
         <div id="history"></div>
-        <div class="typeMsg"> 
+        <div class="typeMsg">
             <input type="text" id="message" />
             <button id="send" onclick="send()">Send</button>
         </div>
@@ -272,7 +320,22 @@ margin:10px auto;
                 });
         }
     </script>
-
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.emit("connection");
+        socket.emit("authenticate", { userID: "<%= username %>" });
+        const message = document.getElementById("message")
+        let content = message.value
+        function send() {
+            socket.emit('sendMsg', { senderID: "<%= username %>", message: content });
+        }
+        socket.on("recieveMsg", (data) => {
+            const { senderID, content } = data
+            console.log(content)
+        })
+        
+    </script>
 </body>
 
 </html>
