@@ -97,7 +97,7 @@
     function shootBeam() {
         const beam = document.createElement('div');
         beam.className = 'beam';
-        const spaceshipRect = spaceship.getBoundingClientRect();
+        const spaceshipRect = space.getBoundingClientRect();
         bposX = spaceshipRect.left + spaceshipRect.width / 2;
         bposY = spaceshipRect.top + spaceshipRect.height / 2;
         console.log(bposX, bposY)
