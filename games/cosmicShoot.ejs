@@ -46,7 +46,7 @@
             }
 
             to {
-                transform: translateY(1000px);
+                transform: translateY(-1000px);
             }
         }
     </style>
@@ -97,8 +97,9 @@
     function shootBeam() {
         const beam = document.createElement('div');
         beam.className = 'beam';
-        bposX = 550 ;
-        bposY = 550 ;
+        const spaceshipRect = spaceship.getBoundingClientRect();
+        bposX = spaceshipRect.left + spaceshipRect.width / 2;
+        bposY = spaceshipRect.top + spaceshipRect.height / 2;
         console.log(bposX, bposY)
         beam.style.transform = `translate(${bposX}px, ${bposY}px) rotate(${rotation}deg)`;
         space.appendChild(beam);
