@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/frontend/global.css">
+    <title>drawing</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            color: white;
+            /* background-image: url("../assets/paint1.jpg");
+            object-fit: cover; */
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+        }
+
+        h2 {
+            color: white;
+            text-align: center;
+        }
+
+        .findMatch {
+            background-color: rgb(46, 44, 44);
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            margin: auto;
+            width: 30%;
+            height: 500px;
+            padding: 50px;
+        }
+
+        #goBack {
+            margin: 60px auto;
+            display: inline-block;
+            padding: 10px;
+            background-color: #cb1a1a;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            width: 200px;
+            font-weight: bold;
+            border-style: none;
+        }
+
+        button {
+            display: inline-block;
+            padding: 10px;
+            background-color: #ff9900;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            width: 200px;
+            font-weight: bold;
+            border-style: none;
+            margin: auto;
+        }
+
+        .game-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #toolbar {
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+            width: 100px;
+            background-color: black;
+        }
+
+        #toolbar * {
+            margin-bottom: 6px;
+        }
+
+        #toolbar label {
+            font-size: 12px;
+        }
+
+        #toolbar input {
+            width: 100%;
+            border: none;
+        }
+
+        #toolbar button {
+            background-color: darkblue;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            padding: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="game-container" id="container">
+        <div class="findMatch">
+            <h1>Paint</h1>
+            <button onclick="findMatch()">Find match</button>
+            <button onclick="playWithFriends()">Play with friend</button>
+            <button onclick="room()">create room</button>
+        </div>
+        <button id="goBack" onclick="home()">Exit</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('drawing-board');
+        const toolbar = document.getElementById('toolbar');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth - canvas.offsetLeft;
+        canvas.height = window.innerHeight - canvas.offsetTop;
+        let isPainting = false;
+        let lineWidth = 5;
+
+        toolbar.addEventListener('click', e => {
+            if (e.target.id === 'clear') {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        });
+        toolbar.addEventListener('change', e => {
+            if (e.target.id === 'stroke') {
+                ctx.strokeStyle = e.target.value;
+            }
+            if (e.target.id === 'lineWidth') {
+                lineWidth = e.target.value;
+            }
+
+        });
+        const draw = (e) => {
+            if (!isPainting) {
+                return;
+            }
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = 'round';
+            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY);
+            ctx.stroke();
+        }
+        canvas.addEventListener('mousedown', e => {
+            isPainting = true;
+        });
+        canvas.addEventListener('mouseup', e => {
+            isPainting = false;
+            ctx.beginPath();
+        });
+        canvas.addEventListener('mousemove', draw);
+    </script>
+</body>
+<script>
+    const socket = io();
+    socket.emit("connection");
+    socket.emit("authenticate", { userID: "<%= username %>" });
+    var player2;
+    var event = new CustomEvent("childScriptReady", { detail: { myVariable: player2 } });
+    senderName = "<%= username %>";
+    function findMatch() {
+
+        document.getElementById("container").innerHTML = `
+            <div class="loadingMatch">
+                <h1>Finding players...</h1>
+                <h2>Estimate time 30s..</h2>
+                <button id="goBack" onclick="cancel()">Cancel</button>
+            </div>`
+
+
+        socket.emit('findMatch', { senderID: "<%= username %>" });
+        socket.on('matched', (matchedUserData) => {
+            console.log('You are matched with:', matchedUserData);
+            player2 = matchedUserData;
+            if (matchedUserData) {
+                loadBoard()
+            }
+        });
+    }
+    function loadBoard() {
+        const scriptToRemove1 = document.getElementById("tictactoebot-script1");
+        if (scriptToRemove1) {
+            scriptToRemove1.remove();
+        }
+        document.getElementById("container").innerHTML = `<section class="game-container">
+        <!-- <div id="toolbar">
+            <h1>Draw</h1>
+            <label>Stroke</label>
+            <input id="stroke" name='stroke' type="color">
+            <label>Line Width</label>
+            <input id="lineWidth" type="number" value="5">
+            <button id="clear">Clear</button>
+        </div> -->
+        <!-- <div>
+            <canvas id="drawing-board"></canvas>
+        </div> -->
+    </section>`;
+        function loadChildScript() {
+            var script = document.createElement("script");
+            script.src = "../frontend/tictactoeonline.js";
+            script.onload = function () {
+                window.dispatchEvent(event);
+            };
+            document.head.appendChild(script);
+        }
+        loadChildScript();
+    }
+</script>
+<script>
+    function home() {
+        window.location.href = "/";
+    }
+    function goBack() {
+        document.getElementById("container").innerHTML = `<div class="findMatch">
+                <h1>Tic Tac Toe</h1>
+                <button onclick="playWithBot()">Play with bot</button>
+                <button onclick="findMatch()">Find match</button>
+                <button onclick="playWithFriends()">Play with friends</button>
+            </div>
+            <button id="goBack" onclick="home()">Exit</button>`
+    }
+    function cancel() {
+        document.getElementById("container").innerHTML = `<div class="findMatch">
+                <h1>Tic Tac Toe</h1>
+                <button onclick="playWithBot()">Play with bot</button>
+                <button onclick="findMatch()">Find match</button>
+                <button onclick="playWithFriends()">Play with friends</button>
+            </div>
+            <button id="goBack" onclick="home()">Exit</button>`
+        socket.emit('removeAvailable', { senderID: "<%= username %>" });
+    }
+</script>
+
+</html>

@@ -21,4 +21,14 @@ router.get("/:username/chess", (req, res) => {
   res.render("chess", { username: username });
 });
 
+router.get("/:username/truck", (req, res) => {
+  const username = req.params.username;
+  res.render("truck", { username: username });
+});
+
+router.get("/:username/paint", (req, res) => {
+  const username = req.params.username;
+  res.render("paint", { username: username });
+});
+
 module.exports = router;
