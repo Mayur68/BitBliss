@@ -314,14 +314,16 @@
           </div>`;
   }
   function resetpassword() {
-    const clientemail = document.getElementById("email").value;
+
+    const clientEmail = document.getElementById("email").value;
+
     fetch("/forgot-password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        clientemail,
+        email: clientEmail, // Correct the key to "email"
       }),
     })
       .then((response) => {
@@ -336,6 +338,7 @@
         console.error(error);
         alert("An error occurred while trying to send email");
       });
+
   }
   function forgotpasssword() {
     document.getElementById("mid").innerHTML = `<div class="field">

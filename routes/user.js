@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
+const crypto = require('crypto');
+
 
 const { getdb } = require("../database/database");
 db = getdb();
@@ -124,7 +126,7 @@ router.post("/sign-up", async (req, res) => {
   }
 });
 
-router.get("/reset%20password", (req, res) => {
+router.get("/resetpassword", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/resetpassword.html"));
 });
 
@@ -161,27 +163,41 @@ router.post("/send-username", async (req, res) => {
 
 router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
-  
+
   const user = await db.collection("accounts")
     .findOne({
-      email: clientemail,
+      email,
     });
 
   if (!user) {
-      return res.send('Email not found');
+    return res.status(404).json({ message: 'Email not found' });
   }
 
+  const username = user.username;
   const resetToken = crypto.randomBytes(20).toString('hex');
   user.resetToken = resetToken;
   user.resetTokenExpiration = Date.now() + 3600000;
 
-  await user.save();
+  await db.collection("accounts").updateOne(
+    { _id: user._id },
+    {
+      $set: {
+        resetToken,
+        resetTokenExpiration: Date.now() + 3600000,
+      },
+    }
+  );
 
   const mailOptions = {
     from: 'patkarmahesh387@gmail.com',
-    to: clientemail,
-    subject: 'Your password Recovery',
-    text: `Dear ${username},\n\n\n\nSincerely,\nYour Cosmic Arcade team`,
+    to: email,
+    subject: 'Your Password Recovery',
+    text: `Dear ${username},\n\nWe received a request to reset the password for your Cosmic Arcade account. 
+    If you did not initiate this request, you can ignore this email.\n\nTo reset your password, 
+    please click on the link below or copy and paste it into your web browser's address bar:\n\nhttp://192.168.1.8:3000/resetpassword/${resetToken}\n\n
+    This link will expire in 1 hour for security reasons. If you don't use this link within that time, you can request another password reset.
+    \n\nIf you have any questions or need further assistance, please contact our support team at [Support Email].\n\nSincerely,
+    \nYour Cosmic Arcade Team`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -194,13 +210,14 @@ router.post('/forgot-password', async (req, res) => {
   });
 });
 
-router.get('/reset-password/:token', async (req, res) => {
+
+router.get('/resetpassword/:token', async (req, res) => {
   const { token } = req.params;
 
   const user = await db.collection("accounts").findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
 
   if (!user) {
-      return res.send('Invalid or expired token');
+    return res.send('Invalid or expired token');
   }
 
   res.send(`
@@ -217,24 +234,26 @@ router.post('/reset-password/:token', async (req, res) => {
   const { newPassword, confirmPassword } = req.body;
 
   if (newPassword !== confirmPassword) {
-      return res.send('Passwords do not match');
+    return res.send('Passwords do not match');
   }
 
-  // Find the user by the reset token and check if it's valid
-  const user = await User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
+  const user = await db.collection("accounts").findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
 
   if (!user) {
-      // Handle the case where the token is invalid or expired
-      return res.send('Invalid or expired token');
+    return res.send('Invalid or expired token');
   }
 
-  // Update the user's password
-  user.password = newPassword;
-  user.resetToken = undefined;
-  user.resetTokenExpiration = undefined;
-  await user.save();
+  await db.collection("accounts").updateOne(
+    { _id: user._id },
+    {
+      $set: {
+        password: newPassword,
+        resetToken: undefined,
+        resetTokenExpiration: undefined,
+      },
+    }
+  );
 
-  // Redirect the user to the login page or a success page
   res.send('Password reset successfully');
 });
 
