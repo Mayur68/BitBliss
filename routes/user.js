@@ -5,6 +5,17 @@ const path = require("path");
 const { getdb } = require("../database/database");
 db = getdb();
 
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    // user: 'your_email@gmail.com',
+    // pass: 'your_password',
+  },
+});
+
+
 // Route for the sign-up page
 router.get("/sign-up", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/sign-up.html"));
@@ -55,7 +66,7 @@ router.post("/login", async (req, res) => {
 
 //checking signup details
 router.post("/sign-up", async (req, res) => {
-  const { clientusername, clientpassword, con_password } = req.body;
+  const { clientusername, clientemail, clientpassword, con_password } = req.body;
   const sessionString = await generateSession();
   const sessionToken = sessionString;
   const expirationTime = 24 * 60 * 60 * 1000;
@@ -75,6 +86,7 @@ router.post("/sign-up", async (req, res) => {
           db.collection("accounts")
             .insertOne({
               username: clientusername,
+              email: clientemail,
               password: clientpassword,
               session: sessionString,
             })
@@ -111,6 +123,43 @@ router.post("/sign-up", async (req, res) => {
     });
   }
 });
+
+router.get("/reset%20password", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/resetpassword.html"));
+});
+
+router.post("/send-username", async (req, res) => {
+  const { clientemail } = req.body;
+
+  const user = await db.collection("accounts")
+    .findOne({
+      email: clientemail,
+    });
+
+  if (!user) {
+    return res.status(404).json({ message: 'Email not found' });
+  }
+
+  const username = user.username;
+
+  const mailOptions = {
+    from: 'patkarmahesh387@gmail.com',
+    to: clientemail,
+    subject: 'Your Username Recovery',
+    text: `Dear ${username},\n\nYour username is: ${username}\n\nSincerely,\nYour Cosmic Arcade team`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ message: 'Failed to send email' });
+    }
+    console.log('Email sent: ' + info.response);
+    res.status(200).json({ message: 'Password reset email sent' });
+  });
+});
+
+
 
 //logout
 router.post("/logout", (req, res) => {

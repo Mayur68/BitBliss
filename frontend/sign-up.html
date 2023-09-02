@@ -62,7 +62,7 @@
     display: block;
   }
 
-  .field>input[type="text"] {
+  .field>input {
     padding: 2%;
     border-radius: 7px;
     width: 100%;
@@ -141,6 +141,11 @@
             <p id="err-username" for="username"></p>
           </div>
           <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter Email" />
+            <p id="err-email" for="email"></p>
+          </div>
+          <div class="field">
             <label for="password">Password</label>
             <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off" />
             <p id="err-password" for="username"></p>
@@ -166,15 +171,18 @@
 </body>
 <script>
   const input_username = document.getElementById("username");
+  const input_email = document.getElementById("email");
   const input_password = document.getElementById("password");
   const confirm_password = document.getElementById("con-password");
 
   var err_username = document.getElementById("err-username");
+  var err_email = document.getElementById("err-email");
   var err_password = document.getElementById("err-password");
   var err_con_password = document.getElementById("err-con-password");
 
   function send_data() {
     const clientusername = input_username.value;
+    const clientemail = input_email.value;
     const clientpassword = input_password.value;
     const con_password = confirm_password.value;
     if (username === "" || password === "") {
@@ -187,6 +195,7 @@
         },
         body: JSON.stringify({
           clientusername,
+          clientemail,
           clientpassword,
           con_password,
         }),
