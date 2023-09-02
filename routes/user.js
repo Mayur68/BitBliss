@@ -159,6 +159,84 @@ router.post("/send-username", async (req, res) => {
   });
 });
 
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  
+  const user = await db.collection("accounts")
+    .findOne({
+      email: clientemail,
+    });
+
+  if (!user) {
+      return res.send('Email not found');
+  }
+
+  const resetToken = crypto.randomBytes(20).toString('hex');
+  user.resetToken = resetToken;
+  user.resetTokenExpiration = Date.now() + 3600000;
+
+  await user.save();
+
+  const mailOptions = {
+    from: 'patkarmahesh387@gmail.com',
+    to: clientemail,
+    subject: 'Your password Recovery',
+    text: `Dear ${username},\n\n\n\nSincerely,\nYour Cosmic Arcade team`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ message: 'Failed to send email' });
+    }
+    console.log('Email sent: ' + info.response);
+    res.status(200).json({ message: 'Password reset email sent' });
+  });
+});
+
+router.get('/reset-password/:token', async (req, res) => {
+  const { token } = req.params;
+
+  const user = await db.collection("accounts").findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
+
+  if (!user) {
+      return res.send('Invalid or expired token');
+  }
+
+  res.send(`
+      <form action="/reset-password/${token}" method="POST">
+          <input type="password" name="newPassword" placeholder="New Password" required>
+          <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+          <button type="submit">Reset Password</button>
+      </form>
+  `);
+});
+
+router.post('/reset-password/:token', async (req, res) => {
+  const { token } = req.params;
+  const { newPassword, confirmPassword } = req.body;
+
+  if (newPassword !== confirmPassword) {
+      return res.send('Passwords do not match');
+  }
+
+  // Find the user by the reset token and check if it's valid
+  const user = await User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
+
+  if (!user) {
+      // Handle the case where the token is invalid or expired
+      return res.send('Invalid or expired token');
+  }
+
+  // Update the user's password
+  user.password = newPassword;
+  user.resetToken = undefined;
+  user.resetTokenExpiration = undefined;
+  await user.save();
+
+  // Redirect the user to the login page or a success page
+  res.send('Password reset successfully');
+});
 
 
 //logout

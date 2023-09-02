@@ -315,7 +315,7 @@
   }
   function resetpassword() {
     const clientemail = document.getElementById("email").value;
-    fetch("/sign-up", {
+    fetch("/forgot-password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -328,9 +328,7 @@
         return response.json();
       })
       .then((data) => {
-        if (data.status === "success") {
-          // window.location.href = "/";
-        } else {
+        if (data) {
           alert(data.message);
         }
       })
