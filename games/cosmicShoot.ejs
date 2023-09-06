@@ -94,7 +94,7 @@
         <div class="menu">
             <h1>Cosmic shoot</h1>
             <button onclick="start()">Start</button>
-            <button onclick="score()">Score</button>
+            <button onclick="score()">Leader Board</button>
             <button onclick="exit()">Exit</button>
         </div>
         <div class="asteroid">
@@ -113,7 +113,7 @@
         document.getElementById("game-container").innerHTML = `<div class="menu">
             <h1>Cosmic shoot</h1>
             <button onclick="start()">Start</button>
-            <button onclick="score()">Score</button>
+            <button onclick="score()">Leader Board</button>
             <button onclick="exit()">Exit</button>
         </div>
         <div class="asteroid">
@@ -121,7 +121,7 @@
         </div>`;
     }
     function score() {
-        document.getElementById("game-container").innerHTML = `<h1>score</h1>
+        document.getElementById("game-container").innerHTML = `<h1>Leader Board</h1>
     <button onclick="back()">back</button>`;
     }
     function start() {

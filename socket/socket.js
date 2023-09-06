@@ -55,6 +55,7 @@ function setupSocket(server) {
       });
 
       connectedUsers[socket.id] = data;
+      
       socket.on("loadFriends", (data) => {
         const { userID } = data;
         let online = [];
@@ -82,9 +83,9 @@ function setupSocket(server) {
     socket.on("disconnect", () => {
       db.collection("connectedUsers")
         .deleteOne({ userID: socket.userID })
-        .then(() => {
-          console.log(socket.userID, "disconnected.....");
-        })
+        // .then(() => {
+        //   console.log(socket.userID, "disconnected.....");
+        // })
         .catch((error) => {
           console.error("Error:", error);
         });

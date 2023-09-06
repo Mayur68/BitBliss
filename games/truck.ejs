@@ -153,7 +153,7 @@
             background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/130015/truck.svg) no-repeat;
             background-size: contain;
             height: 60px;
-            animation: truck 1s 0.080s ease infinite;
+            animation: truck 0.01s infinite;
         }
 
         .truck:before {
@@ -163,13 +163,13 @@
             box-shadow:
                 -30px 28px 0 1.5px #fff,
                 -35px 18px 0 1.5px #fff;
-            animation: wind 1.5s 0.000s ease infinite;
+            animation: wind 0.01s infinite;
         }
 
         .wheels {
             background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/130015/wheels.svg) no-repeat;
             height: 15px;
-            animation: truck 4s 0.001s ease infinite;
+            animation: truck 0.01s infinite;
         }
 
         @keyframes rock {
@@ -204,6 +204,16 @@
             }
         }
 
+        @keyframes jump {
+            50% {
+                transform: translateY(-80px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
         @keyframes wind {
             50% {
                 transform: translateY(3px)
@@ -220,26 +230,29 @@
         <div class="tree"></div>
         <div class="tree"></div>
         <div class="rock"></div>
-        <div class="truck" class="jump"></div>
-        <div class="wheels" class="jump"></div>
+        <div class="truck jump"></div>
+        <div class="wheels jump"></div>
     </div>
     <div class="ground"></div>
 </body>
 <script>
-   const truck = document.querySelectorAll('.jump');
+    const trucks = document.querySelectorAll('.jump');
 
-function jump(truck) {
-    console.log("jump");
-    truck.style.transform = `translateY(${-60}px)`;
-}
-
-document.addEventListener('keydown', (event) => {
-    if (event.key === ' ' || event.key === 'Spacebar') {
-        truck.forEach((truck) => {
-            jump(truck);
-        });
+    function jump(truck) {
+        console.log("jump");
+        truck.style.animation = 'none';
+            setTimeout(() => {
+                truck.style.animation = 'jump 2s';
+            }, 10);
     }
-});
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+            trucks.forEach((truck) => {
+                jump(truck);
+            });
+        }
+    });
 </script>
 
 </html>
