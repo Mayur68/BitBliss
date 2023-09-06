@@ -153,7 +153,7 @@
             background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/130015/truck.svg) no-repeat;
             background-size: contain;
             height: 60px;
-            animation: truck 0.01s infinite;
+            animation: truck 1s infinite;
         }
 
         .truck:before {
@@ -163,13 +163,13 @@
             box-shadow:
                 -30px 28px 0 1.5px #fff,
                 -35px 18px 0 1.5px #fff;
-            animation: wind 0.01s infinite;
+            animation: wind 1s infinite;
         }
 
         .wheels {
             background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/130015/wheels.svg) no-repeat;
             height: 15px;
-            animation: truck 0.01s infinite;
+            animation: truck 1s infinite;
         }
 
         @keyframes rock {
@@ -206,7 +206,7 @@
 
         @keyframes jump {
             50% {
-                transform: translateY(-80px);
+                transform: translateY(-150px);
             }
 
             100% {
@@ -217,6 +217,44 @@
         @keyframes wind {
             50% {
                 transform: translateY(3px)
+            }
+        }
+
+        .object1 {
+            margin-top: -16%;
+            height: 5%;
+            width: 5%;
+            border-radius: 20px;
+            position: absolute;
+            background: #1eff00;
+        }
+
+        @keyframes object1 {
+            0% {
+                transform: translate(1450px);
+            }
+
+            100% {
+                transform: translate(-100px);
+            }
+        }
+
+        .object2 {
+            margin-top: -20%;
+            height: 5%;
+            width: 5%;
+            border-radius: 20px;
+            position: absolute;
+            background: #ff0000;
+        }
+
+        @keyframes object2 {
+            0% {
+                transform: translate(1450px);
+            }
+
+            100% {
+                transform: translate(-100px);
             }
         }
     </style>
@@ -236,16 +274,93 @@
     <div class="ground"></div>
 </body>
 <script>
-    const trucks = document.querySelectorAll('.jump');
+    // const scriptToRemove = document.getElementById("truck-script");
+    // if (scriptToRemove) {
+    //     scriptToRemove.remove();
+    // }
 
+    const trucks = document.querySelectorAll('.jump');
+    let object1;
+    let object2;
     function jump(truck) {
         console.log("jump");
         truck.style.animation = 'none';
-            setTimeout(() => {
-                truck.style.animation = 'jump 2s';
-            }, 10);
+        setTimeout(() => {
+            truck.style.animation = 'jump 0.8s';
+        }, 10);
     }
 
+    function createObject1() {
+        object1 = document.createElement('div');
+        object1.className = 'object1';
+        object1.style.animation = 'none';
+
+        const minTime = 3000;
+        const maxTime = 8000;
+        const randomTime = Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
+
+        setTimeout(() => {
+            object1.style.animation = 'object1 ' + randomTime + 'ms';
+        }, 10);
+
+        document.body.appendChild(object1);
+
+        const object1Interval = setInterval(() => {
+            object1.remove();
+            clearInterval(object1Interval);
+        }, 3000);
+    }
+    setInterval(createObject1, 4000);
+
+    function createObject2() {
+        object2 = document.createElement('div');
+        object2.className = 'object2';
+        object2.style.animation = 'none';
+
+        const minTime = 3000;
+        const maxTime = 8000;
+        const randomTime = Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
+
+        setTimeout(() => {
+            object2.style.animation = 'object2 ' + randomTime + 'ms';
+        }, 10);
+
+        document.body.appendChild(object2);
+
+        const object2Interval = setInterval(() => {
+            object2.remove();
+            clearInterval(object2Interval);
+        }, 2000);
+    }
+
+    setInterval(createObject2, 3000);
+
+
+    // function isColliding(element1, element2) {
+    //     const rect1 = element1.getBoundingClientRect();
+    //     const rect2 = element2.getBoundingClientRect();
+    //     const isColliding = (
+    //         rect2.left < rect1.right &&
+    //         rect2.right > rect1.left &&
+    //         rect2.top < rect1.bottom &&
+    //         rect2.bottom > rect1.top
+    //     );
+    //     return isColliding;
+    // }
+
+    // function checkCollisions() {
+    //     trucks.forEach((truck) => {
+    //         if (isColliding(truck, object1) || isColliding(truck, object2)) {
+    //             endGame();
+    //             return;
+    //         }
+    //     });
+    // }
+
+    // checkCollisions();
+    // function endGame() {
+    //     console.log("game over")
+    // }
     document.addEventListener('keydown', (event) => {
         if (event.key === ' ' || event.key === 'Spacebar') {
             trucks.forEach((truck) => {
@@ -253,6 +368,13 @@
             });
         }
     });
+
+    setInterval(createObject2, 3000);
+
+    // const script = document.createElement("script");
+    // script.src = "../frontend/truck.js";
+    // script.id = "truck-script";
+    // document.body.appendChild(script);
 </script>
 
 </html>
