@@ -12,8 +12,8 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
-    // user: 'your_email@gmail.com',
-    // pass: 'your_password',
+    user: '',
+    pass: '',
   },
 });
 
@@ -194,7 +194,7 @@ router.post('/forgot-password', async (req, res) => {
     subject: 'Your Password Recovery',
     text: `Dear ${username},\n\nWe received a request to reset the password for your Cosmic Arcade account. 
     If you did not initiate this request, you can ignore this email.\n\nTo reset your password, 
-    please click on the link below or copy and paste it into your web browser's address bar:\n\nhttp://192.168.1.8:3000/resetpassword/${resetToken}\n\n
+    please click on the link below or copy and paste it into your web browser's address bar:\n\nhttp://192.168.200.163:3000/resetpassword/${resetToken}\n\n
     This link will expire in 1 hour for security reasons. If you don't use this link within that time, you can request another password reset.
     \n\nIf you have any questions or need further assistance, please contact our support team at [Support Email].\n\nSincerely,
     \nYour Cosmic Arcade Team`,
