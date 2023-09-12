@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="/frontend/global.css"> -->
+    <link rel="stylesheet" href="/frontend/global.css">
     <title>drawing</title>
     <style>
         body {
@@ -75,6 +75,7 @@
 
         #toolbar {
             display: flex;
+            flex-direction: column;
             padding: 5px;
             width: 100px;
             background-color: black;
@@ -113,11 +114,49 @@
         </div>
         <button id="goBack" onclick="home()">Exit</button>
     </div>
+    <script>
+        const canvas = document.getElementById('drawing-board');
+        const toolbar = document.getElementById('toolbar');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth - canvas.offsetLeft;
+        canvas.height = window.innerHeight - canvas.offsetTop;
+        let isPainting = false;
+        let lineWidth = 5;
+
+        toolbar.addEventListener('click', e => {
+            if (e.target.id === 'clear') {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        });
+        toolbar.addEventListener('change', e => {
+            if (e.target.id === 'stroke') {
+                ctx.strokeStyle = e.target.value;
+            }
+            if (e.target.id === 'lineWidth') {
+                lineWidth = e.target.value;
+            }
+
+        });
+        const draw = (e) => {
+            if (!isPainting) {
+                return;
+            }
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = 'round';
+            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY);
+            ctx.stroke();
+        }
+        canvas.addEventListener('mousedown', e => {
+            isPainting = true;
+        });
+        canvas.addEventListener('mouseup', e => {
+            isPainting = false;
+            ctx.beginPath();
+        });
+        canvas.addEventListener('mousemove', draw);
+    </script>
 </body>
-
-
-
-<script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io();
     socket.emit("connection");
@@ -125,8 +164,6 @@
     var player2;
     var event = new CustomEvent("childScriptReady", { detail: { myVariable: player2 } });
     senderName = "<%= username %>";
-
-
     function findMatch() {
 
         document.getElementById("container").innerHTML = `
@@ -137,8 +174,8 @@
             </div>`
 
 
-        socket.emit('findMatchForPaint', { senderID: "<%= username %>" });
-        socket.on('matchedForPaint', (matchedUserData) => {
+        socket.emit('findMatch', { senderID: "<%= username %>" });
+        socket.on('matched', (matchedUserData) => {
             console.log('You are matched with:', matchedUserData);
             player2 = matchedUserData;
             if (matchedUserData) {
@@ -147,27 +184,26 @@
         });
     }
     function loadBoard() {
-        const scriptToRemove1 = document.getElementById("paint-script1");
+        const scriptToRemove1 = document.getElementById("tictactoebot-script1");
         if (scriptToRemove1) {
             scriptToRemove1.remove();
         }
-
         document.getElementById("container").innerHTML = `<section class="game-container">
-         <div id="toolbar">
+        <!-- <div id="toolbar">
             <h1>Draw</h1>
             <label>Stroke</label>
             <input id="stroke" name='stroke' type="color">
             <label>Line Width</label>
             <input id="lineWidth" type="number" value="5">
             <button id="clear">Clear</button>
-        </div> 
-         <div>
+        </div> -->
+        <!-- <div>
             <canvas id="drawing-board"></canvas>
-        </div> 
+        </div> -->
     </section>`;
         function loadChildScript() {
             var script = document.createElement("script");
-            script.src = "../frontend/paint.js";
+            script.src = "../frontend/tictactoeonline.js";
             script.onload = function () {
                 window.dispatchEvent(event);
             };
