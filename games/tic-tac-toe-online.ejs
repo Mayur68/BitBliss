@@ -241,12 +241,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         function playWithFriends() {
-            // Assuming socket is properly initialized elsewhere in your code
-
-            // Emit a 'loadfriends' event with the user's ID
             socket.emit('loadfriends', { userID: "<%= username %>" });
 
-            // Update the HTML content of an element with the ID 'container'
             document.getElementById("container").innerHTML = `
         <div class="friends">
             <h1>Friends</h1>
@@ -254,16 +250,12 @@
             </ul>
         </div>`;
 
-            // Listen for the 'online' event
             socket.on("online", (data) => {
-                // Get the list of online friends from the data
+        
                 const onlineFriends = data.online;
                 console.log(onlineFriends);
-
-                // Get the 'online-friends-list' element
+ 
                 const onlineFriendsList = document.getElementById("online-friends-list");
-
-                // Clear the existing list
                 onlineFriendsList.innerHTML = "";
 
                 // Populate the list with online friends
@@ -318,8 +310,8 @@
             </div>`
 
 
-            socket.emit('findMatch', { senderID: "<%= username %>" });
-            socket.on('matched', (matchedUserData) => {
+            socket.emit('findMatchForTictactoe', { senderID: "<%= username %>" });
+            socket.on('matchedForTictactoe', (matchedUserData) => {
                 console.log('You are matched with:', matchedUserData);
                 player2 = matchedUserData;
                 if (matchedUserData) {
