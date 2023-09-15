@@ -51,9 +51,6 @@ app.get("/", (req, res) => {
     });
 });
 
-
-
-
 //connecting to database and runnning server
 connection((err) => {
   if (!err) {
