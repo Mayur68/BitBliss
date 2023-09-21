@@ -1,3 +1,54 @@
+const truck = document.querySelector('.truck');
+const objects = [];
+let scores = 0;
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function createObjects() {
+    const object = document.createElement('div');
+    object.className = 'object';
+    const objectImage = document.createElement('img');
+    objectImage.src = '../assets/car.png';
+    objectImage.alt = 'car Image';
+    object.appendChild(objectImage);
+    document.body.appendChild(object);
+    object.style.left = '0px';
+    const objectSpeed = getRandomInt(1, 25);
+
+    function updateObjectPosition() {
+        scores++;
+        const currentPosition = parseInt(object.style.left, 10);
+        const newPosition = currentPosition + objectSpeed;
+        if (newPosition >= window.innerWidth - object.clientWidth) {
+            clearInterval(objectInterval);
+            object.remove();
+        } else {
+            object.style.left = newPosition + 'px';
+        }
+            if (isColliding(truck, object)) {
+                endGame();
+                return;
+            }
+
+            if (newPosition >= window.innerWidth) {
+                clearInterval(objectInterval);
+                object.remove();
+            }
+        }
+
+        const objectInterval = setInterval(updateObjectPosition, 50);
+        objects.push(object);
+    }
+
+    function spawnObjectsRandomly() {
+        setInterval(() => {
+            createObjects();
+        }, getRandomInt(1000, 5000));
+    }
+
+    spawnObjectsRandomly();
 
     function isColliding(element1, element2) {
         const rect1 = element1.getBoundingClientRect();
@@ -11,16 +62,12 @@
         return isColliding;
     }
 
-    function checkCollisions() {
-        trucks.forEach((truck) => {
-            if (isColliding(truck, object1) || isColliding(truck, object2)) {
-                endGame();
-                return;
-            }
-        });
-    }
 
-    checkCollisions();
+
     function endGame() {
-        console.log("game over")
+        const currentDisplay = menu.style.display;
+        menu.style.display = currentDisplay === 'none' ? 'block' : 'none';
+        const gameContainer = document.getElementById("menu");
+        gameContainer.innerHTML = `<h1>Game Over</h1><h1>${scores}</h1><button onclick="start()">Restart</button><button onclick="back()">Exit</button>`;
+        console.log(`Game Over. Score: ${scores}`);
     }

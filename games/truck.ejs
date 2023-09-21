@@ -30,6 +30,33 @@
             background-color: #823d01;
         }
 
+
+        #menu {
+            margin: 50px auto;
+            width: 400px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+        }
+
+        button {
+            display: inline-block;
+            padding: 10px;
+            background-color: #ff9900;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            width: 200px;
+            font-weight: bold;
+            border-style: none;
+            margin: auto;
+        }
+
         .mountain {
             position: absolute;
             right: -900px;
@@ -220,48 +247,27 @@
             }
         }
 
-        .object1 {
+        .object {
             margin-top: -16%;
             height: 5%;
             width: 5%;
             border-radius: 20px;
             position: absolute;
-            background: #1eff00;
         }
 
-        @keyframes object1 {
-            0% {
-                transform: translate(1450px);
-            }
-
-            100% {
-                transform: translate(-100px);
-            }
-        }
-
-        .object2 {
-            margin-top: -20%;
-            height: 5%;
-            width: 5%;
-            border-radius: 20px;
-            position: absolute;
-            background: #ff0000;
-        }
-
-        @keyframes object2 {
-            0% {
-                transform: translate(1450px);
-            }
-
-            100% {
-                transform: translate(-100px);
-            }
+        .object img {
+            width: 100%;
         }
     </style>
 </head>
 
 <body>
     <div class="loop-wrapper">
+        <div id="menu">
+            <h1>Truck Road</h1>
+            <button onclick="start()">Start</button>
+            <button onclick="exit()">Exit</button>
+        </div>
         <div class="mountain"></div>
         <div class="hill"></div>
         <div class="tree"></div>
@@ -274,107 +280,34 @@
     <div class="ground"></div>
 </body>
 <script>
-    // const scriptToRemove = document.getElementById("truck-script");
-    // if (scriptToRemove) {
-    //     scriptToRemove.remove();
-    // }
-
     const trucks = document.querySelectorAll('.jump');
-    let object1;
-    let object2;
-    function jump(truck) {
-        console.log("jump");
-        truck.style.animation = 'none';
-        setTimeout(() => {
-            truck.style.animation = 'jump 0.8s';
-        }, 10);
-    }
 
-    function createObject1() {
-        object1 = document.createElement('div');
-        object1.className = 'object1';
-        object1.style.animation = 'none';
+    function start() {
+        const menu = document.getElementById('menu');
+        menu.style.display = 'none';
 
-        const minTime = 3000;
-        const maxTime = 8000;
-        const randomTime = Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
-
-        setTimeout(() => {
-            object1.style.animation = 'object1 ' + randomTime + 'ms';
-        }, 10);
-
-        document.body.appendChild(object1);
-
-        const object1Interval = setInterval(() => {
-            object1.remove();
-            clearInterval(object1Interval);
-        }, 3000);
-    }
-    setInterval(createObject1, 4000);
-
-    function createObject2() {
-        object2 = document.createElement('div');
-        object2.className = 'object2';
-        object2.style.animation = 'none';
-
-        const minTime = 3000;
-        const maxTime = 8000;
-        const randomTime = Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
-
-        setTimeout(() => {
-            object2.style.animation = 'object2 ' + randomTime + 'ms';
-        }, 10);
-
-        document.body.appendChild(object2);
-
-        const object2Interval = setInterval(() => {
-            object2.remove();
-            clearInterval(object2Interval);
-        }, 2000);
-    }
-
-    setInterval(createObject2, 3000);
-
-
-    // function isColliding(element1, element2) {
-    //     const rect1 = element1.getBoundingClientRect();
-    //     const rect2 = element2.getBoundingClientRect();
-    //     const isColliding = (
-    //         rect2.left < rect1.right &&
-    //         rect2.right > rect1.left &&
-    //         rect2.top < rect1.bottom &&
-    //         rect2.bottom > rect1.top
-    //     );
-    //     return isColliding;
-    // }
-
-    // function checkCollisions() {
-    //     trucks.forEach((truck) => {
-    //         if (isColliding(truck, object1) || isColliding(truck, object2)) {
-    //             endGame();
-    //             return;
-    //         }
-    //     });
-    // }
-
-    // checkCollisions();
-    // function endGame() {
-    //     console.log("game over")
-    // }
-    document.addEventListener('keydown', (event) => {
-        if (event.key === ' ' || event.key === 'Spacebar') {
-            trucks.forEach((truck) => {
-                jump(truck);
-            });
+        function jump(truck) {
+            console.log("jump");
+            truck.style.animation = 'none';
+            setTimeout(() => {
+                truck.style.animation = 'jump 0.8s';
+            }, 10);
         }
-    });
 
-    setInterval(createObject2, 3000);
+        document.addEventListener('keydown', (event) => {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                trucks.forEach((truck) => {
+                    jump(truck);
+                });
+            }
+        });
 
-    // const script = document.createElement("script");
-    // script.src = "../frontend/truck.js";
-    // script.id = "truck-script";
-    // document.body.appendChild(script);
+        const script = document.createElement("script");
+        script.src = "../frontend/truck.js";
+        script.id = "truck-script";
+        document.body.appendChild(script);
+    }
+
 </script>
 
 </html>
