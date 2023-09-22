@@ -15,7 +15,17 @@ function createObjects() {
     object.appendChild(objectImage);
     document.body.appendChild(object);
     object.style.left = '0px';
-    const objectSpeed = getRandomInt(1, 25);
+    let objectSpeed;
+    if (scores < 1000) {
+        objectSpeed = getRandomInt(10, 15);
+    } else if (scores >= 1000) {
+        objectSpeed = getRandomInt(15, 25);
+    } else if (scores >= 2000) {
+        objectSpeed = getRandomInt(35, 45);
+    } else if (scores >= 3000) {
+        objectSpeed = getRandomInt(45, 55);
+    }
+
 
     function updateObjectPosition() {
         scores++;
@@ -27,47 +37,48 @@ function createObjects() {
         } else {
             object.style.left = newPosition + 'px';
         }
-            if (isColliding(truck, object)) {
-                endGame();
-                return;
-            }
 
-            if (newPosition >= window.innerWidth) {
-                clearInterval(objectInterval);
-                object.remove();
-            }
+        if (isColliding(truck, object)) {
+            endGame();
         }
 
-        const objectInterval = setInterval(updateObjectPosition, 50);
-        objects.push(object);
+        if (newPosition >= window.innerWidth) {
+            clearInterval(objectInterval);
+            object.remove();
+        }
     }
 
-    function spawnObjectsRandomly() {
-        setInterval(() => {
-            createObjects();
-        }, getRandomInt(1000, 5000));
-    }
+    const objectInterval = setInterval(updateObjectPosition, 50);
+    objects.push(object);
+}
 
-    spawnObjectsRandomly();
+function spawnObjectsRandomly() {
+    setInterval(() => {
+        createObjects();
+    }, getRandomInt(3000, 6000));
+}
 
-    function isColliding(element1, element2) {
-        const rect1 = element1.getBoundingClientRect();
-        const rect2 = element2.getBoundingClientRect();
-        const isColliding = (
-            rect2.left < rect1.right &&
-            rect2.right > rect1.left &&
-            rect2.top < rect1.bottom &&
-            rect2.bottom > rect1.top
-        );
-        return isColliding;
-    }
+spawnObjectsRandomly();
+
+function isColliding(element1, element2) {
+    const rect1 = element1.getBoundingClientRect();
+    const rect2 = element2.getBoundingClientRect();
+    const isColliding = (
+        rect2.left < rect1.right &&
+        rect2.right > rect1.left &&
+        rect2.top < rect1.bottom &&
+        rect2.bottom > rect1.top
+    );
+    return isColliding;
+}
 
 
 
-    function endGame() {
-        const currentDisplay = menu.style.display;
-        menu.style.display = currentDisplay === 'none' ? 'block' : 'none';
-        const gameContainer = document.getElementById("menu");
-        gameContainer.innerHTML = `<h1>Game Over</h1><h1>${scores}</h1><button onclick="start()">Restart</button><button onclick="back()">Exit</button>`;
-        console.log(`Game Over. Score: ${scores}`);
-    }
+function endGame() {
+    const currentDisplay = menu.style.display;
+    menu.style.display = currentDisplay === 'none' ? 'block' : 'none';
+    trucks.style.display = 'none';
+    const gameContainer = document.getElementById("menu");
+    gameContainer.innerHTML = `<h1>Game Over</h1><h1>${scores}</h1><button onclick="start()">Restart</button><button onclick="back()">Exit</button>`;
+    console.log(`Game Over. Score: ${scores}`);
+}
