@@ -1,7 +1,3 @@
-const truck = document.querySelector('.truck');
-const objects = [];
-let scores = 0;
-
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -14,7 +10,7 @@ function createObjects() {
     objectImage.alt = 'car Image';
     object.appendChild(objectImage);
     document.body.appendChild(object);
-    object.style.left = '0px';
+    object.style.right = '0px';
     let objectSpeed;
     if (scores < 1000) {
         objectSpeed = getRandomInt(10, 15);
@@ -29,18 +25,21 @@ function createObjects() {
 
     function updateObjectPosition() {
         scores++;
-        const currentPosition = parseInt(object.style.left, 10);
+        const currentPosition = parseInt(object.style.right);
         const newPosition = currentPosition + objectSpeed;
         if (newPosition >= window.innerWidth - object.clientWidth) {
             clearInterval(objectInterval);
             object.remove();
         } else {
-            object.style.left = newPosition + 'px';
+            object.style.right = newPosition + 'px';
+        }
+        if (end == false) {
+            if (isColliding(truck, object)) {
+                end = true;
+                endGame();
+            }
         }
 
-        if (isColliding(truck, object)) {
-            endGame();
-        }
 
         if (newPosition >= window.innerWidth) {
             clearInterval(objectInterval);
@@ -54,7 +53,9 @@ function createObjects() {
 
 function spawnObjectsRandomly() {
     setInterval(() => {
-        createObjects();
+        if (end === false) {
+            createObjects();
+        }
     }, getRandomInt(3000, 6000));
 }
 
@@ -77,8 +78,6 @@ function isColliding(element1, element2) {
 function endGame() {
     const currentDisplay = menu.style.display;
     menu.style.display = currentDisplay === 'none' ? 'block' : 'none';
-    trucks.style.display = 'none';
     const gameContainer = document.getElementById("menu");
-    gameContainer.innerHTML = `<h1>Game Over</h1><h1>${scores}</h1><button onclick="start()">Restart</button><button onclick="back()">Exit</button>`;
-    console.log(`Game Over. Score: ${scores}`);
+    gameContainer.innerHTML = `<h1>Game Over</h1><h1>${scores}</h1><button onclick="start()">Restart</button><button onclick="exit()">Exit</button>`;
 }

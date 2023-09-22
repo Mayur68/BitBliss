@@ -34,8 +34,9 @@
         #menu {
             margin: 50px auto;
             width: 400px;
-            height: 200px;
+            height: 300px;
             display: flex;
+            justify-content: space-between;
             flex-direction: column;
         }
 
@@ -233,7 +234,7 @@
 
         @keyframes jump {
             50% {
-                transform: translateY(-150px);
+                transform: translateY(-190px);
             }
 
             100% {
@@ -280,22 +281,28 @@
     <div class="ground"></div>
 </body>
 <script>
+    const truck = document.querySelector('.truck');
     const trucks = document.querySelectorAll('.jump');
-
-    function exit(){
+    let scores = 0;
+    const objects = [];
+    let end = false;
+    function exit() {
         window.location = '/';
     }
 
     function start() {
+        end = false;
+        scores = 0;
         const menu = document.getElementById('menu');
         menu.style.display = 'none';
+
         function jump(truck) {
             console.log("jump");
             truck.style.animation = 'none';
             setTimeout(() => {
-                truck.style.animation = 'jump 0.8s';
+                truck.style.animation = 'jump 1s';
             }, 10);
-        }
+        } 
 
         document.addEventListener('keydown', (event) => {
             if (event.key === ' ' || event.key === 'Spacebar') {
