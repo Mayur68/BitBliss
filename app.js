@@ -11,8 +11,10 @@ const app = express();
 const server = require("http").Server(app);
 
 //socket.io
-const setupSocket = require("./socket/socket");
+const setupSocket = require("./socket/TicTacToe");
 setupSocket(server);
+const setupSocketForChat = require("./socket/chat");
+setupSocketForChat(server);
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
