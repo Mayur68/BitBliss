@@ -11,7 +11,7 @@ const app = express();
 const server = require("http").Server(app);
 
 //socket.io
-const setupSocket = require("./socket/TicTacToe");
+const setupSocket = require("./socket/games_1");
 setupSocket(server);
 const setupSocketForChat = require("./socket/chat");
 setupSocketForChat(server);
