@@ -4,7 +4,7 @@ This web application is built using Node.js, HTML, CSS, and JavaScript.
 
 ## Description
 
-WebApp is a simple web application that allows users to [add a brief description of what the app does]. Users can create and manage online repositories, collaborate with others, engage in chat conversations, and even play games.
+WebApp is a simple web application that allows users to .... Users can create and manage online repositories, collaborate with others, engage in chat conversations, and even play games.
 
 ## Installation
 
