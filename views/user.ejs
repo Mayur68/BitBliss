@@ -12,203 +12,247 @@
     <title>Cosmic Arcade</title>
 </head>
 
-<body>
+<body class="Desktop1" style="width: 1440px; height: 2455px; position: relative; background: #181A23">
+    <div class="Rectangle1"
+        style="width: 1352px; height: 615px; left: 41px; top: 58px; position: absolute; background: #282828; border-radius: 10px">
+    </div>
+    <div class="Rectangle2"
+        style="width: 324px; height: 615px; left: 36px; top: 58px; position: absolute; background: #1F1F1F; border-radius: 10px">
+    </div>
+    <div class="Rectangle7"
+        style="width: 297px; height: 47px; left: 49px; top: 85px; position: absolute; background: #969696; border-radius: 10px">
+    </div>
+    <div class="Rectangle11"
+        style="width: 297px; height: 47px; left: 49px; top: 148px; position: absolute; background: #969696; border-radius: 10px">
+    </div>
+    <div class="Rectangle3"
+        style="width: 694.41px; height: 39px; left: 397px; top: 606px; position: absolute; background: white; border-radius: 10px; border: 1px #0047FF solid; backdrop-filter: blur(4px)">
+    </div>
+    <div class="TypeMassage"
+        style="left: 424px; top: 617px; position: absolute; color: #6C6C6C; font-size: 15px; font-family: Inter; font-weight: 300; word-wrap: break-word">
+        type massage...</div>
+    <div class="Rectangle4"
+        style="width: 71px; height: 39px; left: 1191px; top: 606px; position: absolute; transform: rotate(180deg); transform-origin: 0 0; background: #0032E3; border-radius: 15px">
+    </div>
+    <div class="Ellipse1"
+        style="width: 63px; height: 54px; left: 36px; top: 40px; position: absolute; border-radius: 9999px"></div>
+    <div class="Ellipse2"
+        style="width: 35px; height: 35px; left: 1384px; top: 15px; position: absolute; background: #D9D9D9; border-radius: 9999px">
+    </div>
+    <div class="Ellipse3"
+        style="width: 35px; height: 35px; left: 9px; top: 15px; position: absolute; background: #000AFF; border-radius: 9999px">
+    </div>
+    <div class="Rectangle8"
+        style="width: 506px; height: 521px; left: 41px; top: 825px; position: absolute; background: #212231; border-radius: 10px">
+    </div>
+    <div class="Rectangle9"
+        style="width: 828px; height: 521px; left: 591px; top: 825px; position: absolute; background: #3F4254; border-radius: 10px">
+    </div>
+    <div class="UploadHere"
+        style="left: 919px; top: 1068px; position: absolute; color: black; font-size: 30px; font-family: Inter; font-weight: 300; word-wrap: break-word">
+        Upload here</div>
 
-    <body class="Desktop1" style="width: 1440px; height: 2321px; position: relative; background: #181A23">
-        <div class="Rectangle1"
-            style="width: 1398px; height: 682px; left: 21px; top: 156px; position: absolute; background: #282828; border-radius: 10px">
-        </div>
-        <div class="Rectangle2"
-            style="width: 523px; height: 682px; left: 22px; top: 156px; position: absolute; background: #1F1F1F; border-radius: 10px">
-        </div>
-        <div class="Rectangle7"
-            style="width: 490px; height: 64px; left: 36px; top: 180px; position: absolute; background: #969696; border-radius: 10px">
-        </div>
-        <div class="Rectangle3"
-            style="width: 741px; height: 51px; left: 561px; top: 766px; position: absolute; background: white; border-radius: 10px; border: 1px #0047FF solid; backdrop-filter: blur(4px)">
-        </div>
-        <div class="TypeMassage"
-            style="left: 599px; top: 778px; position: absolute; color: #6C6C6C; font-size: 22px; font-family: Inter; font-weight: 300; word-wrap: break-word">
-            type massage...</div>
-        <div class="Rectangle4"
-            style="width: 71px; height: 51px; left: 1316px; top: 766px; position: absolute; background: #0032E3; border-radius: 15px">
-        </div>
-        <div class="Ellipse1"
-            style="width: 63px; height: 54px; left: 36px; top: 40px; position: absolute; border-radius: 9999px"></div>
-    </body>
 
-    <script>
-        function r_p_c() {
-            window.location.href = "/<%= username %>/Rock-Paper-Scissors";
-        }
-        function TicTacToe_online() {
-            window.location.href = "/<%= username %>/TicTacToe-online";
-        }
-        function cosmicShoot() {
-            window.location.href = "/<%= username %>/shootDown";
-        }
-        function chess() {
-            window.location.href = "/<%= username %>/chess";
-        }
-        function truck() {
-            window.location.href = "/<%= username %>/truck";
-        }
-        function paint() {
-            window.location.href = "/<%= username %>/paint";
-        }
+    <div>
+        <input type="text" id="addFriend" />
+        <button onclick="addFriend()"></button>
+    </div>
 
-        function addFriend() {
-            const friendId = document.getElementById("addFriend").value
-            const userId = "<%= username %>"
-            const data = {
-                userId: userId,
-                friendId: friendId,
-            };
-            fetch("/addFriend", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                    if (data.status === "success") {
-                        alert("Friend added successfully!");
-                    } else {
-                        alert("Failed to add friend: " + data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error adding friend:", error);
-                    // Handle the error
-                    alert("An error occurred while adding friend. Please try again later.");
-                });
-        }
-    </script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        socket.emit("connection");
-        socket.emit("authenticate", { userID: "<%= username %>" });
-        const message = document.getElementById("message")
-        let content = message.value
-        function send() {
-            socket.emit('sendMsg', { senderID: "<%= username %>", message: content });
-        }
-        socket.on("recieveMsg", (data) => {
-            const { senderID, content } = data
-            console.log(content)
+    <div class="Line1"
+        style="width: 1440px; height: 0px; left: 0px; top: 1638px; position: absolute; border: 1px black solid"></div>
+    <div class="Rectangle10"
+        style="width: 1368px; height: 177px; left: 36px; top: 1675px; position: absolute; background: #000B34"></div>
+    <div class="CosmicArcade"
+        style="left: 543px; top: 1733px; position: absolute; color: #5B4DFF; font-size: 50px; font-family: Inter; font-weight: 300; word-wrap: break-word">
+        Cosmic Arcade</div>
+</body>
+
+<script>
+    function r_p_c() {
+        window.location.href = "/<%= username %>/Rock-Paper-Scissors";
+    }
+    function TicTacToe_online() {
+        window.location.href = "/<%= username %>/TicTacToe-online";
+    }
+    function cosmicShoot() {
+        window.location.href = "/<%= username %>/shootDown";
+    }
+    function chess() {
+        window.location.href = "/<%= username %>/chess";
+    }
+    function truck() {
+        window.location.href = "/<%= username %>/truck";
+    }
+    function paint() {
+        window.location.href = "/<%= username %>/paint";
+    }
+
+
+    function addFriend() {
+        const friendId = document.getElementById("addFriend").value
+
+        const userId = "<%= username %>"
+        const data = {
+            userId: userId,
+            friendId: friendId,
+        };
+        fetch("/addFriend", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
         })
-
-    </script>
-    <script>
-        const owner = '<%= username %>'
-        function createRepository() {
-            const name = title
-            const description = description
-            fetch("/createRepository", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Friend added successfully!");
+                } else {
+                    alert("Failed to add friend: " + data.message);
+                }
             })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                    if (data.status === "success") {
-                        alert("Repository created successfully!");
-                    } else {
-                        alert("Failed to create Repository" + data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error creating Repository", error);
-                    // Handle the error
-                    alert("An error occurred while creating Repository. Please try again later.");
-                });
-        }
+            .catch((error) => {
+                console.error("Error adding friend:", error);
+                // Handle the error
+                alert("An error occurred while adding friend. Please try again later.");
+            });
+    }
+</script>
 
-        function getRepository() {
-            const name = title
-            const description = description
-            fetch("/createRepository", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket1 = io();
+    socket1.emit("connection_1");
+    socket1.emit("authenticate_1", { userID: "<%= username %>" });
+    const message = document.getElementById("message")
+    // let content = message.value
+
+    function send() {
+        socket1.emit('sendMsg', { senderID: "<%= username %>", message: content });
+    }
+    socket1.on("recieveMsg", (data) => {
+        const { senderID, content } = data
+        console.log(content)
+    })
+
+    const userId = "<%= username %>"
+    socket1.emit("loadFriends", userId);
+
+</script>
+
+
+
+
+<script>
+    const owner = '<%= username %>'
+    function createRepository() {
+        const name = title
+        const description = description
+        fetch("/createRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Repository created successfully!");
+                } else {
+                    alert("Failed to create Repository" + data.message);
+                }
             })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                    if (data.status === "success") {
-                        alert("Repository created successfully!");
-                    } else {
-                        alert("Failed to create Repository" + data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error creating Repository", error);
-                    // Handle the error
-                    alert("An error occurred while creating Repository. Please try again later.");
-                });
-        }
+            .catch((error) => {
+                console.error("Error creating Repository", error);
+                // Handle the error
+                alert("An error occurred while creating Repository. Please try again later.");
+            });
+    }
 
-        function updateRepository() {
-            const name = title
-            const description = description
-            fetch("/createRepository", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
+    function getRepository() {
+        const name = title
+        const description = description
+        fetch("/createRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Repository created successfully!");
+                } else {
+                    alert("Failed to create Repository" + data.message);
+                }
             })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                    if (data.status === "success") {
-                        alert("Repository created successfully!");
-                    } else {
-                        alert("Failed to create Repository" + data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error creating Repository", error);
-                    // Handle the error
-                    alert("An error occurred while creating Repository. Please try again later.");
-                });
-        }
+            .catch((error) => {
+                console.error("Error creating Repository", error);
+                // Handle the error
+                alert("An error occurred while creating Repository. Please try again later.");
+            });
+    }
 
-        function deleteRepository() {
-            const name = title
-            const description = description
-            fetch("/createRepository", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
+    function updateRepository() {
+        const name = title
+        const description = description
+        fetch("/createRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Repository created successfully!");
+                } else {
+                    alert("Failed to create Repository" + data.message);
+                }
             })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                    if (data.status === "success") {
-                        alert("Repository created successfully!");
-                    } else {
-                        alert("Failed to create Repository" + data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error creating Repository", error);
-                    // Handle the error
-                    alert("An error occurred while creating Repository. Please try again later.");
-                });
-        }
+            .catch((error) => {
+                console.error("Error creating Repository", error);
+                // Handle the error
+                alert("An error occurred while creating Repository. Please try again later.");
+            });
+    }
 
-    </script>
+    function deleteRepository() {
+        const name = title
+        const description = description
+        fetch("/createRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Repository created successfully!");
+                } else {
+                    alert("Failed to create Repository" + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error creating Repository", error);
+                // Handle the error
+                alert("An error occurred while creating Repository. Please try again later.");
+            });
+    }
+
+</script>
 
 </html>

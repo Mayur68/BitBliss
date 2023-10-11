@@ -13,8 +13,8 @@ const server = require("http").Server(app);
 //socket.io
 const setupSocket = require("./socket/games_1");
 setupSocket(server);
-const setupSocketForChat = require("./socket/chat");
-setupSocketForChat(server);
+// const setupSocketForChat = require("./socket/chat");
+// setupSocketForChat(server);
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json());

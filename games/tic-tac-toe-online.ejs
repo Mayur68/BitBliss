@@ -233,7 +233,7 @@
             </div>
             <button id="goBack" onclick="goBack()">Surrender?</button>`
             const script = document.createElement("script");
-            script.src = "../frontend/tictactoebot.js";
+            script.src = "./scripts/tictactoebot.js";
             script.id = "tictactoebot-script";
             document.body.appendChild(script);
         }
@@ -345,7 +345,7 @@
             </div>`
             function loadChildScript() {
                 var script = document.createElement("script");
-                script.src = "../frontend/tictactoeonline.js";
+                script.src = "./scripts/tictactoeonline.js";
                 script.onload = function () {
                     window.dispatchEvent(event);
                 };
