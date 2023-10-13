@@ -125,22 +125,32 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    const socket1 = io();
-    socket1.emit("connection_1");
-    socket1.emit("authenticate_1", { userID: "<%= username %>" });
+    const userId = "<%= username %>"
+    const socket = io();
+    socket.emit("connection");
+    socket.emit("authenticate", { userID: userId });
     const message = document.getElementById("message")
     // let content = message.value
 
-    function send() {
-        socket1.emit('sendMsg', { senderID: "<%= username %>", message: content });
-    }
-    socket1.on("recieveMsg", (data) => {
-        const { senderID, content } = data
-        console.log(content)
+    socket.emit("loadFriends", userId);
+
+    socket.on("Friends", (data) => {
+        const { friends } = data
+        console.log("friends: ",friends)
     })
 
-    const userId = "<%= username %>"
-    socket1.emit("loadFriends", userId);
+    socket.on("onlineFriends", (data) => {
+        const { OnlineFriends } = data
+        console.log("onlinFriends: ",OnlineFriends)
+    })
+
+    function send() {
+        socket1.emit('sendMsg', { senderID: "<%= username %>", message: message });
+    }
+    socket.on("recieveMsg", (data) => {
+        const { senderID, message } = data
+        console.log(message)
+    })
 
 </script>
 

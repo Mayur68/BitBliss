@@ -11,10 +11,10 @@ const app = express();
 const server = require("http").Server(app);
 
 //socket.io
-const setupSocket = require("./socket/games_1");
+// const setupSocket = require("./socket/games_1");
+// setupSocket(server);
+const setupSocket = require("./socket/chat");
 setupSocket(server);
-// const setupSocketForChat = require("./socket/chat");
-// setupSocketForChat(server);
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
@@ -37,21 +37,27 @@ app.get("/", (req, res) => {
     .find()
     .toArray()
     .then((result) => {
-      if (result.length > 0) {
-        let i;
-        for (i = 0; i < result.length; i++) {
-          let username = result[i].username;
-          if (result[i].session === sessionString) {
-            res.render("user", { username: username });
-          } else {
-            res.sendFile(__dirname + "/frontend/index.html");
-          }
+      let authenticated = false;
+
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].session === sessionString) {
+          authenticated = true;
+          const username = result[i].username;
+          res.render("user", { username: username });
+          break;
         }
-      } else {
+      }
+
+      if (!authenticated) {
         res.sendFile(__dirname + "/frontend/index.html");
       }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Internal server error");
     });
 });
+
 
 //connecting to database and runnning server
 connection((err) => {
