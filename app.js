@@ -3,9 +3,22 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const { connection, getdb } = require("./database/database");
+const { EventEmitter } = require('events');
+const busEmitter = new EventEmitter();
+
+
+busEmitter.setMaxListeners(15);
+
+// Add event listeners
+for (let i = 0; i < 15; i++) {
+  busEmitter.on('exit', () => {
+    console.log('Exit listener', i + 1);
+  });
+}
 
 const arcade = require("./routes/arcade");
 const user = require("./routes/user");
+const chatHistory = require("./routes/chatHistory");
 
 const app = express();
 const server = require("http").Server(app);
@@ -21,6 +34,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use("/", arcade);
 app.use("/", user);
+app.use("/", chatHistory);
 
 // Set the view engine to EJS
 app.set("view engine", "ejs");

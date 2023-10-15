@@ -4,43 +4,45 @@ db = getdb();
 
 function setupSocket(server) {
   const io = socketIO(server);
-  const connectedUsers = [];
+  const connectedUsers = {};
+  const connectedUsers1 = [];
 
   io.on("connection", (socket) => {
-    connectedUsers.push(socket.id);
-
     socket.on("authenticate", (data) => {
       const { userID } = data;
       socket.userID = userID;
-      loadFriends(io, socket, connectedUsers);
+      connectedUsers[userID] = socket.id;
+      connectedUsers1.push(userID);
+      loadFriends(io, socket, connectedUsers1);
     });
 
     socket.on("send_message", (data) => {
       const { senderID, recipientID, message } = data;
-      if (recipientID) {
-        io.to(recipientID).emit("new_message", {
+      if (recipientID && connectedUsers[recipientID]) {
+        io.to(connectedUsers[recipientID]).emit("receiveMsg", {
           senderID,
           message,
         });
-      } else {
-        console.log("Recipient not found for sender:", senderID);
       }
+      // else {
+      //   console.log("Recipient not found for sender:", senderID);
+      // }
     });
-
 
     socket.on("disconnect", () => {
-      const index = connectedUsers.indexOf(socket.id);
+      const userID = socket.userID;
+      delete connectedUsers[userID];
+      const index = connectedUsers1.indexOf(userID);
       if (index !== -1) {
-        connectedUsers.splice(index, 1);
+        connectedUsers1.splice(index, 1);
       }
     });
-
-  })
+  });
 }
 
 
-async function loadFriends(io, socket) {
-  const userID = socket.userID; // Corrected to extract userID
+async function loadFriends(io, socket, connectedUsers1) {
+  const userID = socket.userID;
 
   try {
     const user = await db.collection("accounts").findOne({ username: userID });
@@ -51,10 +53,8 @@ async function loadFriends(io, socket) {
 
     const onlineFriends = [];
     const friends = user.friends || [];
-    console.log(io.sockets.connected)
     friends.forEach((friendID) => {
-      if (io.sockets.connected[friendID]) {
-        console.log("gfcjghck")
+      if (connectedUsers1.indexOf(friendID) >= 0) {
         onlineFriends.push(friendID);
       }
     });
@@ -65,7 +65,5 @@ async function loadFriends(io, socket) {
     console.error("Error loading friends:", error);
   }
 }
-
-
 
 module.exports = setupSocket;

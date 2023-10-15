@@ -10,83 +10,115 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title>Cosmic Arcade</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .chat-container {
+            border: 1px solid #ccc;
+            display: flex;
+            /* flex-direction: column; */
+            border-radius: 15px;
+            justify-content: space-between;
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .chat-window {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 450px;
+            width: 50%;
+            border-radius: 15px;
+            overflow-y: scroll;
+
+        }
+
+        .messages {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .message {
+            padding: 5px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+
+        .message.self {
+            align-self: flex-end;
+            background-color: #ac10f5;
+        }
+
+        .message.notself {
+            align-self: flex-start;
+            background-color: #0e0eff;
+        }
+
+        #friends-list {
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            padding: 10px;
+            max-height: 450px;
+            width: 20%;
+            overflow-y: auto;
+        }
+
+        /* Style for each friend item */
+        .friend-item {
+            padding: 5px;
+            margin-bottom: 5px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+        }
+
+        #addFriend {
+            width: 20%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+        }
+    </style>
 </head>
 
 <body class="Desktop1" style="width: 1440px; height: 2455px; position: relative; background: #181A23">
-    <div class="Rectangle1"
-        style="width: 1352px; height: 615px; left: 41px; top: 58px; position: absolute; background: #282828; border-radius: 10px">
-    </div>
-    <div class="Rectangle2"
-        style="width: 324px; height: 615px; left: 36px; top: 58px; position: absolute; background: #1F1F1F; border-radius: 10px">
-    </div>
-    <div class="Rectangle7"
-        style="width: 297px; height: 47px; left: 49px; top: 85px; position: absolute; background: #969696; border-radius: 10px">
-    </div>
-    <div class="Rectangle11"
-        style="width: 297px; height: 47px; left: 49px; top: 148px; position: absolute; background: #969696; border-radius: 10px">
-    </div>
-    <div class="Rectangle3"
-        style="width: 694.41px; height: 39px; left: 397px; top: 606px; position: absolute; background: white; border-radius: 10px; border: 1px #0047FF solid; backdrop-filter: blur(4px)">
-    </div>
-    <div class="TypeMassage"
-        style="left: 424px; top: 617px; position: absolute; color: #6C6C6C; font-size: 15px; font-family: Inter; font-weight: 300; word-wrap: break-word">
-        type massage...</div>
-    <div class="Rectangle4"
-        style="width: 71px; height: 39px; left: 1191px; top: 606px; position: absolute; transform: rotate(180deg); transform-origin: 0 0; background: #0032E3; border-radius: 15px">
-    </div>
-    <div class="Ellipse1"
-        style="width: 63px; height: 54px; left: 36px; top: 40px; position: absolute; border-radius: 9999px"></div>
-    <div class="Ellipse2"
-        style="width: 35px; height: 35px; left: 1384px; top: 15px; position: absolute; background: #D9D9D9; border-radius: 9999px">
-    </div>
-    <div class="Ellipse3"
-        style="width: 35px; height: 35px; left: 9px; top: 15px; position: absolute; background: #000AFF; border-radius: 9999px">
-    </div>
-    <div class="Rectangle8"
-        style="width: 506px; height: 521px; left: 41px; top: 825px; position: absolute; background: #212231; border-radius: 10px">
-    </div>
-    <div class="Rectangle9"
-        style="width: 828px; height: 521px; left: 591px; top: 825px; position: absolute; background: #3F4254; border-radius: 10px">
-    </div>
-    <div class="UploadHere"
-        style="left: 919px; top: 1068px; position: absolute; color: black; font-size: 30px; font-family: Inter; font-weight: 300; word-wrap: break-word">
-        Upload here</div>
-
-
-    <div>
+    <button onclick="profile()">profile</button>
+    <div id="adfriend">
+        <label style="color: #ccc;">Add friend</label>
         <input type="text" id="addFriend" />
-        <button onclick="addFriend()"></button>
+        <button onclick="addFriend()">Add Friend</button>
+    </div>
+    <div class="chat-container">
+        <div id="friends-list"></div>
+        <div class="chat-window" id="chat-window">
+            <div class="messages" id="messages"></div>
+        </div>
+        <div>
+            <input type="text" id="message-input" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+
     </div>
 
-    <div class="Line1"
-        style="width: 1440px; height: 0px; left: 0px; top: 1638px; position: absolute; border: 1px black solid"></div>
-    <div class="Rectangle10"
-        style="width: 1368px; height: 177px; left: 36px; top: 1675px; position: absolute; background: #000B34"></div>
-    <div class="CosmicArcade"
-        style="left: 543px; top: 1733px; position: absolute; color: #5B4DFF; font-size: 50px; font-family: Inter; font-weight: 300; word-wrap: break-word">
-        Cosmic Arcade</div>
 </body>
 
 <script>
-    function r_p_c() {
-        window.location.href = "/<%= username %>/Rock-Paper-Scissors";
-    }
-    function TicTacToe_online() {
-        window.location.href = "/<%= username %>/TicTacToe-online";
-    }
-    function cosmicShoot() {
-        window.location.href = "/<%= username %>/shootDown";
-    }
-    function chess() {
-        window.location.href = "/<%= username %>/chess";
-    }
-    function truck() {
-        window.location.href = "/<%= username %>/truck";
-    }
-    function paint() {
-        window.location.href = "/<%= username %>/paint";
-    }
 
+    function profile() {
+        window.location = "/<%= username %>"
+    }
 
     function addFriend() {
         const friendId = document.getElementById("addFriend").value
@@ -96,6 +128,7 @@
             userId: userId,
             friendId: friendId,
         };
+
         fetch("/addFriend", {
             method: "POST",
             headers: {
@@ -114,13 +147,11 @@
             })
             .catch((error) => {
                 console.error("Error adding friend:", error);
-                // Handle the error
                 alert("An error occurred while adding friend. Please try again later.");
             });
     }
+
 </script>
-
-
 
 
 <script src="/socket.io/socket.io.js"></script>
@@ -130,27 +161,148 @@
     socket.emit("connection");
     socket.emit("authenticate", { userID: userId });
     const message = document.getElementById("message")
-    // let content = message.value
-
     socket.emit("loadFriends", userId);
+    let recepientID;
+    let receivedMessage;
 
     socket.on("Friends", (data) => {
-        const { friends } = data
-        console.log("friends: ",friends)
-    })
+        const { friends } = data;
+        console.log("friends: ", friends);
+        updateFriendsList(friends);
+    });
 
-    socket.on("onlineFriends", (data) => {
-        const { OnlineFriends } = data
-        console.log("onlinFriends: ",OnlineFriends)
-    })
-
-    function send() {
-        socket1.emit('sendMsg', { senderID: "<%= username %>", message: message });
+    function updateFriendsList(friends) {
+        const friendsListDiv = document.getElementById("friends-list");
+        friendsListDiv.innerHTML = "";
+        friends.forEach((friend) => {
+            const friendElement = document.createElement("div");
+            friendElement.className = "friend-item";
+            friendElement.innerText = friend;
+            friendElement.onclick = () => friendClickHandler(friend);
+            friendsListDiv.appendChild(friendElement);
+        });
     }
-    socket.on("recieveMsg", (data) => {
-        const { senderID, message } = data
-        console.log(message)
-    })
+
+    function friendClickHandler(x) {
+        recepientID = x;
+
+        const dataToSend = {
+            recepientID: recepientID,
+            userId: userId
+        };
+
+        const messages = document.getElementById("messages");
+        messages.innerHTML = "";
+
+        fetch("/loadHistory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataToSend)
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    const chatHistory = data.chatHistory;
+                    displayChatHistory(chatHistory);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading History:", error);
+                alert("An error occurred while loading history. Please try again later.");
+            });
+
+        function displayChatHistory(chatHistory) {
+            // Display each message
+            chatHistory.forEach((chat) => {
+                console.log(chat);
+
+                if (chat.message && chat.message.trim() !== '') {
+                    const messageDiv = document.createElement('div');
+
+                    if (chat.sender.userId === userId) {
+                        messageDiv.className = "message self";
+                        messageDiv.textContent = chat.message;
+                        messages.appendChild(messageDiv);
+                    } else if (chat.sender.userId === recepientID) {
+                        messageDiv.className = "message notself";
+                        messageDiv.textContent = chat.message;
+                        messages.appendChild(messageDiv);
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    function sendMessage() {
+        const messageInput = document.getElementById("message-input");
+        const message = messageInput.value;
+        if (message.trim() === "") return;
+        if (!recepientID) {
+            console.log("Select a recipient.");
+            return;
+        }
+
+        const messagesDiv = document.getElementById("messages");
+        const messageElement = document.createElement("div");
+        messageElement.className = "message self";
+        messageElement.innerText = message;
+        messagesDiv.appendChild(messageElement);
+        const dataToSend = {
+            recepientID: recepientID,
+            userId: userId,
+            message: message
+        };
+
+        fetch("/saveHistory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataToSend),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    console.log();
+                } else {
+                    console.log("Failed to save History: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error saving History:", error);
+                alert("An error occurred while saving history. Please try again later.");
+            });
+
+
+        socket.emit('send_message', {
+            senderID: "<%= username %>",
+            recipientID: recepientID,
+            message: message
+        });
+
+        messageInput.value = "";
+        const chatWindow = document.getElementById("chat-window");
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+
+    socket.on("receiveMsg", (data) => {
+        const { senderID, message } = data;
+        receivedMessage = message
+        const messagesDiv = document.getElementById("messages");
+        const messageElement = document.createElement("div");
+        messageElement.className = "message notself";
+        messageElement.innerText = `${message}`;
+        messagesDiv.appendChild(messageElement);
+        const chatWindow = document.getElementById("chat-window");
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    });
 
 </script>
 
