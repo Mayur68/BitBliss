@@ -100,6 +100,11 @@
         <input type="text" id="addFriend" />
         <button onclick="addFriend()">Add Friend</button>
     </div>
+    <div id="adfriend">
+        <label style="color: #ccc;">Create room</label>
+        <input type="text" id="createRoom" placeholder="Enter room name" />
+        <button onclick="createRoom()">Create room</button>
+    </div>
     <div class="chat-container">
         <div id="friends-list"></div>
         <div class="chat-window" id="chat-window">
@@ -119,6 +124,8 @@
     function profile() {
         window.location = "/<%= username %>"
     }
+
+   
 
     function addFriend() {
         const friendId = document.getElementById("addFriend").value
@@ -161,9 +168,15 @@
     socket.emit("connection");
     socket.emit("authenticate", { userID: userId });
     const message = document.getElementById("message")
+    const room = document.getElementById("createRoom")
+    let roomName = room.value;
     socket.emit("loadFriends", userId);
     let recepientID;
     let receivedMessage;
+
+    function createRoom(){
+        socket.emit("createRoom", { userID: userId, roomName:roomName});   
+    }
 
     socket.on("Friends", (data) => {
         const { friends } = data;

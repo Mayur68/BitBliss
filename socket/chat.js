@@ -29,6 +29,11 @@ function setupSocket(server) {
       // }
     });
 
+    socket.on('CreateRoom', (data) => {
+      const { userID, roomName } = data;
+      socket.join(roomName);
+    })
+
     socket.on("disconnect", () => {
       const userID = socket.userID;
       delete connectedUsers[userID];
