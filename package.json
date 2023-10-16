@@ -1,10 +1,16 @@
+
 {
   "name": "WebApp",
   "version": "1.0.0",
   "description": "Simple BtiBliss",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+
+"start": "nodemon index",
+"build": "npm install && npm run build-server",
+"build-server": "echo 'Building server...' && npm run compile-server",
+"compile-server": "echo 'Compiling server...'"
   },
   "keywords": [],
   "author": "Mayur",
