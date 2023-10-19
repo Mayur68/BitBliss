@@ -3,60 +3,19 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico" />
-    <!-- <link rel="stylesheet" href="/frontend/global.css"> -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <title>Cosmic Arcade</title>
+    <title>Chat Application</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-        }
-
-        .chat-container {
-            border: 1px solid #ccc;
-            display: flex;
-            /* flex-direction: column; */
-            border-radius: 15px;
-            justify-content: space-between;
-            width: 90%;
-            margin: auto;
-            padding: 20px;
-        }
-
-        .chat-window {
-            border: 1px solid #ccc;
-            padding: 10px;
-            height: 450px;
-            width: 50%;
-            border-radius: 15px;
-            overflow-y: scroll;
-
-        }
-
-        .messages {
-            display: flex;
-            flex-direction: column;
-
-        }
-
-        .message {
-            padding: 5px;
-            margin-bottom: 5px;
-            border-radius: 5px;
+            margin: 0;
+            padding: 0;
             background-color: #f0f0f0;
         }
 
-        .message.self {
-            align-self: flex-end;
-            background-color: #ac10f5;
-        }
-
-        .message.notself {
-            align-self: flex-start;
-            background-color: #0e0eff;
+        .chat-container {
+            display: flex;
+            height: 100vh;
         }
 
         #friends-list {
@@ -68,7 +27,6 @@
             overflow-y: auto;
         }
 
-        /* Style for each friend item */
         .friend-item {
             padding: 5px;
             margin-bottom: 5px;
@@ -76,56 +34,157 @@
             border-radius: 5px;
         }
 
-        input[type="text"] {
-            width: 80%;
-            padding: 10px;
+        .chat-sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        #addFriend {
-            width: 20%;
+        .chat-sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .chat-sidebar ul li {
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+        .chat-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .chat-header {
+            background-color: #ffffff;
             padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .message {
             margin-bottom: 10px;
         }
 
-        button {
+        .message-input {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .message-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .message-input button {
             padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .message-input button:hover {
+            background-color: #45a049;
+        }
+
+        .create-room-button {
+            padding: 10px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .create-room-button:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 767px) {
+            .chat-toggle-button {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                font-size: 24px;
+                cursor: pointer;
+                z-index: 1000;
+            }
+
+            .chat-sidebar {
+                width: 80%;
+                max-width: 300px;
+                position: fixed;
+                top: 0;
+                left: -100%;
+                background-color: #ffffff;
+                transition: left 0.3s ease-in;
+            }
+
+            .chat-content {
+                margin-left: auto;
+                padding: 20px;
+            }
         }
     </style>
 </head>
 
-<body class="Desktop1" style="width: 1440px; height: 2455px; position: relative; background: #181A23">
-    <button onclick="profile()">profile</button>
-    <div id="adfriend">
-        <label style="color: #ccc;">Add friend</label>
-        <input type="text" id="addFriend" />
-        <button onclick="addFriend()">Add Friend</button>
-    </div>
-    <div id="adfriend">
-        <label style="color: #ccc;">Create room</label>
-        <input type="text" id="createRoom" placeholder="Enter room name" />
-        <button onclick="createRoom()">Create room</button>
-    </div>
+<body>
+    <!-- <div class="chat-toggle-button" onclick="toggleChat()">☰</div> -->
     <div class="chat-container">
-        <div id="friends-list"></div>
-        <div class="chat-window" id="chat-window">
-            <div class="messages" id="messages"></div>
+        <div class="chat-sidebar" id="chatSidebar">
+            <h2>Chat List</h2>
+            <div id="friends-list"></div>
+            <button class="create-room-button">Create Room</button>
         </div>
-        <div>
-            <input type="text" id="message-input" placeholder="Type a message...">
-            <button onclick="sendMessage()">Send</button>
+        <div class="chat-content" id="chatContent">
+            <div class="chat-header">
+                <h2 id="chatTitle">Select a chat</h2>
+            </div>
+            <div class="chat-messages">
+                <div class="message">Select a chat to start conversation.</div>
+            </div>
+            <div class="message-input">
+                <input type="text" placeholder="Type your message..." disabled>
+                <button disabled>Send</button>
+            </div>
         </div>
-
     </div>
 
 </body>
 
+
 <script>
+
+    function showChat(chatName) {
+        const chatContent = document.getElementById('chatContent');
+        const chatTitle = document.getElementById('chatTitle');
+        const chatSidebar = document.getElementById('chatSidebar');
+
+        chatTitle.innerText = chatName;
+        chatContent.classList.add('active');
+        chatSidebar.classList.remove('active');
+    }
+
+    function toggleChat() {
+        const chatSidebar = document.getElementById('chatSidebar');
+        chatSidebar.classList.toggle('active');
+    }
+
 
     function profile() {
         window.location = "/<%= username %>"
     }
-
-   
 
     function addFriend() {
         const friendId = document.getElementById("addFriend").value
@@ -174,8 +233,8 @@
     let recepientID;
     let receivedMessage;
 
-    function createRoom(){
-        socket.emit("createRoom", { userID: userId, roomName:roomName});   
+    function createRoom() {
+        socket.emit("createRoom", { userID: userId, roomName: roomName });
     }
 
     socket.on("Friends", (data) => {
@@ -191,7 +250,7 @@
             const friendElement = document.createElement("div");
             friendElement.className = "friend-item";
             friendElement.innerText = friend;
-            friendElement.onclick = () => friendClickHandler(friend);
+            friendElement.onclick = () => friendClickHandler(friend), showChat(friend);
             friendsListDiv.appendChild(friendElement);
         });
     }
@@ -319,115 +378,5 @@
 
 </script>
 
-
-
-
-<script>
-    const owner = '<%= username %>'
-    function createRepository() {
-        const name = title
-        const description = description
-        fetch("/createRepository", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                if (data.status === "success") {
-                    alert("Repository created successfully!");
-                } else {
-                    alert("Failed to create Repository" + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error creating Repository", error);
-                // Handle the error
-                alert("An error occurred while creating Repository. Please try again later.");
-            });
-    }
-
-    function getRepository() {
-        const name = title
-        const description = description
-        fetch("/createRepository", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                if (data.status === "success") {
-                    alert("Repository created successfully!");
-                } else {
-                    alert("Failed to create Repository" + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error creating Repository", error);
-                // Handle the error
-                alert("An error occurred while creating Repository. Please try again later.");
-            });
-    }
-
-    function updateRepository() {
-        const name = title
-        const description = description
-        fetch("/createRepository", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                if (data.status === "success") {
-                    alert("Repository created successfully!");
-                } else {
-                    alert("Failed to create Repository" + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error creating Repository", error);
-                // Handle the error
-                alert("An error occurred while creating Repository. Please try again later.");
-            });
-    }
-
-    function deleteRepository() {
-        const name = title
-        const description = description
-        fetch("/createRepository", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                if (data.status === "success") {
-                    alert("Repository created successfully!");
-                } else {
-                    alert("Failed to create Repository" + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error creating Repository", error);
-                // Handle the error
-                alert("An error occurred while creating Repository. Please try again later.");
-            });
-    }
-
-</script>
 
 </html>

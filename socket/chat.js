@@ -24,15 +24,16 @@ function setupSocket(server) {
           message,
         });
       }
-      // else {
-      //   console.log("Recipient not found for sender:", senderID);
-      // }
     });
 
     socket.on('CreateRoom', (data) => {
       const { userID, roomName } = data;
       socket.join(roomName);
-    })
+
+      socket.emit('roomCreated', `Room ${roomName} created successfully!`);
+
+      io.to(roomName).emit('roomMessage', `User ${userID} has joined the room.`);
+    });
 
     socket.on("disconnect", () => {
       const userID = socket.userID;
@@ -41,6 +42,7 @@ function setupSocket(server) {
       if (index !== -1) {
         connectedUsers1.splice(index, 1);
       }
+      socket.leaveAll();
     });
   });
 }
