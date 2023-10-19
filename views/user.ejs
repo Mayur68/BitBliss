@@ -140,7 +140,21 @@
 </head>
 
 <body>
+<<<<<<< HEAD
     <!-- <div class="chat-toggle-button" onclick="toggleChat()">☰</div> -->
+=======
+    <button onclick="profile()">profile</button>
+    <div id="adfriend">
+        <label style="color: #ccc;">Add friend</label>
+        <input type="text" id="addFriend" />
+        <button onclick="addFriend()">Add Friend</button>
+    </div>
+    <div id="adfriend">
+        <label style="color: #ccc;">Create room</label>
+        <input type="text" id="createRoom" placeholder="Enter room name" />
+        <button onclick="createRoom()">Create room</button>
+    </div>
+>>>>>>> 7015cb3d6187ff109acd7cd783ee313dd0f72e1b
     <div class="chat-container">
         <div class="chat-sidebar" id="chatSidebar">
             <h2>Chat List</h2>
@@ -379,4 +393,118 @@
 </script>
 
 
+<<<<<<< HEAD
 </html>
+=======
+
+
+<script>
+    const owner = '<%= username %>'
+    function createRepository() {
+        const name = title
+        const description = description
+        fetch("/createRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Repository created successfully!");
+                } else {
+                    alert("Failed to create Repository" + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error creating Repository", error);
+                // Handle the error
+                alert("An error occurred while creating Repository. Please try again later.");
+            });
+    }
+
+    function getRepository() {
+        const name = title
+        const description = description
+        fetch("/createRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Repository created successfully!");
+                } else {
+                    alert("Failed to create Repository" + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error creating Repository", error);
+                // Handle the error
+                alert("An error occurred while creating Repository. Please try again later.");
+            });
+    }
+
+    function updateRepository() {
+        const name = title
+        const description = description
+        fetch("/createRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Repository created successfully!");
+                } else {
+                    alert("Failed to create Repository" + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error creating Repository", error);
+                // Handle the error
+                alert("An error occurred while creating Repository. Please try again later.");
+            });
+    }
+
+    function deleteRepository() {
+        const name = title
+        const description = description
+        fetch("/createRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Repository created successfully!");
+                } else {
+                    alert("Failed to create Repository" + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error creating Repository", error);
+                // Handle the error
+                alert("An error occurred while creating Repository. Please try again later.");
+            });
+    }
+
+</script>
+
+</html>
+>>>>>>> 7015cb3d6187ff109acd7cd783ee313dd0f72e1b
