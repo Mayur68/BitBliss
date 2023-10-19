@@ -2,12 +2,11 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const crypto = require('crypto');
-
-
 const { getdb } = require("../database/database");
-db = getdb();
-
 const nodemailer = require('nodemailer');
+
+
+db = getdb();
 
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
