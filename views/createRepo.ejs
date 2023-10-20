@@ -8,32 +8,37 @@
 </head>
 
 <body>
-    <input type="text" id="reponame" placeholder=" repo name" />
-    <button onclick="public()">Public</button>
-    <button onclick="private()">private</button>
-    <input type="file" id="file" placeholder="file" />
-    <button onclick="createRepository()">Create repository</button>
-    <button onclick="cancel()">cancel</button>
-</body>
-<script>
+    <form action="/createRepository" method="POST" enctype="multipart/form-data">
+        <input type="text" id="reponame" name="name" placeholder="Repository Name" />
+        <label>
+            <input type="radio" name="visibility" value="public" /> Public
+        </label>
+        <label>
+            <input type="radio" name="visibility" value="private" /> Private
+        </label>
+        <input type="file" id="file" name="file" placeholder="File" />
+        <button type="button" onclick="cancel()">Cancel</button>
+        <button type="submit">Create Repository</button>
+    </form>
 
-</script>
+</body>
 <script>
     function cancel() {
         window.location.href = "/";
     }
 
-    let visibility;
-
-    function public() {
-        visibility = "public";
-    }
-
-    function private() {
-        visibility = "private";
-    }
-
     const owner = '<%= username %>';
+    let visibility = "public"; // Default to public
+
+    // Function to update the visibility variable based on the radio button selection
+    function updateVisibility(event) {
+        visibility = event.target.value;
+    }
+
+    // Attach a change event listener to the radio buttons
+    document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener('change', updateVisibility);
+    });
 
     function createRepository() {
         const name = document.getElementById("reponame");
@@ -46,6 +51,7 @@
             accountId: owner,
             file: repofile,
         };
+
         fetch("/createRepository", {
             method: "POST",
             headers: {
@@ -68,6 +74,7 @@
             });
     }
 </script>
+
 
 
 </html>
