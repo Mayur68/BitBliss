@@ -1,19 +1,44 @@
-const { MongoClient } = require("mongodb");
+const mongoose = require("mongoose");
 
-let dbConnection;
+const databaseUrl = "mongodb://127.0.0.1:27017/webapp";
 
-module.exports = {
-  connection: (cb) => {
-    MongoClient.connect("mongodb://127.0.0.1:27017/webapp")
-    // MongoClient.connect("mongodb+srv://mayur68:" + encodeURIComponent("IF8QYZLtEzm7kR6") + "@cluster0.bpkmyqk.mongodb.net/?retryWrites=true&w=majority")
-      .then((client) => {
-        dbConnection = client.db();
-        return cb();
-      })
-      .catch((err) => {
-        console.log(err);
-        return cb(err);
-      });
+mongoose
+  .connect(databaseUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to the MongoDB database");
+  })
+  .catch((error) => {
+    console.error("Error connecting to the MongoDB database:", error);
+  });
+
+const db = mongoose.connection;
+
+const accountSchema = new mongoose.Schema({
+  profilePhoto: String,
+  username: String,
+  name: String,
+  email: String,
+  password: String,
+  session: String,
+  friends: [String],
+  bio: String,
+});
+
+const Account = mongoose.model("Account", accountSchema);
+
+const fileSchema = new mongoose.Schema({
+  name: String,
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Account",
   },
-  getdb: () => dbConnection,
-};
+  createdAt: Date,
+  filePath: String,
+});
+
+const File = mongoose.model("File", fileSchema);
+
+module.exports = { db, Account, File };

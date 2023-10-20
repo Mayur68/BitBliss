@@ -2,20 +2,10 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const crypto = require('crypto');
-const { getdb } = require("../database/database");
+const { db, Account, File } = require("../database/database");
 const nodemailer = require('nodemailer');
 
-
-db = getdb();
-
-const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    // user: 'your_email@gmail.com',
-    // pass: 'your_password',
-  },
-});
-
+let username
 
 // Route for the sign-up page
 router.get("/sign-up", (req, res) => {
@@ -27,20 +17,20 @@ router.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/login.html"));
 });
 
-//login details
+// login details
 router.post("/login", async (req, res) => {
   const { clientusername, clientpassword } = req.body;
   const expirationTime = 24 * 60 * 60 * 1000;
   const expirationDate = new Date(Date.now() + expirationTime);
 
   try {
-    const result = await db.collection("accounts").find({
+    const user = await Account.findOne({
       username: clientusername,
       password: clientpassword,
-    }).toArray();
+    }, "session");
 
-    if (result.length > 0) {
-      const sessionToken = result[0].session;
+    if (user) {
+      const sessionToken = user.session;
       res.cookie("sessionToken", sessionToken, {
         expires: expirationDate,
         httpOnly: true,
@@ -64,7 +54,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
-//sign up details
+
+// sign up details
 router.post("/sign-up", async (req, res) => {
   const { clientusername, clientemail, clientpassword, con_password } = req.body;
   const sessionString = await generateSession();
@@ -74,22 +65,22 @@ router.post("/sign-up", async (req, res) => {
 
   try {
     if (clientpassword === con_password) {
-      const result = await db.collection("accounts").findOne({
-        username: clientusername,
-      });
+      const existingUser = await Account.findOne({ username: clientusername });
 
-      if (result) {
+      if (existingUser) {
         res.status(401).json({
           status: "error",
           message: "Account already exists!",
         });
       } else {
-        await db.collection("accounts").insertOne({
+        const newUser = new Account({
           username: clientusername,
           email: clientemail,
           password: clientpassword,
           session: sessionString,
         });
+
+        await newUser.save();
 
         res.cookie("sessionToken", sessionToken, {
           expires: expirationDate,
@@ -98,7 +89,7 @@ router.post("/sign-up", async (req, res) => {
 
         res.json({
           status: "success",
-          message: "Login successful!",
+          message: "Sign-up successful!",
         });
       }
     } else {
@@ -117,136 +108,170 @@ router.post("/sign-up", async (req, res) => {
 });
 
 
+
 router.get("/resetpassword", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/resetpassword.html"));
+});
+
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    // user: 'your_email@gmail.com',
+    // pass: 'your_password',
+  },
 });
 
 router.post("/send-username", async (req, res) => {
   const { clientemail } = req.body;
 
-  const user = await db.collection("accounts")
-    .findOne({
-      email: clientemail,
-    });
+  try {
+    const user = await Account.findOne({ email: clientemail }, "username");
 
-  if (!user) {
-    return res.status(404).json({ message: 'Email not found' });
-  }
-
-  const username = user.username;
-
-  const mailOptions = {
-    from: 'patkarmahesh387@gmail.com',
-    to: clientemail,
-    subject: 'Your Username Recovery',
-    text: `Dear ${username},\n\nYour username is: ${username}\n\nSincerely,\nYour Cosmic Arcade team`,
-  };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).json({ message: 'Failed to send email' });
+    if (!user) {
+      return res.status(404).json({ message: 'Email not found' });
     }
-    console.log('Email sent: ' + info.response);
-    res.status(200).json({ message: 'Password reset email sent' });
-  });
+
+    const username = user.username;
+
+    const mailOptions = {
+      from: 'patkarmahesh387@gmail.com',
+      to: clientemail,
+      subject: 'Your Username Recovery',
+      text: `Dear ${username},\n\nYour username is: ${username}\n\nSincerely,\nYour Cosmic Arcade team`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Failed to send email' });
+      }
+      console.log('Email sent: ' + info.response);
+      res.status(200).json({ message: 'Username recovery email sent' });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
 
+
+// forgot-password
 router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
 
-  const user = await db.collection("accounts")
-    .findOne({
-      email,
+  try {
+    const user = await Account.findOne({ email }, "username _id");
+
+    if (!user) {
+      return res.status(404).json({ message: 'Email not found' });
+    }
+
+    const username = user.username;
+    const resetToken = crypto.randomBytes(20).toString('hex');
+
+    user.resetToken = resetToken;
+    user.resetTokenExpiration = Date.now() + 3600000;
+
+    await user.save();
+
+    const mailOptions = {
+      from: 'patkarmahesh387@gmail.com',
+      to: email,
+      subject: 'Your Password Recovery',
+      text: `Dear ${username},\n\nWe received a request to reset the password for your Cosmic Arcade account. 
+      If you did not initiate this request, you can ignore this email.\n\nTo reset your password, 
+      please click on the link below or copy and paste it into your web browser's address bar:\n\nhttp://192.168.1.8:3000/resetpassword/${resetToken}\n\n
+      This link will expire in 1 hour for security reasons. If you don't use this link within that time, you can request another password reset.
+      \n\nIf you have any questions or need further assistance, please contact our support team at [Support Email].\n\nSincerely,
+      \nYour Cosmic Arcade Team`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Failed to send email' });
+      }
+      console.log('Email sent: ' + info.response);
+      res.status(200).json({ message: 'Password reset email sent' });
     });
-
-  if (!user) {
-    return res.status(404).json({ message: 'Email not found' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-
-  const username = user.username;
-  const resetToken = crypto.randomBytes(20).toString('hex');
-  user.resetToken = resetToken;
-  user.resetTokenExpiration = Date.now() + 3600000;
-
-  await db.collection("accounts").updateOne(
-    { _id: user._id },
-    {
-      $set: {
-        resetToken,
-        resetTokenExpiration: Date.now() + 3600000,
-      },
-    }
-  );
-
-  const mailOptions = {
-    from: 'patkarmahesh387@gmail.com',
-    to: email,
-    subject: 'Your Password Recovery',
-    text: `Dear ${username},\n\nWe received a request to reset the password for your Cosmic Arcade account. 
-    If you did not initiate this request, you can ignore this email.\n\nTo reset your password, 
-    please click on the link below or copy and paste it into your web browser's address bar:\n\nhttp://192.168.1.8:3000/resetpassword/${resetToken}\n\n
-    This link will expire in 1 hour for security reasons. If you don't use this link within that time, you can request another password reset.
-    \n\nIf you have any questions or need further assistance, please contact our support team at [Support Email].\n\nSincerely,
-    \nYour Cosmic Arcade Team`,
-  };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).json({ message: 'Failed to send email' });
-    }
-    console.log('Email sent: ' + info.response);
-    res.status(200).json({ message: 'Password reset email sent' });
-  });
 });
 
-
+// resetpassword
 router.get('/resetpassword/:token', async (req, res) => {
   const { token } = req.params;
 
-  const user = await db.collection("accounts").findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
+  try {
+    const user = await Account.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
 
-  if (!user) {
-    return res.send('Invalid or expired token');
+    if (!user) {
+      return res.send('Invalid or expired token');
+    }
+
+    res.send(`
+        <form action="/reset-password/${token}" method="POST">
+            <input type="password" name="newPassword" placeholder="New Password" required>
+            <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+            <button type="submit">Reset Password</button>
+        </form>
+    `);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
   }
-
-  res.send(`
-      <form action="/reset-password/${token}" method="POST">
-          <input type="password" name="newPassword" placeholder="New Password" required>
-          <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
-          <button type="submit">Reset Password</button>
-      </form>
-  `);
 });
+
 
 router.post('/reset-password/:token', async (req, res) => {
   const { token } = req.params;
   const { newPassword, confirmPassword } = req.body;
 
   if (newPassword !== confirmPassword) {
-    return res.send('Passwords do not match');
+    return res.status(400).send('Passwords do not match');
   }
 
-  const user = await db.collection("accounts").findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
+  try {
+    const user = await Account.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
 
-  if (!user) {
-    return res.send('Invalid or expired token');
-  }
-
-  await db.collection("accounts").updateOne(
-    { _id: user._id },
-    {
-      $set: {
-        password: newPassword,
-        resetToken: undefined,
-        resetTokenExpiration: undefined,
-      },
+    if (!user) {
+      return res.status(400).send('Invalid or expired token');
     }
-  );
 
-  res.send('Password reset successfully');
+    user.password = newPassword;
+    user.resetToken = undefined;
+    user.resetTokenExpiration = undefined;
+
+    await user.save();
+
+    res.status(200).send('Password reset successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
 });
+
+
+//Repository
+router.get("/new-Repository", async (req, res) => {
+  const sessionString = req.cookies.sessionToken;
+
+  try {
+    const user = await Account.findOne({ session: sessionString }, "username");
+
+    if (user) {
+      res.render("createRepo", { username: user.username });
+    } else {
+      res.status(403).send("Unauthorized");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+});
+
 
 
 //logout
@@ -255,40 +280,25 @@ router.post("/logout", (req, res) => {
   res.sendStatus(200);
 });
 
-//view collection at `/data`
-router.get("/data", (req, res) => {
-  let accounts = [];
+// user profile page
+router.get("/:username", async (req, res) => {
+  try {
+    const username = req.params.username;
+    const sessionString = req.cookies.sessionToken;
 
-  db.collection("accounts")
-    .find()
-    .toArray()
-    .then((accounts) => {
-      res.status(200).json(accounts);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({ error: "Internal server error" });
-    });
+    const user = await Account.findOne({ username, session: sessionString });
+
+    if (user) {
+      res.render("userProfile", { username: user.username });
+    } else {
+      res.render("notfound");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
 });
 
-//user profile page
-router.get("/:username", (req, res) => {
-  const username = req.params.username;
-  const sessionString = req.cookies.sessionToken;
-  db.collection("accounts")
-    .find({
-      username: username,
-      session: sessionString,
-    })
-    .toArray()
-    .then((result) => {
-      if (result.length > 0) {
-        res.render("userProfile", { username: username });
-      } else {
-        res.render("notfound");
-      }
-    });
-});
 
 //genetare session
 function generateSession() {

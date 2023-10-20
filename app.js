@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const { connection, getdb } = require("./database/database");
+const { db, Account, File } = require("./database/database");
 const { EventEmitter } = require('events');
 const busEmitter = new EventEmitter();
 
@@ -19,6 +19,7 @@ for (let i = 0; i < 15; i++) {
 const arcade = require("./routes/arcade");
 const user = require("./routes/user");
 const chatHistory = require("./routes/chatHistory");
+const repository = require("./routes/repository");
 
 const app = express();
 const server = require("http").Server(app);
@@ -35,6 +36,7 @@ app.use(cookieParser());
 app.use("/", arcade);
 app.use("/", user);
 app.use("/", chatHistory);
+app.use("/", repository);
 
 // Set the view engine to EJS
 app.set("view engine", "ejs");
@@ -44,25 +46,15 @@ app.set("views", [
   path.join(__dirname, "frontend"),
 ]);
 
-//root
+//Root
 app.get("/", (req, res) => {
   const sessionString = req.cookies.sessionToken;
-  db.collection("accounts")
-    .find()
-    .toArray()
-    .then((result) => {
-      let authenticated = false;
 
-      for (let i = 0; i < result.length; i++) {
-        if (result[i].session === sessionString) {
-          authenticated = true;
-          const username = result[i].username;
-          res.render("user", { username: username });
-          break;
-        }
-      }
-
-      if (!authenticated) {
+  Account.findOne({ session: sessionString })
+    .then((user) => {
+      if (user) {
+        res.render("user", { username: user.username });
+      } else {
         res.sendFile(__dirname + "/frontend/index.html");
       }
     })
@@ -72,17 +64,10 @@ app.get("/", (req, res) => {
     });
 });
 
-
-//connecting to database and runnning server
-connection((err) => {
-  if (!err) {
-    server.listen(3000, (err) => {
-      if (err) {
-        console.error("Error starting server:", err);
-      } else {
-        console.log("Server is running at 3000...");
-      }
-    });
-    db = getdb();
+server.listen(3000, (err) => {
+  if (err) {
+    console.error("Error starting server:", err);
+  } else {
+    console.log("Server is running at 3000...");
   }
 });

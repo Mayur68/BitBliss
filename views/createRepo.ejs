@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" id="reponame" placeholder=" repo name" />
+    <button onclick="public()">Public</button>
+    <button onclick="private()">private</button>
+    <input type="file" id="file" placeholder="file" />
+    <button onclick="createRepository()">Create repository</button>
+    <button onclick="cancel()">cancel</button>
+</body>
+<script>
+
+</script>
+<script>
+    function cancel() {
+        window.location.href = "/";
+    }
+
+    let visibility;
+
+    function public() {
+        visibility = "public";
+    }
+
+    function private() {
+        visibility = "private";
+    }
+
+    const owner = '<%= username %>';
+
+    function createRepository() {
+        const name = document.getElementById("reponame");
+        const reponame = name.value;
+        const file = document.getElementById("file");
+        const repofile = file.value;
+        const data = {
+            name: reponame,
+            visibility: visibility,
+            accountId: owner,
+            file: repofile,
+        };
+        fetch("/createRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Repository created successfully!");
+                } else {
+                    alert("Failed to create Repository: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error creating Repository", error);
+                alert("An error occurred while creating the Repository. Please try again later.");
+            });
+    }
+</script>
+
+
+</html>

@@ -1,19 +1,16 @@
 const socketIO = require("socket.io");
-const { getdb } = require("../database/database");
-db = getdb();
+const { Account } = require("../database/database");
 
 function setupSocket(server) {
   const io = socketIO(server);
   const connectedUsers = {};
-  const connectedUsers1 = [];
 
   io.on("connection", (socket) => {
     socket.on("authenticate", (data) => {
       const { userID } = data;
       socket.userID = userID;
       connectedUsers[userID] = socket.id;
-      connectedUsers1.push(userID);
-      loadFriends(io, socket, connectedUsers1);
+      loadFriends(io, socket, connectedUsers);
     });
 
     socket.on("send_message", (data) => {
@@ -38,21 +35,16 @@ function setupSocket(server) {
     socket.on("disconnect", () => {
       const userID = socket.userID;
       delete connectedUsers[userID];
-      const index = connectedUsers1.indexOf(userID);
-      if (index !== -1) {
-        connectedUsers1.splice(index, 1);
-      }
       socket.leaveAll();
     });
-  });
+  })
 }
 
-
-async function loadFriends(io, socket, connectedUsers1) {
+async function loadFriends(io, socket, connectedUsers) {
   const userID = socket.userID;
 
   try {
-    const user = await db.collection("accounts").findOne({ username: userID });
+    const user = await Account.findOne({ username: userID });
     if (!user) {
       console.log("User not found with userID:", userID);
       return;
@@ -61,7 +53,7 @@ async function loadFriends(io, socket, connectedUsers1) {
     const onlineFriends = [];
     const friends = user.friends || [];
     friends.forEach((friendID) => {
-      if (connectedUsers1.indexOf(friendID) >= 0) {
+      if (connectedUsers[friendID]) {
         onlineFriends.push(friendID);
       }
     });
