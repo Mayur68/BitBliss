@@ -1,39 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const { getdb } = require("../database/database");
+const { ChatHistory } = require("../database/database");
 
 router.post("/saveHistory", async (req, res) => {
-    const { recepientID, userId, message } = req.body;
-    const db = getdb();
+    const { recipientID, userID, message } = req.body;
 
     try {
-        const chatRecord = {
+        const chatRecord = new ChatHistory({
             sender: {
-                userId: userId,
+                userID: userID,
             },
             receiver: {
-                userId: recepientID,
+                userID: recipientID,
             },
             message,
             timestamp: new Date(),
-        };
+        });
 
-        const result = await db.collection("chatHistory").insertOne(chatRecord);
+        const result = await chatRecord.save();
 
-        if (result.insertedCount === 1) {
-            res.status(200).json({
+        if (result) {
+            return res.status(200).json({
                 status: "success",
                 message: "Chat history saved successfully!",
             });
-        } else {
-            res.status(500).json({
-                status: "error",
-                message: "Failed to save chat history.",
-            });
         }
+
+        throw new Error("Failed to save chat history.");
     } catch (err) {
         console.error(err);
-        res.status(500).json({
+        return res.status(500).json({
             status: "error",
             message: "Internal server error",
         });
@@ -41,27 +37,23 @@ router.post("/saveHistory", async (req, res) => {
 });
 
 router.post("/loadHistory", async (req, res) => {
-    const { recepientID, userId } = req.body;
-    const db = getdb();
+    const { recipientID, userID } = req.body;
 
     try {
-        const result = await db.collection("chatHistory").find({
-
+        const result = await ChatHistory.find({
             $or: [
-                { "sender.userId": userId, "receiver.userId": recepientID },
-                { "sender.userId": recepientID, "receiver.userId": userId },
-            ]
-        }).toArray();
+                { "sender.userID": userID, "receiver.userID": recipientID },
+                { "sender.userID": recipientID, "receiver.userID": userID },
+            ],
+        }).exec();
 
-        if (result.length > 0) {
-            res.status(200).json({
-                status: "success",
-                chatHistory: result
-            });
-        }
+        return res.status(200).json({
+            status: "success",
+            chatHistory: result,
+        });
     } catch (err) {
         console.error(err);
-        res.status(500).json({
+        return res.status(500).json({
             status: "error",
             message: "Internal server error",
         });

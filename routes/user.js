@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const crypto = require('crypto');
-const { db, Account, File } = require("../database/database");
+const { db, accounts } = require("../database/database");
 const nodemailer = require('nodemailer');
 
 let username
@@ -24,7 +24,7 @@ router.post("/login", async (req, res) => {
   const expirationDate = new Date(Date.now() + expirationTime);
 
   try {
-    const user = await Account.findOne({
+    const user = await accounts.findOne({
       username: clientusername,
       password: clientpassword,
     }, "session");
@@ -65,7 +65,7 @@ router.post("/sign-up", async (req, res) => {
 
   try {
     if (clientpassword === con_password) {
-      const existingUser = await Account.findOne({ username: clientusername });
+      const existingUser = await accounts.findOne({ username: clientusername });
 
       if (existingUser) {
         res.status(401).json({
@@ -73,7 +73,7 @@ router.post("/sign-up", async (req, res) => {
           message: "Account already exists!",
         });
       } else {
-        const newUser = new Account({
+        const newUser = new accounts({
           username: clientusername,
           email: clientemail,
           password: clientpassword,
@@ -125,7 +125,7 @@ router.post("/send-username", async (req, res) => {
   const { clientemail } = req.body;
 
   try {
-    const user = await Account.findOne({ email: clientemail }, "username");
+    const user = await accounts.findOne({ email: clientemail }, "username");
 
     if (!user) {
       return res.status(404).json({ message: 'Email not found' });
@@ -160,7 +160,7 @@ router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
 
   try {
-    const user = await Account.findOne({ email }, "username _id");
+    const user = await accounts.findOne({ email }, "username _id");
 
     if (!user) {
       return res.status(404).json({ message: 'Email not found' });
@@ -205,7 +205,7 @@ router.get('/resetpassword/:token', async (req, res) => {
   const { token } = req.params;
 
   try {
-    const user = await Account.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
+    const user = await accounts.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
 
     if (!user) {
       return res.send('Invalid or expired token');
@@ -234,7 +234,7 @@ router.post('/reset-password/:token', async (req, res) => {
   }
 
   try {
-    const user = await Account.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
+    const user = await accounts.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } });
 
     if (!user) {
       return res.status(400).send('Invalid or expired token');
@@ -253,13 +253,12 @@ router.post('/reset-password/:token', async (req, res) => {
   }
 });
 
-
 //Repository
 router.get("/new-Repository", async (req, res) => {
   const sessionString = req.cookies.sessionToken;
 
   try {
-    const user = await Account.findOne({ session: sessionString }, "username");
+    const user = await accounts.findOne({ session: sessionString }, "username");
 
     if (user) {
       res.render("createRepo", { username: user.username });
@@ -271,8 +270,6 @@ router.get("/new-Repository", async (req, res) => {
     res.status(500).send("Internal server error");
   }
 });
-
-
 
 //logout
 router.post("/logout", (req, res) => {
@@ -286,10 +283,12 @@ router.get("/:username", async (req, res) => {
     const username = req.params.username;
     const sessionString = req.cookies.sessionToken;
 
-    const user = await Account.findOne({ username, session: sessionString });
-
-    if (user) {
-      res.render("userProfile", { username: user.username });
+    const user1 = await accounts.findOne({ username, session: sessionString });
+    const user2 = await accounts.findOne({ username });
+    if (user1) {
+      res.render("loggedUserProfile", { username: user1.username });
+    } else if (user2) {
+      res.render("userProfile", { username: user2.username });
     } else {
       res.render("notfound");
     }
@@ -298,7 +297,6 @@ router.get("/:username", async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
-
 
 //genetare session
 function generateSession() {
@@ -325,84 +323,5 @@ function generateSession() {
       });
   });
 }
-
-router.post("/addFriend", (req, res) => {
-  const { userId, friendId } = req.body;
-
-  if (userId && friendId) {
-    if (userId === friendId) {
-      return res.status(400).json({
-        status: "error",
-        message: "Cannot add yourself as a friend!",
-      });
-    }
-  }
-
-  if (userId && friendId) {
-    db.collection("accounts")
-      .findOne({ username: friendId })
-      .then((friend) => {
-        if (!friend) {
-          return res.status(401).json({
-            status: "error",
-            message: "Friend not found!",
-          });
-        }
-
-        db.collection("accounts")
-          .findOne({ username: userId, friends: { $in: [friendId] } })
-          .then((result) => {
-            if (result) {
-              return res.status(401).json({
-                status: "error",
-                message: "Friend already exists!",
-              });
-            }
-
-            db.collection("accounts")
-              .updateOne(
-                { username: userId },
-                { $addToSet: { friends: friendId } }
-              )
-              .then(() => {
-                res.json({
-                  status: "success",
-                  message: "Friend added successfully!",
-                });
-              })
-              .catch((err) => {
-                console.error(err);
-                res.status(500).json({
-                  status: "error",
-                  message: "Internal server error",
-                });
-              });
-          })
-          .catch((err) => {
-            console.error(err);
-            res.status(500).json({
-              status: "error",
-              message: "Internal server error",
-            });
-          });
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).json({
-          status: "error",
-          message: "Internal server error",
-        });
-      });
-  } else {
-    res.status(400).json({
-      status: "error",
-      message: "Invalid request. Both userId and friendId are required.",
-    });
-  }
-});
-
-
-
-
 
 module.exports = router;

@@ -7,9 +7,6 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
-    console.log("Connected to the MongoDB database");
-  })
   .catch((error) => {
     console.error("Error connecting to the MongoDB database:", error);
   });
@@ -27,18 +24,33 @@ const accountSchema = new mongoose.Schema({
   bio: String,
 });
 
-const Account = mongoose.model("Account", accountSchema);
+const accounts = mongoose.model("accounts", accountSchema);
 
 const fileSchema = new mongoose.Schema({
   name: String,
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Account",
+    ref: "accounts",
   },
   createdAt: Date,
   filePath: String,
+}, {
+  collection: 'File'
 });
 
-const File = mongoose.model("File", fileSchema);
+const repositories = mongoose.model("repositories", fileSchema);
 
-module.exports = { db, Account, File };
+const chatHistorySchema = new mongoose.Schema({
+  sender: {
+    userID: String,
+  },
+  receiver: {
+    userID: String,
+  },
+  message: String,
+  timestamp: Date,
+});
+
+const ChatHistory = mongoose.model("ChatHistory", chatHistorySchema);
+
+module.exports = { db, accounts, repositories, ChatHistory };

@@ -10,18 +10,152 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #323232;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .profile-button {
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .explore-bar {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px 10px;
+            width: 200px;
+        }
+
+        .sections {
+            display: flex;
+            flex-direction: column;
+            margin: 20px;
+        }
+
+        .section {
+            flex: 1;
+            border: 1px solid #ccc;
+            padding: 20px;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .chatting-interface {
+            /* Styles for the chatting interface */
+            height: 400px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: scroll;
+        }
+
+        .chat-container {
+            border: 1px solid #ccc;
+            display: flex;
+            /* flex-direction: column; */
+            border-radius: 15px;
+            justify-content: space-between;
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .chat-window {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 450px;
+            width: 50%;
+            border-radius: 15px;
+            overflow-y: scroll;
+
+        }
+
+        .messages {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .message {
+            padding: 5px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+
+        .message.self {
+            align-self: flex-end;
+            background-color: #ac10f5;
+        }
+
+        .message.notself {
+            align-self: flex-start;
+            background-color: #0e0eff;
+        }
+
+        #friends-list {
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            padding: 10px;
+            max-height: 450px;
+            width: 20%;
+            overflow-y: auto;
+        }
+
+        /* Style for each friend item */
+        .friend-item {
+            padding: 5px;
+            margin-bottom: 5px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
         }
     </style>
 </head>
 
 <body>
-    <button onclick="profile()">profile</button>
-    <button onclick="createRepository()">Create repository</button>
+    <div class="header">
+        <button class="profile-button" onclick="profile()">Profile</button>
+        <input type="text" class="explore-bar" id="explore" placeholder="Explore...">
+        <button onclick="explore()">explore</button>
+    </div>
+    <div class="sections">
+        <div class="section">
+            <div class="chat-container">
+                <div id="friends-list"></div>
+                <div class="chat-window" id="chat-window">
+                    <div class="messages" id="messages"></div>
+                </div>
+                <div>
+                    <input type="text" id="message-input" placeholder="Type a message...">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Repository</h2>
+                <button onclick="createRepository()">create new Repository</button>
+                <div id="repo-container"></div>
+            </div>
+        </div>
 </body>
 
 
 <script>
+
     function createRepository() {
         window.location.href = "/new-Repository";
     }
@@ -30,10 +164,15 @@
         window.location = "/<%= username %>"
     }
 
+    const explores = document.getElementById("explore")
+    function explore() {
+        window.location.href = "/" + explores.value
+    }
+
+    const userId = "<%= username %>"
+
     function addFriend() {
         // const friendId = document.getElementById("addFriend").value
-
-        const userId = "<%= username %>"
         const data = {
             userId: userId,
             friendId: friendId,
@@ -61,12 +200,60 @@
             });
     }
 
+    function loadRepositories() {
+        const userId = "<%= username %>";
+
+        fetch("/loadRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status === "success") {
+                    const repositories = data.repositories;
+
+                    if (repositories.length > 0) {
+                        const repoContainer = document.getElementById("repo-container");
+                        repoContainer.innerHTML = "";
+                        repositories.forEach((repo) => {
+                            const repoElement = document.createElement("div");
+                            repoElement.innerHTML = `<h3>${repo.name}</h3><p>Created on: ${repo.createdAt}</p>`;
+                            const fileContainer = document.createElement("div");
+                            fileContainer.innerHTML = "<h4>Files:</h4>";
+                            repo.files.forEach((file) => {
+                                fileContainer.innerHTML += `<p>${file}</p>`;
+                            });
+
+                            repoElement.appendChild(fileContainer);
+                            repoContainer.appendChild(repoElement);
+                        });
+                    } else {
+                        alert("No repositories found for this user.");
+                    }
+                } else {
+                    alert("Failed to load repositories: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading repositories", error);
+                alert("An error occurred while loading the repositories. Please try again later.");
+            });
+    }
+    loadRepositories();
+
 </script>
 
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    const userId = "<%= username %>"
     const socket = io();
     socket.emit("connection");
     socket.emit("authenticate", { userID: userId });
@@ -77,15 +264,17 @@
     let recepientID;
     let receivedMessage;
 
+
     function createRoom() {
         socket.emit("createRoom", { userID: userId, roomName: roomName });
     }
 
+
     socket.on("Friends", (data) => {
         const { friends } = data;
-        console.log("friends: ", friends);
         updateFriendsList(friends);
     });
+
 
     function updateFriendsList(friends) {
         const friendsListDiv = document.getElementById("friends-list");
@@ -94,10 +283,11 @@
             const friendElement = document.createElement("div");
             friendElement.className = "friend-item";
             friendElement.innerText = friend;
-            friendElement.onclick = () => friendClickHandler(friend), showChat(friend);
+            friendElement.onclick = () => friendClickHandler(friend);
             friendsListDiv.appendChild(friendElement);
         });
     }
+
 
     function friendClickHandler(x) {
         recepientID = x;
@@ -119,7 +309,6 @@
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 if (data.status === "success") {
                     const chatHistory = data.chatHistory;
                     displayChatHistory(chatHistory);
@@ -130,10 +319,9 @@
                 alert("An error occurred while loading history. Please try again later.");
             });
 
+            
         function displayChatHistory(chatHistory) {
-            // Display each message
             chatHistory.forEach((chat) => {
-                console.log(chat);
 
                 if (chat.message && chat.message.trim() !== '') {
                     const messageDiv = document.createElement('div');

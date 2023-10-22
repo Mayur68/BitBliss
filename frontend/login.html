@@ -178,6 +178,7 @@
     if (clientusername === "" || clientpassword === "")
       alert("Incorrect username and password");
     else {
+      // Make the POST request to the server
       fetch("/login", {
         method: "POST",
         headers: {
@@ -185,7 +186,7 @@
         },
         body: JSON.stringify({
           clientusername,
-          clientpassword
+          clientpassword,
         }),
       })
         .then((response) => {
@@ -193,7 +194,10 @@
         })
         .then((data) => {
           if (data.status === "success") {
-            console.log(data.status)
+            // Store the username in local storage
+            localStorage.setItem("username", clientusername);
+
+            console.log(data.status);
             window.location.href = "/";
           } else {
             alert(data.message);
@@ -203,6 +207,7 @@
           console.error(error);
           alert("error");
         });
+
     }
   }
   function back() {

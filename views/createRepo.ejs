@@ -27,7 +27,6 @@
         window.location.href = "/";
     }
 
-    const owner = '<%= username %>';
     let visibility = "public"; // Default to public
 
     // Function to update the visibility variable based on the radio button selection
@@ -45,13 +44,14 @@
         const reponame = name.value;
         const file = document.getElementById("file");
         const repofile = file.value;
+        const owner = '<%= username %>';
         const data = {
             name: reponame,
             visibility: visibility,
             accountId: owner,
             file: repofile,
         };
-
+        console.log(data)
         fetch("/createRepository", {
             method: "POST",
             headers: {
@@ -61,9 +61,8 @@
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 if (data.status === "success") {
-                    alert("Repository created successfully!");
+                    alert(data.message);
                 } else {
                     alert("Failed to create Repository: " + data.message);
                 }
