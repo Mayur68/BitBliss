@@ -35,7 +35,7 @@ const fileSchema = new mongoose.Schema({
   createdAt: Date,
   filePath: String,
 }, {
-  collection: 'File'
+  collection: 'repositories'
 });
 
 const repositories = mongoose.model("repositories", fileSchema);
@@ -49,8 +49,10 @@ const chatHistorySchema = new mongoose.Schema({
   },
   message: String,
   timestamp: Date,
+}, {
+  collection: 'chatHistory'
 });
 
-const ChatHistory = mongoose.model("ChatHistory", chatHistorySchema);
+const chatHistory = mongoose.model("chatHistory", chatHistorySchema);
 
-module.exports = { db, accounts, repositories, ChatHistory };
+module.exports = { db, accounts, repositories, chatHistory };

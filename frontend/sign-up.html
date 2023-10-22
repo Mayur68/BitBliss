@@ -100,20 +100,6 @@
     padding-left: 2%;
   }
 
-  #planet-1 {
-    background: url("../../assets/planet-1.png") no-repeat;
-    background-size: contain;
-    width: 300px;
-    animation: move-up-down_1 4s ease-in-out infinite;
-  }
-
-  #planet-2 {
-    background: url("../../assets/planet-2.png") no-repeat;
-    background-size: contain;
-    width: 500px;
-    animation: move-up-down_2 4s ease-in-out infinite;
-  }
-
   @media only screen and (max-width: 768px) {
     .box {
       margin: 0 20% 0;
@@ -127,7 +113,6 @@
 
 <body>
   <div id="container">
-    <div id="planet-1"></div>
     <div id="mid">
       <div class="title">
         <a href="/"><img src="/assets/favicon/favicon-32x32.png" /></a>
@@ -166,9 +151,10 @@
         </div>
       </div>
     </div>
-    <div id="planet-2"></div>
   </div>
 </body>
+
+
 <script>
   const input_username = document.getElementById("username");
   const input_email = document.getElementById("email");
@@ -205,6 +191,7 @@
         })
         .then((data) => {
           if (data.status === "success") {
+            document.cookie = `sessionToken=${data.sessionToken}; expires=${data.expirationDate}; path=/`;
             localStorage.setItem("username", clientusername);
             window.location.href = "/";
           } else {

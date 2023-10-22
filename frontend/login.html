@@ -109,20 +109,6 @@
     padding-left: 2%;
   }
 
-  #planet-1 {
-    background: url("../../assets/planet-1.png") no-repeat;
-    background-size: contain;
-    width: 300px;
-    animation: move-up-down_1 4s ease-in-out infinite;
-  }
-
-  #planet-2 {
-    background: url("../../assets/planet-2.png") no-repeat;
-    background-size: contain;
-    width: 500px;
-    animation: move-up-down_2 4s ease-in-out infinite;
-  }
-
   @media only screen and (max-width: 768px) {
     .box {
       margin: 0 20% 0;
@@ -167,6 +153,8 @@
     </div>
   </div>
 </body>
+
+
 <script>
   const input_username = document.getElementById("username");
   const input_password = document.getElementById("password");
@@ -178,7 +166,6 @@
     if (clientusername === "" || clientpassword === "")
       alert("Incorrect username and password");
     else {
-      // Make the POST request to the server
       fetch("/login", {
         method: "POST",
         headers: {
@@ -194,10 +181,8 @@
         })
         .then((data) => {
           if (data.status === "success") {
-            // Store the username in local storage
+            document.cookie = `sessionToken=${data.sessionToken}; expires=${data.expirationDate}; path=/`;
             localStorage.setItem("username", clientusername);
-
-            console.log(data.status);
             window.location.href = "/";
           } else {
             alert(data.message);
@@ -205,11 +190,13 @@
         })
         .catch((error) => {
           console.error(error);
-          alert("error");
+          alert("An error occurred while logging in.");
         });
 
     }
   }
+
+
   function back() {
     document.getElementById("mid").innerHTML = `<div class="title">
         <a href="/"><img src="/assets/favicon/favicon-32x32.png"></a>

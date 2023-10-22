@@ -53,7 +53,6 @@ router.post("/loadRepository", async (req, res) => {
     }
 
     const repository = await repositories.find({ owner: user._id });
-    console.log(repository)
     const repositoriesData = repository.map((repo) => ({
       name: repo.name,
       createdAt: repo.createdAt,

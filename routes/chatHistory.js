@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { ChatHistory } = require("../database/database");
+const { chatHistory } = require("../database/database");
 
 router.post("/saveHistory", async (req, res) => {
-    const { recipientID, userID, message } = req.body;
-
+    const { recipientID, userId, message } = req.body;
     try {
-        const chatRecord = new ChatHistory({
+        const chatRecord = new chatHistory({
             sender: {
-                userID: userID,
+                userID: userId,
             },
             receiver: {
                 userID: recipientID,
@@ -16,8 +15,8 @@ router.post("/saveHistory", async (req, res) => {
             message,
             timestamp: new Date(),
         });
-
         const result = await chatRecord.save();
+
 
         if (result) {
             return res.status(200).json({
@@ -37,16 +36,15 @@ router.post("/saveHistory", async (req, res) => {
 });
 
 router.post("/loadHistory", async (req, res) => {
-    const { recipientID, userID } = req.body;
-
+    const { recipientID, userId } = req.body;
     try {
-        const result = await ChatHistory.find({
+        const result = await chatHistory.find({
             $or: [
-                { "sender.userID": userID, "receiver.userID": recipientID },
-                { "sender.userID": recipientID, "receiver.userID": userID },
+                { "sender.userID": userId, "receiver.userID": recipientID },
+                { "sender.userID": recipientID, "receiver.userID": userId },
             ],
         }).exec();
-
+        
         return res.status(200).json({
             status: "success",
             chatHistory: result,

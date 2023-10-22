@@ -17,10 +17,9 @@ router.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/login.html"));
 });
 
-// login details
 router.post("/login", async (req, res) => {
   const { clientusername, clientpassword } = req.body;
-  const expirationTime = 24 * 60 * 60 * 1000;
+  const expirationTime = 24 * 60 * 60 * 1000; // 24 hours
   const expirationDate = new Date(Date.now() + expirationTime);
 
   try {
@@ -55,6 +54,7 @@ router.post("/login", async (req, res) => {
 });
 
 
+
 // sign up details
 router.post("/sign-up", async (req, res) => {
   const { clientusername, clientemail, clientpassword, con_password } = req.body;
@@ -81,12 +81,10 @@ router.post("/sign-up", async (req, res) => {
         });
 
         await newUser.save();
-
         res.cookie("sessionToken", sessionToken, {
           expires: expirationDate,
           httpOnly: true,
         });
-
         res.json({
           status: "success",
           message: "Sign-up successful!",

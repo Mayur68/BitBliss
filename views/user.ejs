@@ -155,7 +155,7 @@
 
 
 <script>
-
+    const userId = localStorage.getItem("username");
     function createRepository() {
         window.location.href = "/new-Repository";
     }
@@ -168,8 +168,6 @@
     function explore() {
         window.location.href = "/" + explores.value
     }
-
-    const userId = "<%= username %>"
 
     function addFriend() {
         // const friendId = document.getElementById("addFriend").value
@@ -201,7 +199,6 @@
     }
 
     function loadRepositories() {
-        const userId = "<%= username %>";
 
         fetch("/loadRepository", {
             method: "POST",
@@ -254,22 +251,14 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    const socket = io();
-    socket.emit("connection");
-    socket.emit("authenticate", { userID: userId });
-    const message = document.getElementById("message")
-    const room = document.getElementById("createRoom")
-    // let roomName = room.value;
-    socket.emit("loadFriends", userId);
-    let recepientID;
+    let recipientID;
     let receivedMessage;
 
 
-    function createRoom() {
-        socket.emit("createRoom", { userID: userId, roomName: roomName });
-    }
-
-
+    const socket = io();
+    socket.emit("connection");
+    socket.emit("authenticate", { userID: userId });
+    socket.emit("loadFriends", userId);
     socket.on("Friends", (data) => {
         const { friends } = data;
         updateFriendsList(friends);
@@ -290,10 +279,10 @@
 
 
     function friendClickHandler(x) {
-        recepientID = x;
+        recipientID = x;
 
         const dataToSend = {
-            recepientID: recepientID,
+            recipientID: x,
             userId: userId
         };
 
@@ -319,18 +308,16 @@
                 alert("An error occurred while loading history. Please try again later.");
             });
 
-            
+
         function displayChatHistory(chatHistory) {
             chatHistory.forEach((chat) => {
-
                 if (chat.message && chat.message.trim() !== '') {
                     const messageDiv = document.createElement('div');
-
-                    if (chat.sender.userId === userId) {
+                    if (chat.sender.userID === userId) {
                         messageDiv.className = "message self";
                         messageDiv.textContent = chat.message;
                         messages.appendChild(messageDiv);
-                    } else if (chat.sender.userId === recepientID) {
+                    } else if (chat.sender.userID === recipientID) {
                         messageDiv.className = "message notself";
                         messageDiv.textContent = chat.message;
                         messages.appendChild(messageDiv);
@@ -346,7 +333,7 @@
         const messageInput = document.getElementById("message-input");
         const message = messageInput.value;
         if (message.trim() === "") return;
-        if (!recepientID) {
+        if (!recipientID) {
             console.log("Select a recipient.");
             return;
         }
@@ -357,7 +344,7 @@
         messageElement.innerText = message;
         messagesDiv.appendChild(messageElement);
         const dataToSend = {
-            recepientID: recepientID,
+            recipientID: recipientID,
             userId: userId,
             message: message
         };
@@ -386,7 +373,7 @@
 
         socket.emit('send_message', {
             senderID: "<%= username %>",
-            recipientID: recepientID,
+            recipientID: recipientID,
             message: message
         });
 

@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <form action="/createRepository" method="POST" enctype="multipart/form-data">
+    <form enctype="multipart/form-data">
         <input type="text" id="reponame" name="name" placeholder="Repository Name" />
         <label>
             <input type="radio" name="visibility" value="public" /> Public
@@ -23,18 +23,17 @@
 
 </body>
 <script>
+    const userId = localStorage.getItem("username");
     function cancel() {
         window.location.href = "/";
     }
 
-    let visibility = "public"; // Default to public
+    let visibility = "public";
 
-    // Function to update the visibility variable based on the radio button selection
     function updateVisibility(event) {
         visibility = event.target.value;
     }
 
-    // Attach a change event listener to the radio buttons
     document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
         radio.addEventListener('change', updateVisibility);
     });
@@ -44,33 +43,32 @@
         const reponame = name.value;
         const file = document.getElementById("file");
         const repofile = file.value;
-        const owner = '<%= username %>';
         const data = {
             name: reponame,
             visibility: visibility,
-            accountId: owner,
+            accountId: userId,
             file: repofile,
         };
         console.log(data)
-        fetch("/createRepository", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === "success") {
-                    alert(data.message);
-                } else {
-                    alert("Failed to create Repository: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error creating Repository", error);
-                alert("An error occurred while creating the Repository. Please try again later.");
-            });
+        // fetch("/createRepository", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(data),
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         if (data.status === "success") {
+        //             window.location.href = "/"
+        //         } else {
+        //             alert("Failed to create Repository: " + data.message);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error creating Repository", error);
+        //         alert("An error occurred while creating the Repository. Please try again later.");
+        //     });
     }
 </script>
 
