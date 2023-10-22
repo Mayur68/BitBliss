@@ -35,10 +35,10 @@ const fileSchema = new mongoose.Schema({
   createdAt: Date,
   filePath: String,
 }, {
-  collection: 'repositories'
+  collection: 'repository'
 });
 
-const repositories = mongoose.model("repositories", fileSchema);
+const repository = mongoose.model("repository", fileSchema);
 
 const chatHistorySchema = new mongoose.Schema({
   sender: {
@@ -55,4 +55,4 @@ const chatHistorySchema = new mongoose.Schema({
 
 const chatHistory = mongoose.model("chatHistory", chatHistorySchema);
 
-module.exports = { db, accounts, repositories, chatHistory };
+module.exports = { db, accounts, repository, chatHistory };

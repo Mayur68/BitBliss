@@ -199,7 +199,6 @@
     }
 
     function loadRepositories() {
-
         fetch("/loadRepository", {
             method: "POST",
             headers: {
@@ -220,14 +219,23 @@
                     if (repositories.length > 0) {
                         const repoContainer = document.getElementById("repo-container");
                         repoContainer.innerHTML = "";
+
                         repositories.forEach((repo) => {
                             const repoElement = document.createElement("div");
+                            repoElement.className = "section";
                             repoElement.innerHTML = `<h3>${repo.name}</h3><p>Created on: ${repo.createdAt}</p>`;
+
                             const fileContainer = document.createElement("div");
                             fileContainer.innerHTML = "<h4>Files:</h4>";
-                            repo.files.forEach((file) => {
-                                fileContainer.innerHTML += `<p>${file}</p>`;
-                            });
+
+                            if (repo.filePath && repo.filePath.length > 0) {
+                                const filePaths = repo.filePath.split(';'); // Assuming ';' is the delimiter
+                                filePaths.forEach((filePath) => {
+                                    fileContainer.innerHTML += `<p>${filePath}</p>`;
+                                });
+                            } else {
+                                fileContainer.innerHTML += "<p>No files found.</p>";
+                            }
 
                             repoElement.appendChild(fileContainer);
                             repoContainer.appendChild(repoElement);
@@ -244,6 +252,8 @@
                 alert("An error occurred while loading the repositories. Please try again later.");
             });
     }
+
+
     loadRepositories();
 
 </script>

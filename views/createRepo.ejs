@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <form enctype="multipart/form-data">
+    <form enctype="multipart/form-data" id="repositoryForm">
         <input type="text" id="reponame" name="name" placeholder="Repository Name" />
         <label>
             <input type="radio" name="visibility" value="public" /> Public
@@ -18,9 +18,8 @@
         </label>
         <input type="file" id="file" name="file" placeholder="File" />
         <button type="button" onclick="cancel()">Cancel</button>
-        <button type="submit">Create Repository</button>
+        <button type="button" onclick="createRepository()">Create Repository</button>
     </form>
-
 </body>
 <script>
     const userId = localStorage.getItem("username");
@@ -42,36 +41,30 @@
         const name = document.getElementById("reponame");
         const reponame = name.value;
         const file = document.getElementById("file");
-        const repofile = file.value;
-        const data = {
-            name: reponame,
-            visibility: visibility,
-            accountId: userId,
-            file: repofile,
-        };
-        console.log(data)
-        // fetch("/createRepository", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(data),
-        // })
-        //     .then((response) => response.json())
-        //     .then((data) => {
-        //         if (data.status === "success") {
-        //             window.location.href = "/"
-        //         } else {
-        //             alert("Failed to create Repository: " + data.message);
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error creating Repository", error);
-        //         alert("An error occurred while creating the Repository. Please try again later.");
-        //     });
+        const repofile = file.files[0]; // Get the selected file
+        const formData = new FormData();
+        formData.append("name", reponame);
+        formData.append("visibility", visibility);
+        formData.append("accountId", userId);
+        formData.append("file", repofile);
+
+        fetch("/createRepository", {
+            method: "POST",
+            body: formData, // Use FormData for file upload
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    window.location.href = "/";
+                } else {
+                    alert("Failed to create Repository: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error creating Repository", error);
+                alert("An error occurred while creating the Repository. Please try again later.");
+            });
     }
 </script>
-
-
 
 </html>

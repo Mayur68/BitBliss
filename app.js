@@ -33,6 +33,7 @@ app.use("/", user);
 app.use("/", chatHistory);
 app.use("/", repository);
 app.use("/", home);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Set the view engine to EJS
 app.set("view engine", "ejs");
