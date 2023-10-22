@@ -1,5 +1,5 @@
 const socketIO = require("socket.io");
-const { Account } = require("../database/database");
+const { accounts } = require("../database/database");
 
 function setupSocket(server) {
   const io = socketIO(server);
@@ -44,7 +44,7 @@ async function loadFriends(io, socket, connectedUsers) {
   const userID = socket.userID;
 
   try {
-    const user = await Account.findOne({ username: userID });
+    const user = await accounts.findOne({ username: userID });
     if (!user) {
       console.log("User not found with userID:", userID);
       return;
