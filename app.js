@@ -9,6 +9,7 @@ const user = require("./routes/user");
 const home = require("./routes/home");
 const chatHistory = require("./routes/chatHistory");
 const repository = require("./routes/repository");
+const explore = require("./routes/explore");
 
 
 const busEmitter = new EventEmitter();
@@ -33,6 +34,7 @@ app.use("/", user);
 app.use("/", chatHistory);
 app.use("/", repository);
 app.use("/", home);
+app.use("/", explore);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Set the view engine to EJS

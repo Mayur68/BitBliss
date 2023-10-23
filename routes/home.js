@@ -2,6 +2,21 @@ const express = require("express");
 const router = express.Router();
 const { accounts } = require("../database/database");
 
+
+router.post("/notification", async (req, res) => { });
+
+router.post("/:username/:repositoryName", async (req, res) => { });
+
+router.get("/Explore/:promt", async (req, res) => {
+  try {
+    const promt = req.params.promt;
+    res.render("explore", { promt: promt });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
+
 router.post("/addFriend", async (req, res) => {
   const { userId, friendId } = req.body;
 

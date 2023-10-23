@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>
+        <%= promt %>
+    </title>
+    <style>
+        body{
+            background-color: #1d1b34;
+        }
+        /* Reset default margin and padding for the entire page */
+        body,
+        h1,
+        h2 {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Style the header */
+        header {
+            background-color: #1d1b34;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style the main content */
+        main {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px;
+        }
+
+
+        /* Style section headings */
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #07a607;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #input {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            input[type="text"] {
+                width: 70%;
+                /* max-height: 20px; */
+                padding: 10px;
+                border-style: none;
+                border-radius: 5px;
+            }
+        #filter{
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Add more specific styles for your filtering options within the sections */
+    </style>
+</head>
+
+<body>
+    <header>
+        <input type="text" class="explore-bar" id="explore" placeholder="explore..." value="<%= promt %>">
+        <button onclick="explore()">explore</button>
+    </header>
+
+    <main>
+        <section id="filter">
+            <button onclick="users()">Users</button>
+            <button>Repositories</button>
+        </section>
+        <section id="results">
+
+        </section>
+    </main>
+</body>
+<script>
+
+    function explore(){
+        window.location.href = "/Explore/" + explores.value
+    }
+    
+    function users() {
+        data = {
+            users: "<%= promt %>"
+        }
+        fetch("/getUsers", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("userfound");
+                } else {
+                    alert("not found: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading user", error);
+                alert("An error occurred while loading user. Please try again later.");
+            });
+    }
+</script>
+
+</html>
