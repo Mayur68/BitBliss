@@ -13,9 +13,11 @@
         }
 
         .header {
+            display: flex;
+            justify-content: space-between;
             background-color: #1d1b34;
             color: #fff;
-            padding: 10px 0;
+            padding: 20px;
             text-align: center;
         }
 
@@ -29,11 +31,12 @@
         }
 
         .explore-bar {
+            bottom: 0;
+            font-size: 18px;
             background-color: #fff;
             border: 1px solid #ccc;
             border-radius: 5px;
-            padding: 5px 10px;
-            width: 200px;
+            max-height: 20px;
         }
 
         .sections {
@@ -64,6 +67,7 @@
             border-radius: 15px;
             justify-content: space-between;
             width: 98%;
+            height: 700px;
             margin: auto;
             padding: 10px;
             margin-bottom: 30px;
@@ -74,8 +78,8 @@
             display: flex;
             flex-direction: column;
             padding: 10px;
-            height: 450px;
-            width: 70%;
+            height: 555px;
+            width: 75%;
             border-radius: 15px;
             overflow-y: scroll;
         }
@@ -87,7 +91,7 @@
         .messages {
             display: flex;
             flex-direction: column;
-bottom: 0;
+            bottom: 0;
         }
 
         .message {
@@ -111,7 +115,7 @@ bottom: 0;
             background-color: #191961;
             border-radius: 15px;
             padding: 10px;
-            max-height: 450px;
+            height: 555px;
             width: 20%;
             overflow-y: auto;
         }
@@ -148,12 +152,22 @@ bottom: 0;
         }
 
         #repo-container {
+            display: flex;
+            justify-content: space-between;
             margin-top: 30px;
             border-radius: 20px;
-            cursor: pointer;
-            background-color: #ffffff;
+            background-color: #007bff;
             color: wheat;
             margin-bottom: 20px;
+        }
+
+        .repository {
+            width: 20%;
+            height: 200px;
+            background-color: #1d1b34;
+            border-radius: 20px;
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
+            cursor: pointer;
         }
 
         .flex {
@@ -161,16 +175,23 @@ bottom: 0;
             flex-direction: row;
         }
 
+
+
         @media only screen and (max-width: 768px) {
+            .explore-bar {
+                max-width: 150px;
+                max-height: 20px;
+            }
+
             .chat-container {
                 display: flex;
                 flex-direction: column;
                 background-color: #1d1b34;
                 border-radius: 15px;
                 justify-content: space-between;
-                width: 90%;
+                width: 96%;
                 margin: auto;
-                padding: 20px;
+                /* padding: 20px; */
                 margin-bottom: 30px;
             }
 
@@ -183,14 +204,48 @@ bottom: 0;
                 overflow-y: scroll;
             }
 
+            .repository {
+                width: 98%;
+                height: 200px;
+                margin-bottom: 20px;
+                background-color: #1d1b34;
+                border-radius: 20px;
+                box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
+                cursor: pointer;
+            }
+
             #friends-list {
                 background-color: #191961;
                 border-radius: 15px;
                 padding: 10px;
                 max-height: 450px;
                 width: 95%;
+                height: max-content;
                 margin-bottom: 10px;
                 overflow-y: auto;
+            }
+
+            #repo-container {
+                display: flex;
+                flex-direction: column;
+                margin-top: 30px;
+                border-radius: 20px;
+                background-color: #007bff;
+                color: wheat;
+                margin-bottom: 20px;
+            }
+
+            #input {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            input[type="text"] {
+                width: 70%;
+                /* max-height: 20px; */
+                padding: 10px;
+                border-style: none;
+                border-radius: 5px;
             }
         }
     </style>
@@ -209,14 +264,14 @@ bottom: 0;
                     <div id="friends-list"></div>
                     <div class="chat-window" id="chat-window">
                         <div class="messages" id="messages"></div>
-                        <div>
+                        <div id="input">
                             <input type="text" id="message-input" placeholder="Type a message...">
                             <button onclick="sendMessage()">Send</button>
                         </div>
                     </div>
                 </div>
                 <div>
-                    
+
                 </div>
 
             </div>
@@ -230,7 +285,9 @@ bottom: 0;
 
 
 <script>
-    const userId = localStorage.getItem("username");
+    // const userId = localStorage.getItem("username");
+    const userId = "<%= username %>"
+    
     function createRepository() {
         window.location.href = "/new-Repository";
     }
@@ -274,6 +331,9 @@ bottom: 0;
     }
 
     function loadRepositories() {
+        if (!userId) {
+            alert("fuck off")
+        }
         fetch("/loadRepository", {
             method: "POST",
             headers: {
@@ -297,7 +357,7 @@ bottom: 0;
 
                         repositories.forEach((repo) => {
                             const repoElement = document.createElement("div");
-                            repoElement.className = "section";
+                            repoElement.className = "repository";
                             repoElement.onclick = () => openRepository(repo.name);
                             repoElement.innerHTML = `<h3>${repo.name}</h3><p>Created on: ${repo.createdAt}</p>`;
                             repoContainer.appendChild(repoElement);
@@ -352,6 +412,8 @@ bottom: 0;
 
 
     function friendClickHandler(x) {
+        const friend = document.querySelector(".friend-item");
+        friend.style.backgroundColor = "#07a607";
         recipientID = x;
 
         const dataToSend = {

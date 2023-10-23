@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #1d1b34;
             margin: 0;
             padding: 0;
         }
@@ -73,6 +73,31 @@
             list-style: none;
             margin-bottom: 5px;
         }
+        #repo-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            border-radius: 20px;
+            background-color: #007bff;
+            height: 400px;
+            color: wheat;
+            margin-bottom: 20px;
+        }
+
+        .repository {
+            margin: auto;
+            width: 15%;
+            height: 200px;
+            background-color: #1d1b34;
+            border-radius: 20px;
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+        }
+
+        .flex {
+            display: flex;
+            flex-direction: row;
+        }
     </style>
 </head>
 
@@ -90,8 +115,10 @@
 
         </div>
     </div>
+    <div id="repo-container"></div>
 </body>
 <script>
+    const userId = "<%= username %>"
     function addFriend() {
         // To retrieve the username
         const userId = localStorage.getItem("username");
@@ -123,6 +150,55 @@
                 console.error("Error adding friend:", error);
                 alert("An error occurred while adding friend. Please try again later.");
             });
-    }</script>
+    }
+    function loadRepositories() {
+        if (!userId) {
+            alert("fuck off")
+        }
+        fetch("/loadRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status === "success") {
+                    const repositories = data.repositories;
+
+                    if (repositories.length > 0) {
+                        const repoContainer = document.getElementById("repo-container");
+                        repoContainer.innerHTML = "";
+
+                        repositories.forEach((repo) => {
+                            const repoElement = document.createElement("div");
+                            repoElement.className = "repository";
+                            repoElement.onclick = () => openRepository(repo.name);
+                            repoElement.innerHTML = `<h3>${repo.name}</h3><p>Created on: ${repo.createdAt}</p>`;
+                            repoContainer.appendChild(repoElement);
+                        });
+                    }
+                } else {
+                    alert("Failed to load repositories: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading repositories", error);
+                alert("An error occurred while loading the repositories. Please try again later.");
+            });
+    }
+
+    function openRepository(name) {
+        window.location.href = "/" + name;
+    }
+
+    loadRepositories();
+    </script>
 
 </html>
