@@ -9,9 +9,11 @@
         <%= promt %>
     </title>
     <style>
-        body{
+        body {
             background-color: #1d1b34;
+            font-family: Arial, sans-serif;
         }
+
         /* Reset default margin and padding for the entire page */
         body,
         h1,
@@ -43,6 +45,7 @@
             font-size: 28px;
             margin-bottom: 20px;
         }
+
         button {
             background-color: #07a607;
             color: #fff;
@@ -53,53 +56,96 @@
             margin-top: 20px;
             font-weight: bold;
         }
-        #input {
-                display: flex;
-                justify-content: space-between;
-            }
 
-            input[type="text"] {
-                width: 70%;
-                /* max-height: 20px; */
-                padding: 10px;
-                border-style: none;
-                border-radius: 5px;
-            }
-        #filter{
+        #input {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
         }
 
-        /* Add more specific styles for your filtering options within the sections */
+        input[type="text"] {
+            width: 70%;
+            /* max-height: 20px; */
+            padding: 10px;
+            border-style: none;
+            border-radius: 5px;
+        }
+
+        #filter {
+            display: flex;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+        }
+
+        #results {
+            width: 80%;
+            height: 500px;
+            border: 1px solid rgb(84, 84, 84);
+            border-radius: 20px;
+            overflow-y: scroll;
+        }
+
+        #results::-webkit-scrollbar {
+            display: none;
+        }
+
+        .item {
+            width: 90%;
+            height: 100px;
+            margin: 3% 5%;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            background-color: rgb(67, 67, 255);
+            border: 2px solid white;
+            cursor: pointer;
+        }
+
+        #title {
+            margin-left: 45%;
+            font-size: 25px;
+            color: white;
+        }
     </style>
 </head>
 
 <body>
     <header>
         <input type="text" class="explore-bar" id="explore" placeholder="explore..." value="<%= promt %>">
-        <button onclick="explore()">explore</button>
+        <button onclick="explore()">Explore</button>
     </header>
 
     <main>
         <section id="filter">
+            <label>Filter</label>
+            <button onclick="filter('all')">All</button>
+            <button onclick="filter('public')">Public</button>
+            <button onclick="filter('private')">Private</button>
+            <button onclick="repositories()">Repositories</button>
             <button onclick="users()">Users</button>
-            <button>Repositories</button>
         </section>
         <section id="results">
-
+            <label id="title"></label>
+            <div id="result"></div>
         </section>
     </main>
 </body>
-<script>
 
-    function explore(){
-        window.location.href = "/Explore/" + explores.value
+<script>
+    function explore() {
+        window.location.href = "/Explore/" + document.getElementById('explore').value;
     }
-    
+
     function users() {
-        data = {
-            users: "<%= promt %>"
-        }
+        const resultsSection = document.getElementById("result");
+        const title = document.getElementById("title");
+        resultsSection.innerHTML = "";
+        title.innerText = "Users"
+        const prompt = "<%= promt %>";
+        const data = {
+            user: prompt,
+        };
+
         fetch("/getUsers", {
             method: "POST",
             headers: {
@@ -111,16 +157,92 @@
             .then((data) => {
                 console.log(data);
                 if (data.status === "success") {
-                    alert("userfound");
-                } else {
-                    alert("not found: " + data.message);
+                    displayUsers(data.relatedUsers);
                 }
             })
             .catch((error) => {
-                console.error("Error loading user", error);
-                alert("An error occurred while loading user. Please try again later.");
+                console.error("Error loading users", error);
+                alert("An error occurred while loading users. Please try again later.");
             });
     }
+
+    function displayUsers(users) {
+        const resultsSection = document.getElementById("result");
+        const title = document.getElementById("title");
+        resultsSection.innerHTML = "";
+        title.innerText = "Users"
+
+        if (users.length > 0) {
+            users.forEach((user) => {
+                const userElement = document.createElement("div");
+                userElement.className = "item";
+                userElement.onclick = () => openProfile(user);
+                userElement.innerHTML = `<p>Username: ${user.username}</p><p>Email: ${user.email}</p>`;
+                resultsSection.appendChild(userElement);
+            });
+        } else {
+            resultsSection.innerHTML = "No related users found.";
+        }
+    }
+
+    function repositories() {
+        const resultsSection = document.getElementById("result");
+        const title = document.getElementById("title");
+        resultsSection.innerHTML = "";
+        title.innerText = "repositories"
+        const prompt = "<%= promt %>";
+        const data = {
+            topics: prompt,
+        };
+
+        fetch("/getRepositories", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    displayRepositories(data.repositories);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading repositories", error);
+                alert("An error occurred while loading repositories. Please try again later.");
+            });
+
+        function displayRepositories(repositories) {
+            const resultsSection = document.getElementById("result");
+            const title = document.getElementById("title");
+            resultsSection.innerHTML = "";
+            title.innerText = "Repositories"
+
+            if (repositories.length > 0) {
+                repositories.forEach((repo) => {
+                    const repoElement = document.createElement("div");
+                    repoElement.className = "item";
+                    repoElement.onclick = () => openRepository(repo);
+                    repoElement.innerHTML = `<p>Repository Name: ${repo.name}</p><p>Created by: ${repo.owner.username}</p>`;
+                    resultsSection.appendChild(repoElement);
+                });
+            } else {
+                resultsSection.innerHTML = "No related repositories found.";
+            }
+        }
+    }
+    repositories()
+
+    function openRepository(repo) {
+        window.location.href = `/${repo.owner.username}/${repo.name}`;
+    }
+
+    function openProfile(user) {
+        window.location.href = `/${user.username}`;
+    }
 </script>
+
 
 </html>

@@ -116,17 +116,20 @@
     function createRepository() {
         const name = document.getElementById("reponame");
         const reponame = name.value;
+        const topicsInput = document.getElementById("topics");
+    const topics = topicsInput.value;
         const file = document.getElementById("file");
-        const repofile = file.files[0]; // Get the selected file
+        const repofile = file.files[0];
         const formData = new FormData();
         formData.append("name", reponame);
         formData.append("visibility", visibility);
+        formData.append("topics", topics);
         formData.append("accountId", userId);
         formData.append("file", repofile);
         
         fetch("/createRepository", {
             method: "POST",
-            body: formData, // Use FormData for file upload
+            body: formData,
         })
             .then((response) => response.json())
             .then((data) => {

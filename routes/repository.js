@@ -35,6 +35,7 @@ router.post("/createRepository", upload.single("file"), async (req, res) => {
       owner: user._id,
       createdAt: new Date(),
       filePath: req.file.path,
+      topics: req.body.topics.split(",").map(topic => topic.trim()),
     });
 
     await newRepository.save();
@@ -73,7 +74,11 @@ router.post("/loadRepository", async (req, res) => {
   }
 });
 
-
+router.get('/:username/:repository', (req, res) => {
+  const username = req.params.username;
+  const repository = req.params.repository;
+  res.render("repository", { username: username, repository: repository });
+});
 
 
 module.exports = router;

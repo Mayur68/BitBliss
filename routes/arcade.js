@@ -1,32 +1,32 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/:username/Rock-Paper-Scissors", (req, res) => {
+router.get("/Rock-Paper-Scissors", (req, res) => {
   const username = req.params.username;
   res.render("Rock-Paper-Scissors", { username: username });
 });
 
-router.get("/:username/TicTacToe-online", (req, res) => {
+router.get("/TicTacToe", (req, res) => {
   const username = req.params.username;
   res.render("tic-tac-toe-online", { username: username });
 });
 
-router.get("/:username/shootDown", (req, res) => {
+router.get("/shootDown", (req, res) => {
   const username = req.params.username;
   res.render("cosmicShoot", { username: username });
 });
 
-router.get("/:username/chess", (req, res) => {
+router.get("/chess", (req, res) => {
   const username = req.params.username;
   res.render("chess", { username: username });
 });
 
-router.get("/:username/truck", (req, res) => {
+router.get("/truck", (req, res) => {
   const username = req.params.username;
   res.render("truck", { username: username });
 });
 
-router.get("/:username/paint", (req, res) => {
+router.get("/paint", (req, res) => {
   const username = req.params.username;
   res.render("paint", { username: username });
 });
