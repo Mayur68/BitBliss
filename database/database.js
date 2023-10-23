@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-// const databaseUrl = "mongodb://127.0.0.1:27017/webapp";
-const databaseUrl = "mongodb+srv://mayur68:IF8QYZLtEzm7kR6@cluster0.bpkmyqk.mongodb.net/?retryWrites=true&w=majority";
+const databaseUrl = "mongodb://127.0.0.1:27017/webapp";
+// const databaseUrl = "mongodb+srv://mayur68:IF8QYZLtEzm7kR6@cluster0.bpkmyqk.mongodb.net/?retryWrites=true&w=majority";
 
 mongoose
   .connect(databaseUrl, {
@@ -35,6 +35,7 @@ const fileSchema = new mongoose.Schema({
   },
   createdAt: Date,
   filePath: String,
+  topics: [String]
 }, {
   collection: 'repository'
 });

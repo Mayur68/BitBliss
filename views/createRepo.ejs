@@ -32,6 +32,14 @@
             border-radius: 5px;
         }
 
+        #topics{
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #07a607;
+            border-radius: 5px;
+        }
+
         /* Style the radio buttons and their labels */
         label {
             display: block;
@@ -82,11 +90,13 @@
         <label>
             <input type="radio" name="visibility" value="private" /> Private
         </label>
+        <input type="text" id="topics" name="topics" placeholder="Topics (comma-separated)" />
         <input type="file" id="file" name="file" placeholder="File" />
         <button type="button" onclick="cancel()">Cancel</button>
         <button type="button" onclick="createRepository()">Create Repository</button>
     </form>
 </body>
+
 <script>
     const userId = "<%= username %>";
     function cancel() {

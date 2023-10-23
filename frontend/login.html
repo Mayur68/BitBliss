@@ -9,115 +9,102 @@
   <title>Login</title>
 </head>
 <style>
-  ul {
-    display: flex;
-    justify-content: space-between;
-    color: white;
-  }
+/* Set background color for the body */
+body {
+    background-color: #1d1b34;
+    font-family: Arial, sans-serif;
+}
 
-  ul>li {
-    padding-left: 0;
-  }
-
-  #container {
-    display: flex;
-    justify-content: space-between;
-    margin: auto;
-    margin-top: 10%;
-  }
-
-  .title {
+/* Style the title */
+.title {
     text-align: center;
-    padding: 14px 16px;
-    margin: 0 12%;
-    margin-top: 1%;
-  }
-
-  .title h1 {
-    color: var(--text-color-2);
-  }
-
-  .box {
     margin: auto;
-    width: 350px;
-    height: auto;
-  }
+    margin-top: 4%;
+}
 
-  .loginForm {
-    background: var(--main-color-2);
-    box-shadow: var(--shadow);
-    padding: 5%;
-    border-radius: 18px;
-  }
+.title h1 {
+    color: #07a607; /* Match the button color from the repository page */
+}
 
-  .field {
-    padding: 2%;
-  }
+/* Style the form container */
+#loginform {
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 2%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 221, 255, 1.8);
+}
 
-  .field>label {
-    margin: 0 0 -8px;
-    padding: 2%;
-    display: block;
-  }
+/* Style the text input */
+#username, #password { /* Apply the same styles for both username and password inputs */
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #07a607;
+    border-radius: 5px;
+}
 
-  .field>input[type="text"] {
-    padding: 2%;
-    border-radius: 7px;
-    width: 100%;
-    border: rgb(91, 91, 255) solid;
-  }
-
-  .field>input:focus {
-    outline: none;
-  }
-
-  .field>button {
-    padding: 2%;
-    border-radius: 7px;
-    width: 100%;
-    background: var(--main-color-2);
-    box-shadow: var(--shadow);
-    font: inherit;
-    border: 0.5px rgb(0, 0, 158) solid;
-    font-family: "Open Sans", sans-serif;
+/* Style the buttons */
+button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-  }
+    background-color: #07a607;
+    color: #fff;
+    font-weight: bold;
+}
 
-  .fp {
-    margin: -7px 10px 0;
+/* Style the "Forgot" links */
+.fp a {
     color: blue;
-    text-align: right;
-    font-size: 12px;
-  }
-
-  .fp a {
     text-decoration: none;
-  }
+}
 
-  .new-user {
+/* Style the "New User" section */
+.new-user {
     display: flex;
     justify-content: center;
+    margin: auto;
     margin-top: 5%;
+    width: 30%;
     padding: 2%;
     border-radius: 7px;
     color: white;
-    box-shadow: var(--shadow);
-  }
+    box-shadow: 0 0 10px rgba(0, 221, 255, 1.8);
+}
 
-  .new-user a {
-    color: rgb(219, 102, 255);
-    padding-left: 2%;
-  }
+.new-user a {
+    color: #07a607; /* Match the button color from the repository page */
+    text-decoration: none;
+}
 
-  @media only screen and (max-width: 768px) {
-    .box {
-      margin: 0 20% 0;
-    }
+/* Style the "Already have an account?" text */
+.new-user p {
+    color: white;
+    padding-right: 2%;
+}
 
+/* Media Query for Responsive Design */
+@media screen and (max-width: 768px) {
+    /* Adjust styles for smaller screens here */
     .title {
-      margin-top: 20%;
+        margin-top: 10%;
     }
-  }
+    #loginform {
+        max-width: 100%;
+    }
+    #username, #password {
+        width: 100%;
+    }
+    .new-user {
+        width: 70%;
+    }
+}
+
 </style>
 
 <body>
@@ -125,7 +112,7 @@
     <div id="mid">
       <div class="title">
         <a href="/">logo</a>
-        <h1 style="color: white;">Login</h1>
+        <h1>Login</h1>
       </div>
       <div class="box">
         <form class="loginForm" id="loginform" name="loginForm">
@@ -147,7 +134,7 @@
         </form>
         <div class="new-user" style="color: white;">
           <p>Create new account?</p>
-          <a href="sign-up" style="color: rgb(219, 102, 255); padding-left: 2%;">Sign up</a>
+          <a href="sign-up">Sign up</a>
         </div>
       </div>
     </div>

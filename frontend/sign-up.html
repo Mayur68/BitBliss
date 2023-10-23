@@ -11,111 +11,108 @@
   <title>sign-up</title>
 </head>
 <style>
-  ul {
-    display: flex;
-    justify-content: space-between;
+/* Set background color for the body */
+body {
+    background-color: #1d1b34;
+    font-family: Arial, sans-serif;
     color: white;
-  }
+    margin: 0;
+    padding: 0;
+}
 
-  ul>li {
-    padding-left: 0;
-  }
-
-  #container {
-    display: flex;
-    justify-content: space-between;
-    margin: auto;
-    margin-top: 10%;
-  }
-
-  .title {
+/* Style the title */
+.title {
     text-align: center;
-    padding: 14px 16px;
-    margin: 0 12%;
-    margin-top: 8%;
-  }
-
-  .title h1 {
-    color: var(--text-color-2);
-  }
-
-  .box {
     margin: auto;
-    width: 350px;
-    height: auto;
-  }
+    margin-top: 4%;
+}
 
-  .loginForm {
-    background: var(--main-color-2);
-    box-shadow: var(--shadow);
-    padding: 5%;
+.title h1 {
+    color: #07a607;
+}
+
+/* Style the form container */
+#loginform {
+    max-width: 350px;
+    margin: 0 auto;
+    padding: 2%;
+    background-color: #fff;
     border-radius: 18px;
-  }
+    box-shadow: 0 0 10px rgba(0, 221, 255, 1.8);
+}
 
-  .field {
-    padding: 2%;
-  }
-
-  .field>label {
-    margin: 0 0 -8px;
-    padding: 2%;
-    display: block;
-  }
-
-  .field>input {
-    padding: 2%;
-    border-radius: 7px;
+/* Style the text input */
+#username, #email, #password, #con-password {
     width: 100%;
-    border: rgb(91, 91, 255) solid;
-  }
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #07a607;
+    border-radius: 5px;
+}
 
-  .field>input:focus {
-    outline: none;
-  }
-
-  .field>button {
-    padding: 2%;
-    border-radius: 7px;
+/* Style the buttons */
+button {
     width: 100%;
-    background: var(--main-color-2);
-    box-shadow: var(--shadow);
-    border: 0.5px rgb(0, 0, 158) solid;
-    font-size: 16px;
-    font-family: "Open Sans", sans-serif;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-  }
+    background-color: #07a607;
+    color: white;
+    font-weight: bold;
+}
 
-  .new-user {
+/* Style the error messages */
+.field p {
+    color: red;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+/* Style the "New User" section */
+.new-user {
     display: flex;
     justify-content: center;
+    margin: auto;
     margin-top: 5%;
     padding: 2%;
+    width: 60%; /* Adjust the width for responsiveness */
     border-radius: 7px;
     color: white;
-    box-shadow: var(--shadow);
-  }
+    box-shadow: 0 0 10px rgba(0, 221, 255, 1.8);
+}
 
-  .new-user>a {
-    color: rgb(219, 102, 255);
-    padding-left: 2%;
-  }
+.new-user a {
+    color: #07a607;
+    text-decoration: none;
+}
 
-  @media only screen and (max-width: 768px) {
-    .box {
-      margin: 0 20% 0;
-    }
+/* Style the "Already have an account?" text */
+.new-user p {
+    color: white;
+    padding-right: 2%;
+}
 
+/* Media Query for Responsive Design */
+@media screen and (max-width: 768px) {
     .title {
-      margin-top: 20%;
+        margin-top: 10%;
     }
-  }
+    #loginform {
+        max-width: 90%; /* Adjust the max-width for smaller screens */
+    }
+    .new-user {
+        width: 80%; /* Adjust the width for smaller screens */
+    }
+}
+
 </style>
 
 <body>
   <div id="container">
     <div id="mid">
       <div class="title">
-        <a href="/"><img src="/assets/favicon/favicon-32x32.png" /></a>
+        <a href="/">logo</a>
         <h1>Sign up</h1>
       </div>
       <div class="box">
