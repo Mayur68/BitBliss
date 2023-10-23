@@ -27,6 +27,10 @@ router.post("/createRepository", upload.single("file"), async (req, res) => {
       return res.status(404).json({ status: "error", message: "User not found" });
     }
 
+    if (!req.file) {
+      return res.status(400).json({ status: "error", message: "No file uploaded" });
+    }
+
     const newRepository = new repository({
       name: req.body.name,
       owner: user._id,
@@ -45,10 +49,11 @@ router.post("/createRepository", upload.single("file"), async (req, res) => {
 
 
 
+
 router.post("/loadRepository", async (req, res) => {
   try {
     const username = req.body.userId;
-
+    console.log(req.body);
     const user = await accounts.findOne({ username });
 
     if (!user) {

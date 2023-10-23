@@ -13,7 +13,7 @@
         }
 
         .header {
-            background-color: #007bff;
+            background-color: #1d1b34;
             color: #fff;
             padding: 10px 0;
             text-align: center;
@@ -39,16 +39,14 @@
         .sections {
             display: flex;
             flex-direction: column;
-            margin: 20px;
+            margin: 5px;
         }
 
         .section {
             flex: 1;
-            border: 1px solid #ccc;
             padding: 20px;
             text-align: center;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            background-color: #1d1b34;
         }
 
         .chatting-interface {
@@ -60,30 +58,36 @@
         }
 
         .chat-container {
-            border: 1px solid #ccc;
             display: flex;
-            /* flex-direction: column; */
+            flex-direction: column;
+            background-color: #1d1b34;
             border-radius: 15px;
             justify-content: space-between;
-            width: 90%;
+            width: 98%;
             margin: auto;
-            padding: 20px;
+            padding: 10px;
+            margin-bottom: 30px;
         }
 
         .chat-window {
-            border: 1px solid #ccc;
+            background-color: #b0b0b0;
+            display: flex;
+            flex-direction: column;
             padding: 10px;
             height: 450px;
-            width: 50%;
+            width: 70%;
             border-radius: 15px;
             overflow-y: scroll;
+        }
 
+        .chat-window::-webkit-scrollbar {
+            display: none;
         }
 
         .messages {
             display: flex;
             flex-direction: column;
-
+bottom: 0;
         }
 
         .message {
@@ -104,7 +108,7 @@
         }
 
         #friends-list {
-            border: 1px solid #ccc;
+            background-color: #191961;
             border-radius: 15px;
             padding: 10px;
             max-height: 450px;
@@ -123,6 +127,71 @@
         input[type="text"] {
             width: 80%;
             padding: 10px;
+            border-style: none;
+            border-radius: 5px;
+        }
+
+        .repo {
+            background-color: #007bff;
+            border-radius: 20px;
+        }
+
+        button {
+            background-color: #07a607;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #repo-container {
+            margin-top: 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            background-color: #ffffff;
+            color: wheat;
+            margin-bottom: 20px;
+        }
+
+        .flex {
+            display: flex;
+            flex-direction: row;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .chat-container {
+                display: flex;
+                flex-direction: column;
+                background-color: #1d1b34;
+                border-radius: 15px;
+                justify-content: space-between;
+                width: 90%;
+                margin: auto;
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+
+            .chat-window {
+                background-color: #b4b3b3;
+                padding: 10px;
+                height: 450px;
+                width: 95%;
+                border-radius: 15px;
+                overflow-y: scroll;
+            }
+
+            #friends-list {
+                background-color: #191961;
+                border-radius: 15px;
+                padding: 10px;
+                max-height: 450px;
+                width: 95%;
+                margin-bottom: 10px;
+                overflow-y: auto;
+            }
         }
     </style>
 </head>
@@ -133,19 +202,25 @@
         <input type="text" class="explore-bar" id="explore" placeholder="Explore...">
         <button onclick="explore()">explore</button>
     </div>
-    <div class="sections">
+    <div>
         <div class="section">
             <div class="chat-container">
-                <div id="friends-list"></div>
-                <div class="chat-window" id="chat-window">
-                    <div class="messages" id="messages"></div>
+                <div class="chat-container flex">
+                    <div id="friends-list"></div>
+                    <div class="chat-window" id="chat-window">
+                        <div class="messages" id="messages"></div>
+                        <div>
+                            <input type="text" id="message-input" placeholder="Type a message...">
+                            <button onclick="sendMessage()">Send</button>
+                        </div>
+                    </div>
                 </div>
                 <div>
-                    <input type="text" id="message-input" placeholder="Type a message...">
-                    <button onclick="sendMessage()">Send</button>
+                    
                 </div>
+
             </div>
-            <div class="section">
+            <div class="section repo">
                 <h2>Repository</h2>
                 <button onclick="createRepository()">create new Repository</button>
                 <div id="repo-container"></div>
@@ -223,25 +298,10 @@
                         repositories.forEach((repo) => {
                             const repoElement = document.createElement("div");
                             repoElement.className = "section";
+                            repoElement.onclick = () => openRepository(repo.name);
                             repoElement.innerHTML = `<h3>${repo.name}</h3><p>Created on: ${repo.createdAt}</p>`;
-
-                            const fileContainer = document.createElement("div");
-                            fileContainer.innerHTML = "<h4>Files:</h4>";
-
-                            if (repo.filePath && repo.filePath.length > 0) {
-                                const filePaths = repo.filePath.split(';'); // Assuming ';' is the delimiter
-                                filePaths.forEach((filePath) => {
-                                    fileContainer.innerHTML += `<p>${filePath}</p>`;
-                                });
-                            } else {
-                                fileContainer.innerHTML += "<p>No files found.</p>";
-                            }
-
-                            repoElement.appendChild(fileContainer);
                             repoContainer.appendChild(repoElement);
                         });
-                    } else {
-                        alert("No repositories found for this user.");
                     }
                 } else {
                     alert("Failed to load repositories: " + data.message);
@@ -253,6 +313,9 @@
             });
     }
 
+    function openRepository(name) {
+        window.location.href = "/" + name;
+    }
 
     loadRepositories();
 

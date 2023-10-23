@@ -191,7 +191,6 @@
         })
         .then((data) => {
           if (data.status === "success") {
-            document.cookie = `sessionToken=${data.sessionToken}; expires=${data.expirationDate}; path=/`;
             localStorage.setItem("username", clientusername);
             window.location.href = "/";
           } else {

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const databaseUrl = "mongodb://127.0.0.1:27017/webapp";
+// const databaseUrl = "mongodb://127.0.0.1:27017/webapp";
+const databaseUrl = "mongodb+srv://mayur68:IF8QYZLtEzm7kR6@cluster0.bpkmyqk.mongodb.net/?retryWrites=true&w=majority";
 
 mongoose
   .connect(databaseUrl, {
