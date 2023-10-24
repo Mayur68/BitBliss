@@ -387,9 +387,6 @@
     }
 
     function loadRepositories() {
-        if (!userId) {
-            alert("fuck off")
-        }
         fetch("/loadRepository", {
             method: "POST",
             headers: {
