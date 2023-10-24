@@ -1,8 +1,10 @@
 const express = require("express");
+const app = express();
+const server = require("http").Server(app);
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const { accounts} = require("./database/database");
+const { accounts } = require("./database/database");
 const { EventEmitter } = require('events');
 const arcade = require("./routes/arcade");
 const user = require("./routes/user");
@@ -10,7 +12,8 @@ const home = require("./routes/home");
 const chatHistory = require("./routes/chatHistory");
 const repository = require("./routes/repository");
 const explore = require("./routes/explore");
-
+const setupSocket = require("./socket/chat");
+setupSocket(server);
 
 const busEmitter = new EventEmitter();
 busEmitter.setMaxListeners(15);
@@ -20,22 +23,16 @@ for (let i = 0; i < 15; i++) {
   });
 }
 
-const app = express();
-const server = require("http").Server(app);
-
-const setupSocket = require("./socket/chat");
-setupSocket(server);
-
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
 app.use("/", arcade);
-app.use("/", user);
 app.use("/", chatHistory);
 app.use("/", home);
 app.use("/", explore);
 app.use("/", repository);
-
+app.use("/", user);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -50,19 +47,24 @@ app.set("views", [
 //Root
 app.get("/", (req, res) => {
   const sessionString = req.cookies.sessionToken;
+  if (sessionString) {
+    accounts.findOne({ session: sessionString })
+      .then((user) => {
+        if (user) {
+          res.render("user", { username: user.username });
+        } else {
+          res.sendFile(__dirname + "/frontend/index.html");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Internal server error");
+      });
+  } else {
+    console.log("no session token")
+    res.sendFile(__dirname + "/frontend/index.html");
+  }
 
-  accounts.findOne({ session: sessionString })
-    .then((user) => {
-      if (user) {
-        res.render("user", { username: user.username });
-      } else {
-        res.sendFile(__dirname + "/frontend/index.html");
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send("Internal server error");
-    });
 });
 
 server.listen(3000, (err) => {

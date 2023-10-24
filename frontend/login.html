@@ -9,25 +9,26 @@
   <title>Login</title>
 </head>
 <style>
-/* Set background color for the body */
-body {
+  /* Set background color for the body */
+  body {
     background-color: #1d1b34;
     font-family: Arial, sans-serif;
-}
+  }
 
-/* Style the title */
-.title {
+  /* Style the title */
+  .title {
     text-align: center;
     margin: auto;
     margin-top: 4%;
-}
+  }
 
-.title h1 {
-    color: #07a607; /* Match the button color from the repository page */
-}
+  .title h1 {
+    color: #07a607;
+    /* Match the button color from the repository page */
+  }
 
-/* Style the form container */
-#loginform {
+  /* Style the form container */
+  #loginform {
     max-width: 300px;
     margin: 0 auto;
     padding: 20px;
@@ -35,20 +36,22 @@ body {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 221, 255, 1.8);
-}
+  }
 
-/* Style the text input */
-#username, #password { /* Apply the same styles for both username and password inputs */
+  /* Style the text input */
+  #username,
+  #password {
+    /* Apply the same styles for both username and password inputs */
     width: 90%;
     padding: 10px;
     margin-bottom: 10px;
     border: 2px solid #07a607;
     border-radius: 5px;
-}
+  }
 
-/* Style the buttons */
-button {
-  width: 100%;
+  /* Style the buttons */
+  button {
+    width: 100%;
     padding: 10px 20px;
     margin-right: 10px;
     border: none;
@@ -57,16 +60,16 @@ button {
     background-color: #07a607;
     color: #fff;
     font-weight: bold;
-}
+  }
 
-/* Style the "Forgot" links */
-.fp a {
+  /* Style the "Forgot" links */
+  .fp a {
     color: blue;
     text-decoration: none;
-}
+  }
 
-/* Style the "New User" section */
-.new-user {
+  /* Style the "New User" section */
+  .new-user {
     display: flex;
     justify-content: center;
     margin: auto;
@@ -76,36 +79,41 @@ button {
     border-radius: 7px;
     color: white;
     box-shadow: 0 0 10px rgba(0, 221, 255, 1.8);
-}
+  }
 
-.new-user a {
-    color: #07a607; /* Match the button color from the repository page */
+  .new-user a {
+    color: #07a607;
+    /* Match the button color from the repository page */
     text-decoration: none;
-}
+  }
 
-/* Style the "Already have an account?" text */
-.new-user p {
+  /* Style the "Already have an account?" text */
+  .new-user p {
     color: white;
     padding-right: 2%;
-}
+  }
 
-/* Media Query for Responsive Design */
-@media screen and (max-width: 768px) {
+  /* Media Query for Responsive Design */
+  @media screen and (max-width: 768px) {
+
     /* Adjust styles for smaller screens here */
     .title {
-        margin-top: 10%;
+      margin-top: 10%;
     }
-    #loginform {
-        max-width: 80%;
-    }
-    #username, #password {
-        width: 100%;
-    }
-    .new-user {
-        width: 70%;
-    }
-}
 
+    #loginform {
+      max-width: 80%;
+    }
+
+    #username,
+    #password {
+      width: 100%;
+    }
+
+    .new-user {
+      width: 70%;
+    }
+  }
 </style>
 
 <body>
@@ -179,7 +187,6 @@ button {
           console.error(error);
           alert("An error occurred while logging in.");
         });
-
     }
   }
 

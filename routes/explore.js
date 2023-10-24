@@ -24,7 +24,7 @@ router.post("/getRepositories", async (req, res) => {
     const { topics } = req.body;
 
     try {
-        // Assuming "topics" is a string or a comma-separated string, convert it to an array
+
         const topicsArray = Array.isArray(topics) ? topics : topics.split(',');
 
         const results = await repository.find({

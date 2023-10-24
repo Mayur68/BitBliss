@@ -27,6 +27,7 @@ const upload = multer({ storage: storage });
 
 router.post("/createRepository", upload.single("file"), async (req, res) => {
   const username = req.body.accountId;
+  console.log(req.body)
   try {
     const user = await accounts.findOne({ username });
 
@@ -45,6 +46,8 @@ router.post("/createRepository", upload.single("file"), async (req, res) => {
       name: repositoryName,
       owner: user._id,
       createdAt: new Date(),
+      description: req.description,
+      visibility: req.visibility,
       filePath: req.file.path,
       topics: req.body.topics.split(",").map(topic => topic.trim()),
     });
