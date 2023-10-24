@@ -6,7 +6,6 @@ router.post("/getUsers", async (req, res) => {
     const { user } = req.body;
 
     try {
-        // Use a regular expression to match usernames that contain the provided user string
         const users = await accounts.find({ username: { $regex: user, $options: 'i' } });
 
         if (users.length > 0) {
@@ -25,8 +24,14 @@ router.post("/getRepositories", async (req, res) => {
     const { topics } = req.body;
 
     try {
-        const results = await repository.find({ topics: { $in: topics } })
-            .populate('owner', 'username');
+        // Assuming "topics" is a string or a comma-separated string, convert it to an array
+        const topicsArray = Array.isArray(topics) ? topics : topics.split(',');
+
+        const results = await repository.find({
+            topics: { $in: topicsArray.map(topic => new RegExp(topic.trim(), 'i')) },
+        }).populate('owner', 'username');
+
+
 
         if (results.length > 0) {
             return res.status(200).json({ status: "success", repositories: results });
