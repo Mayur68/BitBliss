@@ -51,8 +51,8 @@
             font-size: 18px;
             background-color: #fff;
             border: 1px solid #ccc;
+            min-height: 30px;
             border-radius: 5px;
-            max-height: 20px;
         }
 
         .sections {
@@ -145,7 +145,7 @@
 
         input[type="text"] {
             width: 80%;
-            padding: 10px;
+            padding: 10px 20px;
             border-style: none;
             border-radius: 5px;
         }
@@ -163,7 +163,7 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
-            margin-top: 20px;
+            /* margin-top: 20px; */
             font-weight: bold;
         }
 
@@ -215,7 +215,7 @@
 
         @media only screen and (max-width: 768px) {
             .explore-bar {
-                max-width: 150px;
+                max-width: 100px;
                 max-height: 20px;
             }
 
@@ -227,6 +227,7 @@
                 justify-content: space-between;
                 width: 96%;
                 margin: auto;
+                height: max-content;
                 /* padding: 20px; */
                 margin-bottom: 30px;
             }

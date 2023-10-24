@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= repository %></title>
+    <title>
+        <%= repository %>
+    </title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #1d1b34;
             margin: 0;
             padding: 0;
         }
 
         header {
-            background-color: #07a607;
+            background-color: #1d1b34;
             color: #fff;
             padding: 20px;
             text-align: center;
@@ -54,22 +57,27 @@
         }
     </style>
 </head>
+
 <body>
     <header>
-        <h1><%= repository.name %></h1>
+        <h1>
+            <%= repository.name %>
+        </h1>
     </header>
 
     <section>
         <h2>Repository Details</h2>
-        <p>Created Date: <%= repository.createdAt %></p>
-        <p>Owner: <%= repository.owner %></p>
+        <p>Created Date: <%= repository.createdAt %>
+        </p>
+        <p>Owner: <%= repository.owner %>
+        </p>
     </section>
 
     <section>
         <h2>Actions</h2>
         <a href="/viewFiles/<%= repository._id %>">View Files</a>
         <a href="/repositorySettings/<%= repository._id %>">Settings</a>
-        <!-- Add other necessary actions here -->
     </section>
 </body>
+
 </html>

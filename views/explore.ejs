@@ -106,6 +106,55 @@
             font-size: 25px;
             color: white;
         }
+
+        @media only screen and (max-width: 768px) {
+            main {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                margin: 20px;
+            }
+
+            #filter {
+                display: flex;
+                flex-direction: row;
+                margin-top: 0;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+
+            #results {
+                width: 98%;
+                height: 500px;
+                border: 1px solid rgb(84, 84, 84);
+                border-radius: 20px;
+                overflow-y: scroll;
+            }
+
+            #results::-webkit-scrollbar {
+                display: none;
+            }
+
+            .item {
+                width: 90%;
+                height: 100px;
+                margin: 3% 5%;
+                border-radius: 10px;
+                text-align: center;
+                color: white;
+                background-color: rgb(67, 67, 255);
+                border: 2px solid white;
+                cursor: pointer;
+            }
+
+            #title {
+                /* margin-left: 30%; */
+                text-align: center;
+                font-size: 25px;
+                color: white;
+            }
+        }
     </style>
 </head>
 
@@ -118,9 +167,6 @@
     <main>
         <section id="filter">
             <label>Filter</label>
-            <button onclick="filter('all')">All</button>
-            <button onclick="filter('public')">Public</button>
-            <button onclick="filter('private')">Private</button>
             <button onclick="repositories()">Repositories</button>
             <button onclick="users()">Users</button>
         </section>

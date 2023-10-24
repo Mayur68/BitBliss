@@ -12,15 +12,44 @@
             font-family: Arial, sans-serif;
         }
 
+        .header {
+            display: flex;
+            justify-content: space-between;
+            background-color: #1d1b34;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .profile-button {
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        a {
+            width: 50px;
+            height: 50px;
+            border-radius: 30px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 30px;
+        }
         /* Style the form container */
         #repositoryForm {
-            max-width: 300px;
+            color: #fff;
+            max-width: 900px;
+            max-height: max-content;
             margin: 0 auto;
-            padding: 20px;
-            margin-top: 200px;
-            background-color: #fff;
+            padding: 10%;
+            background-color: #1d1b34;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 221, 255, 1.8);
+            /* box-shadow: 0 0 10px rgba(0, 221, 255, 1.8); */
         }
 
         /* Style the text input */
@@ -32,7 +61,7 @@
             border-radius: 5px;
         }
 
-        #topics{
+        #topics {
             width: 90%;
             padding: 10px;
             margin-bottom: 10px;
@@ -78,12 +107,21 @@
         button:nth-child(2) {
             background-color: #191961;
         }
+
     </style>
 </head>
 
 <body>
+    <div class="header">
+        <a href="/"><img src="/assets/logo2.jpg"></a>
+        <button class="profile-button" onclick="profile()">Profile</button>
+    </div>
     <form enctype="multipart/form-data" id="repositoryForm">
+        <h1>Create new Repository</h1>
         <input type="text" id="reponame" name="name" placeholder="Repository Name" />
+        <label>
+            <input type="text" id="reponame" name="name" placeholder="Description (optional)" />
+        </label>
         <label>
             <input type="radio" name="visibility" value="public" /> Public
         </label>
@@ -117,7 +155,7 @@
         const name = document.getElementById("reponame");
         const reponame = name.value;
         const topicsInput = document.getElementById("topics");
-    const topics = topicsInput.value;
+        const topics = topicsInput.value;
         const file = document.getElementById("file");
         const repofile = file.files[0];
         const formData = new FormData();
@@ -126,7 +164,7 @@
         formData.append("topics", topics);
         formData.append("accountId", userId);
         formData.append("file", repofile);
-        
+
         fetch("/createRepository", {
             method: "POST",
             body: formData,
