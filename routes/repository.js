@@ -9,7 +9,7 @@ const path = require("path");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const repositoryName = req.body.name;
-    const uploadDir = path.join(__dirname, "../uploads", repositoryName);
+    const uploadDir = path.join(__dirname, "../../../uploads", repositoryName);
 
     fs.mkdir(uploadDir, { recursive: true }, (err) => {
       if (err) {
@@ -40,7 +40,7 @@ router.post("/createRepository", upload.single("file"), async (req, res) => {
     }
 
     const repositoryName = req.body.name;
-    const repositoryDirectory = path.join(__dirname, "../uploads", repositoryName);
+    const repositoryDirectory = path.join(__dirname, "../../../uploads", repositoryName);
 
     const newRepository = new repository({
       name: repositoryName,
@@ -128,7 +128,7 @@ router.post("/getRepository", async (req, res) => {
 // Function to get the list of files in a repository directory
 async function getFilesInRepository(repositoryName) {
   return new Promise((resolve, reject) => {
-    const repositoryDirectory = path.join(__dirname, "../uploads", repositoryName);
+    const repositoryDirectory = path.join(__dirname, "../../../uploads", repositoryName);
     fs.readdir(repositoryDirectory, (err, files) => {
       if (err) {
         console.error("Error reading repository files:", err);

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-// const databaseUrl = "mongodb://127.0.0.1:27017/webapp";
-const databaseUrl = "mongodb+srv://mayur68:IF8QYZLtEzm7kR6@cluster0.bpkmyqk.mongodb.net/?retryWrites=true&w=majority";
+const databaseUrl = "mongodb://127.0.0.1:27017/webapp";
+// const databaseUrl = "mongodb+srv://mayur68:IF8QYZLtEzm7kR6@cluster0.bpkmyqk.mongodb.net/?retryWrites=true&w=majority";
 
 mongoose
   .connect(databaseUrl, {
@@ -17,8 +17,12 @@ const db = mongoose.connection;
 const accountSchema = new mongoose.Schema({
   profilePhoto: String,
   username: String,
-  name: String,
+  First_name: String,
+  Last_name: String,
+  gender: String,
+  DOB: Date,
   email: String,
+  region: String,
   password: String,
   session: String,
   friends: [String],
@@ -37,7 +41,9 @@ const fileSchema = new mongoose.Schema({
   description: String,
   createdAt: Date,
   filePath: String,
-  topics: [String]
+  topics: [String],
+  collaboraters: [String],
+  permissions: [String]
 }, {
   collection: 'repository'
 });

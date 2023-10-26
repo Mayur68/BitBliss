@@ -107,6 +107,12 @@
             display: flex;
             flex-direction: column;
             bottom: 0;
+            height: 550px;
+            overflow-y: scroll;
+        }
+
+        .messages::-webkit-scrollbar {
+            display: none;
         }
 
         .message {
@@ -370,6 +376,8 @@
         }
     }
 </script>
+
+
 <script>
     const userId = "<%= username %>"
 
@@ -385,6 +393,11 @@
     function explore() {
         window.location.href = "/Explore/" + explores.value
     }
+
+</script>
+
+<script>
+
 
     function loadRepositories() {
         fetch("/loadRepository", {
@@ -463,12 +476,16 @@
         });
     }
 
+    const chatContainer = document.querySelector(".chat-window");
+    function scrollToBottom() {
+        chatContainer.scrollToBottom = chatContainer.scrollHeight;
+    }
 
     function friendClickHandler(x) {
+        scrollToBottom();
         const friend = document.querySelector(".friend-item");
         friend.style.backgroundColor = "#07a607";
         recipientID = x;
-
         const dataToSend = {
             recipientID: x,
             userId: userId
@@ -516,10 +533,24 @@
 
 
     }
+    const messageInput = document.getElementById("message-input");
+
+    messageInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            sendMessage()
+        }
+    });
 
     function sendMessage() {
+        scrollToBottom();
         const messageInput = document.getElementById("message-input");
         const message = messageInput.value;
+
+        messageInput.addEventListener("keypress", function (event) {
+            socket.emit('typing', userId);
+        });
+
+
         if (message.trim() === "") return;
         if (!recipientID) {
             console.log("Select a recipient.");
@@ -582,7 +613,6 @@
         const chatWindow = document.getElementById("chat-window");
         chatWindow.scrollTop = chatWindow.scrollHeight;
     });
-
 </script>
 
 </html>
