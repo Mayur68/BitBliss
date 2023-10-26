@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { accounts } = require("../database/database");
+const mongoose = require('mongoose')
+const { accounts, rooms } = require("../database/database");
 
 
 router.post("/notification", async (req, res) => { });
@@ -14,6 +15,60 @@ router.get("/Explore/:promt", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal server error');
+  }
+});
+
+
+router.post("/createRoom", async (req, res) => {
+  const { owner, roomName, members, description } = req.body;
+
+  try {
+    const ownerAccount = await accounts.findOne({ username: owner });
+    const memberAccounts = await accounts.find({ username: { $in: members } });
+
+    const newRoom = new rooms({
+      name: roomName,
+      owner: ownerAccount._id,
+      members: memberAccounts.map(member => member._id),
+      description,
+      timestamp: new Date(),
+    });
+
+    await newRoom.save();
+
+    return res.status(201).json({
+      status: "success",
+      message: "Room created successfully",
+      room: newRoom,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+    });
+  }
+});
+
+router.post('/loadRoomsAndFriends', async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+      const user = await accounts.findOne({ username: userId });
+      const room = await rooms.findOne({ owner: user._id });
+      const friends = user.friends;
+
+      res.status(200).json({
+          status: 'success',
+          room,
+          friends,
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({
+          status: 'error',
+          message: 'Internal server error',
+      });
   }
 });
 

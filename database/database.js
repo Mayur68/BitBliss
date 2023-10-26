@@ -65,4 +65,22 @@ const chatHistorySchema = new mongoose.Schema({
 
 const chatHistory = mongoose.model("chatHistory", chatHistorySchema);
 
-module.exports = { db, accounts, repository, chatHistory };
+const roomsSchema = new mongoose.Schema({
+  name: String,
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts"
+  },
+  description: String,
+  timestamp: Date,
+  members: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts"
+  }]
+}, {
+  collection: 'rooms'
+});
+
+const rooms = mongoose.model("rooms", roomsSchema);
+
+module.exports = { db, accounts, repository, chatHistory, rooms };

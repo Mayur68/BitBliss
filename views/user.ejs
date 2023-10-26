@@ -55,12 +55,6 @@
             border-radius: 5px;
         }
 
-        .sections {
-            display: flex;
-            flex-direction: column;
-            margin: 5px;
-        }
-
         .section {
             flex: 1;
             padding: 20px;
@@ -68,12 +62,6 @@
             background-color: #1d1b34;
         }
 
-        .chatting-interface {
-            height: 400px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            overflow-y: scroll;
-        }
 
         .chat-container {
             display: flex;
@@ -82,7 +70,7 @@
             border-radius: 15px;
             justify-content: space-between;
             width: 98%;
-            height: 700px;
+            height: 600px;
             margin: auto;
             padding: 10px;
             margin-bottom: 30px;
@@ -96,17 +84,11 @@
             height: 555px;
             width: 75%;
             border-radius: 15px;
-            overflow-y: scroll;
-        }
-
-        .chat-window::-webkit-scrollbar {
-            display: none;
         }
 
         .messages {
             display: flex;
             flex-direction: column;
-            bottom: 0;
             height: 550px;
             overflow-y: scroll;
         }
@@ -116,10 +98,16 @@
         }
 
         .message {
+            max-width: 250px;
+            height: fit-content;
             padding: 5px;
             margin-bottom: 5px;
             border-radius: 5px;
             background-color: #f0f0f0;
+        }
+
+        .message::-webkit-scrollbar {
+            display: none;
         }
 
         .message.self {
@@ -141,7 +129,6 @@
             overflow-y: auto;
         }
 
-        /* Style for each friend item */
         .friend-item {
             padding: 5px;
             margin-bottom: 5px;
@@ -150,7 +137,7 @@
         }
 
         input[type="text"] {
-            width: 80%;
+            width: 70%;
             padding: 10px 20px;
             border-style: none;
             border-radius: 5px;
@@ -218,6 +205,20 @@
             font-weight: bold;
         }
 
+        #room-input,
+        #members {
+            width: 20%;
+            margin-bottom: 10px;
+        }
+
+        #chat-header {
+            width: 100%;
+            height: 50px;
+            background-color: #007bff;
+            border-radius: 20px;
+            color: white;
+            margin-bottom: 10px;
+        }
 
         @media only screen and (max-width: 768px) {
             .explore-bar {
@@ -303,22 +304,24 @@
     </div>
     <div>
         <div class="section">
-            <div class="chat-container">
-                <div class="chat-container flex">
-                    <div id="friends-list"></div>
-                    <div class="chat-window" id="chat-window">
-                        <div class="messages" id="messages"></div>
-                        <div id="input">
-                            <input type="text" id="message-input" placeholder="Type a message...">
-                            <button onclick="sendMessage()">Send</button>
-                        </div>
+            <input type="text" id="room-input" placeholder="Enter room name..">
+            <input type="text" id="members" name="members" placeholder="Add members (comma-separated)" />
+            <button onclick="createRoom()">create</button>
+
+            <div class="chat-container flex">
+                <div id="friends-list"></div>
+                <div class="chat-window" id="chat-window">
+                    <div id="chat-header"></div>
+                    <div class="messages" id="messages"></div>
+                    <div id="input">
+                        <input type="text" id="message-input" placeholder="Type a message...">
+                        <button onclick="sendMessage()">Send</button>
+                        <button onclick="clearChat()">Clear chat</button>
                     </div>
                 </div>
-                <div>
-
-                </div>
-
             </div>
+            <h2>Created Rooms</h2>
+            <div id="created-rooms"></div>
             <div>
                 <div class="section repo">
                     <h2>Repository</h2>
@@ -353,7 +356,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
     </div>
@@ -395,7 +397,65 @@
     }
 
 </script>
+<!-- <script>
+    function loadRoomsAndFriends() {
+        fetch("/loadRoomsAndFriends", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status === "success") {
+                    const repositories = data.repositories;
+                    const rooms = data.rooms;
+                    const friends = data.friends;
 
+                    // Display repositories
+                    const repoContainer = document.getElementById("repo-container");
+                    repoContainer.innerHTML = "";
+                    repositories.forEach((repo) => {
+                        const repoElement = document.createElement("div");
+                        repoElement.className = "repository";
+                        repoElement.onclick = () => openRepository(repo.name);
+                        repoElement.innerHTML = `<h3>${repo.name}</h3><p>Created on: ${repo.createdAt}</p>`;
+                        repoContainer.appendChild(repoElement);
+                    });
+
+                    // Display created rooms
+                    const roomsContainer = document.getElementById("created-rooms");
+                    roomsContainer.innerHTML = "";
+                    rooms.forEach((room) => {
+                        const roomElement = document.createElement("div");
+                        roomElement.className = "room";
+                        // Customize this part to display room information
+                        roomElement.innerHTML = `<h3>${room.roomName}</h3><p>Members: ${room.members.join(", ")}</p>`;
+                        roomsContainer.appendChild(roomElement);
+                    });
+
+                    // Display friends
+                    updateFriendsList(friends);
+                } else {
+                    alert("Failed to load data: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading data", error);
+                alert("An error occurred while loading the data. Please try again later.");
+            });
+    }
+
+    // Call the function to load rooms and friends
+    loadRoomsAndFriends();
+
+</script> -->
 <script>
 
 
@@ -476,13 +536,12 @@
         });
     }
 
-    const chatContainer = document.querySelector(".chat-window");
     function scrollToBottom() {
-        chatContainer.scrollToBottom = chatContainer.scrollHeight;
+        const chatContainer = document.querySelector(".chat-window .messages");
+        chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
     function friendClickHandler(x) {
-        scrollToBottom();
         const friend = document.querySelector(".friend-item");
         friend.style.backgroundColor = "#07a607";
         recipientID = x;
@@ -529,8 +588,8 @@
                     }
                 }
             });
+            scrollToBottom();
         }
-
 
     }
     const messageInput = document.getElementById("message-input");
@@ -542,14 +601,9 @@
     });
 
     function sendMessage() {
-        scrollToBottom();
+
         const messageInput = document.getElementById("message-input");
         const message = messageInput.value;
-
-        messageInput.addEventListener("keypress", function (event) {
-            socket.emit('typing', userId);
-        });
-
 
         if (message.trim() === "") return;
         if (!recipientID) {
@@ -560,7 +614,23 @@
         const messagesDiv = document.getElementById("messages");
         const messageElement = document.createElement("div");
         messageElement.className = "message self";
-        messageElement.innerText = message;
+
+        const messageText = document.createElement("span");
+        messageText.innerText = message;
+
+        const sentTime = document.createElement("span");
+        sentTime.className = "message-time";
+
+        const currentTime = new Date();
+        const hours = currentTime.getHours();
+        const minutes = currentTime.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedTime = `${hours % 12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+        sentTime.innerText = formattedTime;
+
+        messageElement.appendChild(messageText);
+        messageElement.appendChild(sentTime);
+
         messagesDiv.appendChild(messageElement);
         const dataToSend = {
             recipientID: recipientID,
@@ -598,7 +668,7 @@
 
         messageInput.value = "";
         const chatWindow = document.getElementById("chat-window");
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+        scrollToBottom();
     }
 
 
@@ -610,9 +680,93 @@
         messageElement.className = "message notself";
         messageElement.innerText = `${message}`;
         messagesDiv.appendChild(messageElement);
-        const chatWindow = document.getElementById("chat-window");
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+        scrollToBottom();
     });
+
+
+    function clearChat() {
+        data = {
+            userId: userId,
+            recipientID: recipientID,
+        }
+        fetch("/clearChat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    const chat_window = document.getElementById("messages");
+                    chat_window.innerHTML = "";
+                } else {
+                    console.log("Failed to clear chat: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error clearing chat:", error);
+                alert("An error occurred while clearing chat. Please try again later.");
+            });
+    }
+
+    messageInput.addEventListener("keypress", function (event) {
+        socket.emit('typing', userId, recipientID);
+    });
+
+    messageInput.addEventListener("keyup", function (event) {
+        socket.emit('notTyping', userId, recipientID);
+    });
+
+    socket.on('istyping', (data) => {
+        const { userId } = data;
+        console.log(userId)
+        const chatHeader = document.getElementById('chat-header');
+        chatHeader.innerText = "typing...";
+    });
+
+    socket.on('notTyping', (data) => {
+        const { userId } = data;
+        console.log(userId)
+        const chatHeader = document.getElementById('chat-header');
+        chatHeader.innerHTML = ""
+    });
+
+    function createRoom() {
+        const roomName = document.getElementById("room-input").value;
+        const members = document.getElementById("members").value;
+
+        const data = {
+            owner: userId,
+            roomName: roomName,
+            members: members.split(",").map(member => member.trim()),
+        };
+
+        fetch("/createRoom", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    alert("Room created")
+                } else {
+                    alert("Failed to create room: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error creating room:", error);
+                alert("An error occurred while creating the room. Please try again later.");
+            });
+    }
+
+
 </script>
 
 </html>

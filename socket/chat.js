@@ -32,6 +32,21 @@ function setupSocket(server) {
       io.to(roomName).emit('roomMessage', `User ${userID} has joined the room.`);
     });
 
+
+    socket.on('typing', (data) => {
+      const { userId, recipientID } = data;
+      if (recipientID && connectedUsers && connectedUsers[recipientID]) {
+        io.to(connectedUsers[recipientID]).emit("istyping", { userId });
+      }
+    });
+
+
+    socket.on('notTyping', (userId, recipientID) => {
+      if (recipientID && connectedUsers[recipientID]) {
+        io.to(connectedUsers[recipientID]).emit("notTyping", { userId, });
+      }
+    });
+
     socket.on("disconnect", () => {
       const userID = socket.userID;
       delete connectedUsers[userID];

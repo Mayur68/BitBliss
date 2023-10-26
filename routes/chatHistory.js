@@ -44,7 +44,7 @@ router.post("/loadHistory", async (req, res) => {
                 { "sender.userID": recipientID, "receiver.userID": userId },
             ],
         }).exec();
-        
+
         return res.status(200).json({
             status: "success",
             chatHistory: result,
@@ -57,5 +57,43 @@ router.post("/loadHistory", async (req, res) => {
         });
     }
 });
+
+router.post("/clearChat", async (req, res) => {
+    const { recipientID, userId } = req.body;
+
+    try {
+        const result = await chatHistory.deleteMany({
+            $or: [
+                {
+                    "sender.userID": userId,
+                    "receiver.userID": recipientID
+                },
+                {
+                    "sender.userID": recipientID,
+                    "receiver.userID": userId
+                }
+            ]
+        });
+
+        if (result.deletedCount > 0) {
+            return res.status(200).json({
+                status: "success",
+                message: "Chat history deleted successfully",
+            });
+        } else {
+            return res.status(200).json({
+                status: "success",
+                message: "No chat history found for deletion",
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            status: "error",
+            message: "Internal server error",
+        });
+    }
+});
+
 
 module.exports = router;
