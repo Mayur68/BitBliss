@@ -1,5 +1,5 @@
 const socketIO = require("socket.io");
-const { accounts } = require("../database/database");
+const { accounts, rooms } = require("../database/database");
 
 function setupSocket(server) {
   const io = socketIO(server);
@@ -10,7 +10,14 @@ function setupSocket(server) {
       const { userID } = data;
       socket.userID = userID;
       connectedUsers[userID] = socket.id;
-      loadFriends(io, socket, connectedUsers);
+
+      socket.on("loadFriends", (data) => {
+        loadFriends(io, socket, connectedUsers);
+      })
+      socket.on("loadRooms", (data) => {
+        loadRooms(io, socket, connectedUsers);
+      })
+
     });
 
     socket.on("send_message", (data) => {
@@ -79,5 +86,33 @@ async function loadFriends(io, socket, connectedUsers) {
     console.error("Error loading friends:", error);
   }
 }
+
+
+async function loadRooms(io, socket, connectedUsers) {
+  const userID = socket.userID;
+
+  try {
+
+    const ownerAccount = await accounts.findOne({ username: userID });
+
+    const userRooms = await rooms.find({
+      $or: [
+        { owner: ownerAccount.id },
+        { members: ownerAccount.id }
+      ]
+    });
+
+    if (userRooms.length === 0) {
+      console.log("User has no rooms as owner or member:", userID);
+      return;
+    }
+    socket.emit("UserRooms", { userRooms });
+
+  } catch (error) {
+    console.error("Error loading rooms:", error);
+  }
+}
+
+
 
 module.exports = setupSocket;

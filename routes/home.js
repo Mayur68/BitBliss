@@ -50,28 +50,6 @@ router.post("/createRoom", async (req, res) => {
   }
 });
 
-router.post('/loadRoomsAndFriends', async (req, res) => {
-  const { userId } = req.body;
-
-  try {
-      const user = await accounts.findOne({ username: userId });
-      const room = await rooms.findOne({ owner: user._id });
-      const friends = user.friends;
-
-      res.status(200).json({
-          status: 'success',
-          room,
-          friends,
-      });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({
-          status: 'error',
-          message: 'Internal server error',
-      });
-  }
-});
-
 router.post("/addFriend", async (req, res) => {
   const { userId, friendId } = req.body;
 

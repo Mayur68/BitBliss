@@ -304,6 +304,8 @@
     </div>
     <div>
         <div class="section">
+            <button onclick="loadFriends()">Friends</button>
+            <button onclick="loadRooms()">Rooms</button>
             <input type="text" id="room-input" placeholder="Enter room name..">
             <input type="text" id="members" name="members" placeholder="Add members (comma-separated)" />
             <button onclick="createRoom()">create</button>
@@ -361,25 +363,7 @@
     </div>
 </body>
 
-<script>
-    function game(game) {
-        if (game == 'tictactoe') {
-            window.location.href = "/TicTacToe";
-        } else if (game == 'cosmicshoot') {
-            window.location.href = "/cosmicshoot'";
-        } else if (game == 'chess') {
-            window.location.href = "/chess";
-        } else if (game == 'truck') {
-            window.location.href = "/truck";
-        } else if (game == 'paint') {
-            window.location.href = "/paint";
-        } else if (game == 'Rock-Paper-Scissors') {
-            window.location.href = "/Rock-Paper-Scissors";
-        }
-    }
-</script>
-
-
+<!-- home.js -->
 <script>
     const userId = "<%= username %>"
 
@@ -397,117 +381,10 @@
     }
 
 </script>
-<!-- <script>
-    function loadRoomsAndFriends() {
-        fetch("/loadRoomsAndFriends", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (data.status === "success") {
-                    const repositories = data.repositories;
-                    const rooms = data.rooms;
-                    const friends = data.friends;
-
-                    // Display repositories
-                    const repoContainer = document.getElementById("repo-container");
-                    repoContainer.innerHTML = "";
-                    repositories.forEach((repo) => {
-                        const repoElement = document.createElement("div");
-                        repoElement.className = "repository";
-                        repoElement.onclick = () => openRepository(repo.name);
-                        repoElement.innerHTML = `<h3>${repo.name}</h3><p>Created on: ${repo.createdAt}</p>`;
-                        repoContainer.appendChild(repoElement);
-                    });
-
-                    // Display created rooms
-                    const roomsContainer = document.getElementById("created-rooms");
-                    roomsContainer.innerHTML = "";
-                    rooms.forEach((room) => {
-                        const roomElement = document.createElement("div");
-                        roomElement.className = "room";
-                        // Customize this part to display room information
-                        roomElement.innerHTML = `<h3>${room.roomName}</h3><p>Members: ${room.members.join(", ")}</p>`;
-                        roomsContainer.appendChild(roomElement);
-                    });
-
-                    // Display friends
-                    updateFriendsList(friends);
-                } else {
-                    alert("Failed to load data: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error loading data", error);
-                alert("An error occurred while loading the data. Please try again later.");
-            });
-    }
-
-    // Call the function to load rooms and friends
-    loadRoomsAndFriends();
-
-</script> -->
-<script>
 
 
-    function loadRepositories() {
-        fetch("/loadRepository", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (data.status === "success") {
-                    const repositories = data.repositories;
 
-                    if (repositories.length > 0) {
-                        const repoContainer = document.getElementById("repo-container");
-                        repoContainer.innerHTML = "";
-
-                        repositories.forEach((repo) => {
-                            const repoElement = document.createElement("div");
-                            repoElement.className = "repository";
-                            repoElement.onclick = () => openRepository(repo.name);
-                            repoElement.innerHTML = `<h3>${repo.name}</h3><p>Created on: ${repo.createdAt}</p>`;
-                            repoContainer.appendChild(repoElement);
-                        });
-                    }
-                } else {
-                    alert("Failed to load repositories: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error loading repositories", error);
-                alert("An error occurred while loading the repositories. Please try again later.");
-            });
-    }
-
-    function openRepository(name) {
-        window.location.href = "/" + userId + "/" + name;
-    }
-
-    loadRepositories();
-
-</script>
-
-
+<!-- chat section -->
 <script src="/socket.io/socket.io.js"></script>
 <script>
     let recipientID;
@@ -517,12 +394,24 @@
     const socket = io();
     socket.emit("connection");
     socket.emit("authenticate", { userID: userId });
-    socket.emit("loadFriends", userId);
+
     socket.on("Friends", (data) => {
         const { friends } = data;
         updateFriendsList(friends);
     });
 
+    socket.on("UserRooms", (data) => {
+        const { userRooms } = data;
+        updateRoomsList(userRooms);
+    });
+    loadFriends()
+    function loadFriends() {
+        socket.emit("loadFriends", userId);
+    }
+
+    function loadRooms() {
+        socket.emit("loadRooms", userId);
+    }
 
     function updateFriendsList(friends) {
         const friendsListDiv = document.getElementById("friends-list");
@@ -534,6 +423,66 @@
             friendElement.onclick = () => friendClickHandler(friend);
             friendsListDiv.appendChild(friendElement);
         });
+    }
+
+    function updateRoomsList(rooms) {
+        const friendsListDiv = document.getElementById("friends-list");
+        friendsListDiv.innerHTML = "";
+        rooms.forEach((room) => {
+            const roomElement = document.createElement("div");
+            roomElement.className = "friend-item";
+            roomElement.innerText = room.name;
+            roomElement.onclick = () => roomClickHandler(room);
+            friendsListDiv.appendChild(roomElement);
+        });
+    }
+    function roomClickHandler(room) {
+        roomName = room;
+        const dataToSend = {
+            roomName: room,
+            userId: userId
+        };
+
+        const messages = document.getElementById("messages");
+        messages.innerHTML = "";
+
+        fetch("/loadRoomHistory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataToSend)
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    const chatHistory = data.chatHistory;
+                    displayChatHistory(chatHistory);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading History:", error);
+                alert("An error occurred while loading history. Please try again later.");
+            });
+
+
+        function displayChatHistory(chatHistory) {
+            chatHistory.forEach((chat) => {
+                if (chat.message && chat.message.trim() !== '') {
+                    const messageDiv = document.createElement('div');
+                    if (chat.sender.userID === userId) {
+                        messageDiv.className = "message self";
+                        messageDiv.textContent = chat.message;
+                        messages.appendChild(messageDiv);
+                    } else if (chat.sender.userID === recipientID) {
+                        messageDiv.className = "message notself";
+                        messageDiv.textContent = chat.message;
+                        messages.appendChild(messageDiv);
+                    }
+                }
+            });
+            scrollToBottom();
+        }
     }
 
     function scrollToBottom() {
@@ -592,6 +541,7 @@
         }
 
     }
+
     const messageInput = document.getElementById("message-input");
 
     messageInput.addEventListener("keypress", function (event) {
@@ -767,6 +717,75 @@
     }
 
 
+</script>
+
+<script>
+
+    function loadRepositories() {
+        fetch("/loadRepository", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status === "success") {
+                    const repositories = data.repositories;
+
+                    if (repositories.length > 0) {
+                        const repoContainer = document.getElementById("repo-container");
+                        repoContainer.innerHTML = "";
+
+                        repositories.forEach((repo) => {
+                            const repoElement = document.createElement("div");
+                            repoElement.className = "repository";
+                            repoElement.onclick = () => openRepository(repo.name);
+                            repoElement.innerHTML = `<h3>${repo.name}</h3><p>Created on: ${repo.createdAt}</p>`;
+                            repoContainer.appendChild(repoElement);
+                        });
+                    }
+                } else {
+                    alert("Failed to load repositories: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading repositories", error);
+                alert("An error occurred while loading the repositories. Please try again later.");
+            });
+    }
+
+    function openRepository(name) {
+        window.location.href = "/" + userId + "/" + name;
+    }
+
+    loadRepositories();
+
+</script>
+
+
+<script>
+    function game(game) {
+        if (game == 'tictactoe') {
+            window.location.href = "/TicTacToe";
+        } else if (game == 'cosmicshoot') {
+            window.location.href = "/cosmicshoot'";
+        } else if (game == 'chess') {
+            window.location.href = "/chess";
+        } else if (game == 'truck') {
+            window.location.href = "/truck";
+        } else if (game == 'paint') {
+            window.location.href = "/paint";
+        } else if (game == 'Rock-Paper-Scissors') {
+            window.location.href = "/Rock-Paper-Scissors";
+        }
+    }
 </script>
 
 </html>
