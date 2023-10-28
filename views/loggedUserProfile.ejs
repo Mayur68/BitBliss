@@ -22,7 +22,7 @@
         .profile-container {
             background-color: #fff;
             border-radius: 10px;
-            width: 300px;
+            width: 90%;
             margin: 20px auto;
             text-align: center;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -70,15 +70,6 @@
             background-color: #059a05;
         }
 
-        .friends-list {
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .friends-list li {
-            list-style: none;
-            margin-bottom: 5px;
-        }
 
         #repo-container {
             display: flex;
@@ -105,29 +96,105 @@
             display: flex;
             flex-direction: row;
         }
+
+        #friends-list {
+            background-color: #191961;
+            border-radius: 15px;
+            padding: 10px;
+            margin: auto;
+            height: fit-content;
+            width: 20%;
+            overflow-y: auto;
+        }
+
+        .friend-item {
+            padding: 5px;
+            margin-bottom: 5px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
 <body>
     <div class="profile-container">
-        <div class="profile-photo"></div>
-        <div class="username">
-            <%= username %>
-        </div>
-        <div class="bio">
-            <%= username %> is a programmer and a BCA student, interested in coding and exploring the latest tech.
-        </div>
-        <div class="email">Email: <%= username %>@example.com</div>
-        <button class="add-friend-button">Edit Profile</button>
-        <h2>Friends List:</h2>
-        <div></div>
+        <div class="profile-photo" id="profile-photo"></div>
+        <div class="username" id="username"></div>
+        <div class="name" id="name"></div>
+        <div class="bio" id="bio"></div>
+        <div class="region" id="region"></div>
+        <button class="add-friend-button" onclick="edit()">Edit Profile</button>
+        <h2>Friends</h2>
+        <div id="friends-list"></div>
     </div>
-    <button class="add-friend-button" onclick="logout()">logout</button>
     <div id="repo-container"></div>
+    <button class="add-friend-button" onclick="logout()">logout</button>
 </body>
 
+
+
 <script>
+
+    function loadData() {
+        const username = "<%= username %>";
+        fetch(`/loadData?username=${username}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    console.log(data);
+                    document.getElementById('name').innerText = data.user.First_name +" "+ data.user.Last_name || '';
+                    document.getElementById('username').innerText = data.user.username || '';
+                    document.getElementById('bio').innerText = data.user.bio || '';
+                    document.getElementById('region').innerText = data.user.region || '';
+                } else {
+                    alert('Failed to load profile data');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    loadData()
+</script>
+
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
     const userId = "<%= username %>"
+
+    const socket = io();
+    socket.emit("connection");
+    socket.emit("authenticate", { userID: userId });
+
+    socket.emit("loadFriends", userId);
+    socket.on("Friends", (data) => {
+        const { friends } = data;
+        updateFriendsList(friends);
+    });
+
+    function updateFriendsList(friends) {
+        const friendsListDiv = document.getElementById("friends-list");
+        friendsListDiv.innerHTML = "";
+        friends.forEach((friend) => {
+            const friendElement = document.createElement("div");
+            friendElement.className = "friend-item";
+            friendElement.innerText = friend;
+            friendsListDiv.appendChild(friendElement);
+        });
+    }
+
+
+
+
+
     function logout() {
         fetch('/logout', {
             method: 'POST',
@@ -148,6 +215,9 @@
     }
 
 
+    function edit() {
+        window.location.href = "/Edit/<%= username %>";
+    }
     function loadRepositories() {
         if (!userId) {
             alert("fuck off")

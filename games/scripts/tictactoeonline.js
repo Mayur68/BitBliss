@@ -1,7 +1,8 @@
 window.addEventListener("childScriptReady", function (event) {
     var player2 = event.detail.myVariable;
 });
-
+senderName = userId;
+console.log(senderName)
 a = document.getElementById("box-0");
 b = document.getElementById("box-1");
 c = document.getElementById("box-2");
@@ -56,13 +57,13 @@ function checkWin(x, y, z) {
         //checks left to right diag line for player
         pWin = true;
         if (toss == 'X') {
-            document.getElementById("container").innerHTML = `<div class="result"><h2>You WIN</h2>
-                        <button id="retry" onclick="resetValues()">Try Again?</button>
-                        <button id="goBack" onclick="cancel()">Go Back</button></div>`
+            document.getElementById("container").innerHTML = `<div class="result"><h2>You WIN</h2></div>`
+                        // <button id="retry" onclick="resetValues()">Try Again?</button>
+                        // <button id="goBack" onclick="cancel()">Go Back</button></div>`
         } else {
-            document.getElementById("container").innerHTML = `<div class="result"><h2>You Lose</h2>
-                        <button id="retry" onclick="resetValues()">Try Again?</button>
-                        <button id="goBack" onclick="cancel()">Go Back</button></div></div>`
+            document.getElementById("container").innerHTML = `<div class="result"><h2>You Lose</h2></div>`
+                        // <button id="retry" onclick="resetValues()">Try Again?</button>
+                        // <button id="goBack" onclick="cancel()">Go Back</button></div></div>`
         }
 
 
@@ -70,13 +71,13 @@ function checkWin(x, y, z) {
         //checks left to right diag line for bot
         bWin = true;
         if (toss == 'O') {
-            document.getElementById("container").innerHTML = `<div class="result"><h2>You WIN</h2>
-                        <button id="retry" onclick="resetValues()">Try Again?</button>
-                        <button id="goBack" onclick="cancel()">Go Back</button></div>`
+            document.getElementById("container").innerHTML = `<div class="result"><h2>You WIN</h2></div>`
+                        // <button id="retry" onclick="resetValues()">Try Again?</button>
+                        // <button id="goBack" onclick="cancel()">Go Back</button></div>`
         } else {
-            document.getElementById("container").innerHTML = `<div class="result"><h2>You Lose</h2>
-                        <button id="retry" onclick="resetValues()">Try Again?</button>
-                        <button id="goBack" onclick="cancel()">Go Back</button></div></div>`
+            document.getElementById("container").innerHTML = `<div class="result"><h2>You Lose</h2></div>`
+                        // <button id="retry" onclick="resetValues()">Try Again?</button>
+                        // <button id="goBack" onclick="cancel()">Go Back</button></div></div>`
         }
     }
 }
@@ -103,9 +104,9 @@ function winCheck() {
         checkWin(6, 7, 8);
         pWin = true;
         bWin = true;
-        document.getElementById("container").innerHTML = `<div class="result">
-        <button id="retry" onclick="resetValues()">Try Again?</button>
-        <button id="goBack" onclick="cancel()">Go Back</button></div></div>`
+        document.getElementById("container").innerHTML = `<div class="result">Draw</div>`
+        // <button id="retry" onclick="resetValues()">Try Again?</button>
+        // <button id="goBack" onclick="cancel()">Go Back</button></div></div>`
     } else {
         checkWin(0, 4, 8);
         checkWin(1, 4, 7);

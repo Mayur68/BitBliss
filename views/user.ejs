@@ -4,295 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Application</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        a {
-            width: 50px;
-            height: 50px;
-            border-radius: 30px;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 30px;
-        }
-
-        h1 {
-            color: white;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            background-color: #1d1b34;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .profile-button {
-            background-color: transparent;
-            border: none;
-            color: #fff;
-            font-size: 18px;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-
-        .explore-bar {
-            bottom: 0;
-            font-size: 18px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            min-height: 30px;
-            border-radius: 5px;
-        }
-
-        .section {
-            flex: 1;
-            padding: 20px;
-            text-align: center;
-            background-color: #1d1b34;
-        }
-
-
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            background-color: #1d1b34;
-            border-radius: 15px;
-            justify-content: space-between;
-            width: 98%;
-            height: 600px;
-            margin: auto;
-            padding: 10px;
-            margin-bottom: 30px;
-        }
-
-        .chat-window {
-            background-color: #b0b0b0;
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-            height: 555px;
-            width: 75%;
-            border-radius: 15px;
-        }
-
-        .messages {
-            display: flex;
-            flex-direction: column;
-            height: 550px;
-            overflow-y: scroll;
-        }
-
-        .messages::-webkit-scrollbar {
-            display: none;
-        }
-
-        .message {
-            max-width: 250px;
-            height: fit-content;
-            padding: 5px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-        }
-
-        .message::-webkit-scrollbar {
-            display: none;
-        }
-
-        .message.self {
-            align-self: flex-end;
-            background-color: #ac10f5;
-        }
-
-        .message.notself {
-            align-self: flex-start;
-            background-color: #0e0eff;
-        }
-
-        #friends-list {
-            background-color: #191961;
-            border-radius: 15px;
-            padding: 10px;
-            height: 555px;
-            width: 20%;
-            overflow-y: auto;
-        }
-
-        .friend-item {
-            padding: 5px;
-            margin-bottom: 5px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-        }
-
-        input[type="text"] {
-            width: 70%;
-            padding: 10px 20px;
-            border-style: none;
-            border-radius: 5px;
-        }
-
-        .repo {
-            background-color: #007bff;
-            border-radius: 20px;
-            margin-bottom: 50px;
-        }
-
-        button {
-            background-color: #07a607;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            /* margin-top: 20px; */
-            font-weight: bold;
-        }
-
-        #repo-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            border-radius: 20px;
-            background-color: #007bff;
-            color: wheat;
-            margin-bottom: 20px;
-        }
-
-        .repository {
-            width: 20%;
-            height: 200px;
-            background-color: #1d1b34;
-            border-radius: 20px;
-            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
-            cursor: pointer;
-        }
-
-        .flex {
-            display: flex;
-            flex-direction: row;
-        }
-
-        .game-card {
-            display: inline-block;
-            width: 200px;
-            padding: 20px;
-            margin: 10px;
-            color: #f0f0f0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .cta-button {
-            background-color: #07a607;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-
-        #room-input,
-        #members {
-            width: 20%;
-            margin-bottom: 10px;
-        }
-
-        #chat-header {
-            width: 100%;
-            height: 50px;
-            background-color: #007bff;
-            border-radius: 20px;
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        @media only screen and (max-width: 768px) {
-            .explore-bar {
-                max-width: 100px;
-                max-height: 20px;
-            }
-
-            .chat-container {
-                display: flex;
-                flex-direction: column;
-                background-color: #1d1b34;
-                border-radius: 15px;
-                justify-content: space-between;
-                width: 96%;
-                margin: auto;
-                height: max-content;
-                /* padding: 20px; */
-                margin-bottom: 30px;
-            }
-
-            .chat-window {
-                background-color: #b4b3b3;
-                padding: 10px;
-                height: 450px;
-                width: 95%;
-                border-radius: 15px;
-                overflow-y: scroll;
-            }
-
-            .repository {
-                width: 98%;
-                height: 200px;
-                margin-bottom: 20px;
-                background-color: #1d1b34;
-                border-radius: 20px;
-                box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
-                cursor: pointer;
-            }
-
-            #friends-list {
-                background-color: #191961;
-                border-radius: 15px;
-                padding: 10px;
-                max-height: 450px;
-                width: 95%;
-                height: max-content;
-                margin-bottom: 10px;
-                overflow-y: auto;
-            }
-
-            #repo-container {
-                display: flex;
-                flex-direction: column;
-                margin-top: 30px;
-                border-radius: 20px;
-                background-color: #007bff;
-                color: wheat;
-                margin-bottom: 20px;
-            }
-
-            #input {
-                display: flex;
-                justify-content: space-between;
-            }
-
-            input[type="text"] {
-                width: 70%;
-                /* max-height: 20px; */
-                padding: 10px;
-                border-style: none;
-                border-radius: 5px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/frontend/user.css">
+    <title>BitBliss</title>
 </head>
 
 <body>
@@ -313,17 +26,22 @@
             <div class="chat-container flex">
                 <div id="friends-list"></div>
                 <div class="chat-window" id="chat-window">
-                    <div id="chat-header"></div>
+                    <div id="chat-header">
+                        <p id="friendname"></p>
+                        <p id="typing"></p>
+                        <p id="online"></p>
+                    </div>
                     <div class="messages" id="messages"></div>
                     <div id="input">
                         <input type="text" id="message-input" placeholder="Type a message...">
                         <button onclick="sendMessage()">Send</button>
                         <button onclick="clearChat()">Clear chat</button>
+                        <button onclick="tictactoe()">Challenge</button>
                     </div>
                 </div>
             </div>
-            <h2>Created Rooms</h2>
-            <div id="created-rooms"></div>
+
+
             <div>
                 <div class="section repo">
                     <h2>Repository</h2>
@@ -365,7 +83,6 @@
 
 <!-- home.js -->
 <script>
-    const userId = "<%= username %>"
 
     function createRepository() {
         window.location.href = "/new-Repository";
@@ -384,9 +101,14 @@
 
 
 
+
+
+
 <!-- chat section -->
 <script src="/socket.io/socket.io.js"></script>
 <script>
+
+    const userId = "<%= username %>"
     let recipientID;
     let receivedMessage;
 
@@ -404,7 +126,7 @@
         const { userRooms } = data;
         updateRoomsList(userRooms);
     });
-    loadFriends()
+
     function loadFriends() {
         socket.emit("loadFriends", userId);
     }
@@ -412,6 +134,11 @@
     function loadRooms() {
         socket.emit("loadRooms", userId);
     }
+
+    loadFriends()
+
+
+
 
     function updateFriendsList(friends) {
         const friendsListDiv = document.getElementById("friends-list");
@@ -436,54 +163,6 @@
             friendsListDiv.appendChild(roomElement);
         });
     }
-    function roomClickHandler(room) {
-        roomName = room;
-        const dataToSend = {
-            roomName: room,
-            userId: userId
-        };
-
-        const messages = document.getElementById("messages");
-        messages.innerHTML = "";
-
-        fetch("/loadRoomHistory", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dataToSend)
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === "success") {
-                    const chatHistory = data.chatHistory;
-                    displayChatHistory(chatHistory);
-                }
-            })
-            .catch((error) => {
-                console.error("Error loading History:", error);
-                alert("An error occurred while loading history. Please try again later.");
-            });
-
-
-        function displayChatHistory(chatHistory) {
-            chatHistory.forEach((chat) => {
-                if (chat.message && chat.message.trim() !== '') {
-                    const messageDiv = document.createElement('div');
-                    if (chat.sender.userID === userId) {
-                        messageDiv.className = "message self";
-                        messageDiv.textContent = chat.message;
-                        messages.appendChild(messageDiv);
-                    } else if (chat.sender.userID === recipientID) {
-                        messageDiv.className = "message notself";
-                        messageDiv.textContent = chat.message;
-                        messages.appendChild(messageDiv);
-                    }
-                }
-            });
-            scrollToBottom();
-        }
-    }
 
     function scrollToBottom() {
         const chatContainer = document.querySelector(".chat-window .messages");
@@ -491,65 +170,74 @@
     }
 
     function friendClickHandler(x) {
+        const chatHeader = document.getElementById('friendname');
+        chatHeader.innerText = x;
         const friend = document.querySelector(".friend-item");
         friend.style.backgroundColor = "#07a607";
         recipientID = x;
-        const dataToSend = {
-            recipientID: x,
-            userId: userId
-        };
-
         const messages = document.getElementById("messages");
         messages.innerHTML = "";
 
-        fetch("/loadHistory", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dataToSend)
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === "success") {
-                    const chatHistory = data.chatHistory;
-                    displayChatHistory(chatHistory);
-                }
-            })
-            .catch((error) => {
-                console.error("Error loading History:", error);
-                alert("An error occurred while loading history. Please try again later.");
-            });
-
-
-        function displayChatHistory(chatHistory) {
-            chatHistory.forEach((chat) => {
-                if (chat.message && chat.message.trim() !== '') {
-                    const messageDiv = document.createElement('div');
-                    if (chat.sender.userID === userId) {
-                        messageDiv.className = "message self";
-                        messageDiv.textContent = chat.message;
-                        messages.appendChild(messageDiv);
-                    } else if (chat.sender.userID === recipientID) {
-                        messageDiv.className = "message notself";
-                        messageDiv.textContent = chat.message;
-                        messages.appendChild(messageDiv);
-                    }
+        socket.on("onlineFriends", (data) => {
+            console.log(data)
+            const { onlineFriends } = data;
+            onlineFriends.forEach((friend) => {
+                const roomElement = document.getElementById("online");
+                if (recipientID === friend) {
+                    roomElement.innerText = "online";
                 }
             });
-            scrollToBottom();
-        }
+        });
+
+        // const dataToSend = {
+        //         recipientID: x,
+        //         userId: userId
+        //     };
+        // fetch("/loadHistory", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify(dataToSend)
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         if (data.status === "success") {
+        //             const chatHistory = data.chatHistory;
+        //             displayChatHistory(chatHistory);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error loading History:", error);
+        //         alert("An error occurred while loading history. Please try again later.");
+        //     });
+
+
+        // function displayChatHistory(chatHistory) {
+        //     chatHistory.forEach((chat) => {
+        //         if (chat.message && chat.message.trim() !== '') {
+        //             const messageDiv = document.createElement('div');
+        //             if (chat.sender.userID === userId) {
+        //                 messageDiv.className = "message self";
+        //                 messageDiv.textContent = chat.message + chat.timestamp;
+        //                 messages.appendChild(messageDiv);
+        //             } else if (chat.sender.userID === recipientID) {
+        //                 messageDiv.className = "message notself";
+        //                 messageDiv.textContent = chat.message + chat.timestamp;
+        //                 messages.appendChild(messageDiv);
+        //             }
+        //         }
+        //     });
+        //     scrollToBottom();
+        // }
 
     }
-
     const messageInput = document.getElementById("message-input");
-
     messageInput.addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             sendMessage()
         }
     });
-
     function sendMessage() {
 
         const messageInput = document.getElementById("message-input");
@@ -576,44 +264,47 @@
         const minutes = currentTime.getMinutes();
         const ampm = hours >= 12 ? 'PM' : 'AM';
         const formattedTime = `${hours % 12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
-        sentTime.innerText = formattedTime;
+        sentTime.innerText = " " + formattedTime;
 
         messageElement.appendChild(messageText);
         messageElement.appendChild(sentTime);
-
         messagesDiv.appendChild(messageElement);
+
+
         const dataToSend = {
             recipientID: recipientID,
             userId: userId,
-            message: message
+            message: message,
+            time: formattedTime,
         };
 
-        fetch("/saveHistory", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(dataToSend),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                if (data.status === "success") {
-                    console.log();
-                } else {
-                    console.log("Failed to save History: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error saving History:", error);
-                alert("An error occurred while saving history. Please try again later.");
-            });
+        // fetch("/saveSendingHistory", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(dataToSend),
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         console.log(data);
+        //         if (data.status === "success") {
+        //             console.log();
+        //         } else {
+        //             console.log("Failed to save History: " + data.message);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error saving History:", error);
+        //         alert("An error occurred while saving history. Please try again later.");
+        //     });
 
 
         socket.emit('send_message', {
             senderID: "<%= username %>",
             recipientID: recipientID,
-            message: message
+            message: message,
+            time: formattedTime
         });
 
         messageInput.value = "";
@@ -623,66 +314,95 @@
 
 
     socket.on("receiveMsg", (data) => {
-        const { senderID, message } = data;
+        const { senderID, message, time } = data;
         receivedMessage = message
+
+        // const dataToSend = {
+        //     recipientID: senderID,
+        //     userId: userId,
+        //     message: message,
+        //     time: time,
+        // };
+
+        // fetch("/saveRecievingHistory", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(dataToSend),
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         console.log(data);
+        //         if (data.status === "success") {
+        //             console.log();
+        //         } else {
+        //             console.log("Failed to save History: " + data.message);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error saving History:", error);
+        //         alert("An error occurred while saving history. Please try again later.");
+        //     });
+
         const messagesDiv = document.getElementById("messages");
         const messageElement = document.createElement("div");
         messageElement.className = "message notself";
-        messageElement.innerText = `${message}`;
+        messageElement.innerText = `${message}  ${time}`;
         messagesDiv.appendChild(messageElement);
         scrollToBottom();
     });
 
 
     function clearChat() {
+        document.getElementById("messages").innerHTML = "";
+        // data = {
+        //     userId: userId,
+        //     recipientID: recipientID,
+        // }
+        // fetch("/clearChat", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(data),
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         console.log(data);
+        //         if (data.status === "success") {
+        //             const chat_window = document.getElementById("messages");
+        //             chat_window.innerHTML = "";
+        //         } else {
+        //             console.log("Failed to clear chat: " + data.message);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error clearing chat:", error);
+        //         alert("An error occurred while clearing chat. Please try again later.");
+        //     });
+    }
+
+
+
+    messageInput.addEventListener("keypress", function (event) {
         data = {
             userId: userId,
             recipientID: recipientID,
         }
-        fetch("/clearChat", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                if (data.status === "success") {
-                    const chat_window = document.getElementById("messages");
-                    chat_window.innerHTML = "";
-                } else {
-                    console.log("Failed to clear chat: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error clearing chat:", error);
-                alert("An error occurred while clearing chat. Please try again later.");
-            });
-    }
-
-    messageInput.addEventListener("keypress", function (event) {
-        socket.emit('typing', userId, recipientID);
-    });
-
-    messageInput.addEventListener("keyup", function (event) {
-        socket.emit('notTyping', userId, recipientID);
+        socket.emit('typing', data);
     });
 
     socket.on('istyping', (data) => {
-        const { userId } = data;
-        console.log(userId)
-        const chatHeader = document.getElementById('chat-header');
-        chatHeader.innerText = "typing...";
+        const chatHeader = document.getElementById('typing');
+        chatHeader.innerText = "Typing...";
+        setTimeout(() => {
+            chatHeader.innerText = "";
+        }, 2000);
     });
 
-    socket.on('notTyping', (data) => {
-        const { userId } = data;
-        console.log(userId)
-        const chatHeader = document.getElementById('chat-header');
-        chatHeader.innerHTML = ""
-    });
+
+    // rooom 
 
     function createRoom() {
         const roomName = document.getElementById("room-input").value;
@@ -716,9 +436,111 @@
             });
     }
 
+    function roomClickHandler(room) {
+        roomName = room;
+
+        const dataToSend = {
+            roomName: room,
+            userId: userId,
+        };
+
+        const messages = document.getElementById("messages");
+        messages.innerHTML = "";
+
+        // fetch("/loadRoomHistory", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify(dataToSend)
+        // })
+        //     .then((response) => response.json())
+        //     .then((data) => {
+        //         if (data.status === "success") {
+        //             const chatHistory = data.chatHistory;
+        //             displayChatHistory(chatHistory);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error loading History:", error);
+        //         alert("An error occurred while loading history. Please try again later.");
+        //     });
+
+
+        // function displayChatHistory(chatHistory) {
+        //     chatHistory.forEach((chat) => {
+        //         if (chat.message && chat.message.trim() !== '') {
+        //             const messageDiv = document.createElement('div');
+        //             if (chat.sender.userID === userId) {
+        //                 messageDiv.className = "message self";
+        //                 messageDiv.textContent = chat.message, chat.timestamp;
+        //                 messages.appendChild(messageDiv);
+        //             } else if (chat.sender.userID === recipientID) {
+        //                 messageDiv.className = "message notself";
+        //                 messageDiv.textContent = chat.message;
+        //                 messages.appendChild(messageDiv);
+        //             }
+        //         }
+        //     });
+        //     scrollToBottom();
+        // }
+    }
+
+    // games challenge
+
+    socket.on('challengereturn', () => {
+        player2 = recipientID;
+        console.log("adgfags")
+        loadBoard();
+    })
+    function loadBoard() {
+        let senderName;
+        const messagesDiv = document.getElementById("messages");
+        const messageElement = document.createElement("div");
+        messageElement.className = "message notself";
+        messageElement.innerHTML = `
+                <div class="gameBoard">
+                    <h1>Tic Tac Toe</h1>
+                    <div class="row">
+                        <button id="box-0" class="boardBox"></button>
+                        <button id="box-1" class="boardBox"></button>
+                        <button id="box-2" class="boardBox"></button>
+                    </div>
+                    <div class="row">
+                        <button id="box-3" class="boardBox"></button>
+                        <button id="box-4" class="boardBox"></button>
+                        <button id="box-5" class="boardBox"></button>
+                    </div>
+                    <div class="row">
+                        <button id="box-6" class="boardBox"></button>
+                        <button id="box-7" class="boardBox"></button>
+                        <button id="box-8" class="boardBox"></button>
+                    </div>
+                </div>
+                <div id="container"></div>
+                <button id="goBack" onclick="goBack()">Surrender?</button>
+            `;
+        messagesDiv.appendChild(messageElement);
+
+        scrollToBottom();
+        const script = document.createElement("script");
+        script.src = "../games/scripts/tictactoeonline.js";
+        script.id = "tictactoebot-script";
+        document.body.appendChild(script);
+    }
+    function tictactoe() {
+        socket.emit('gameChallenge', userId, recipientID);
+    }
+    function goBack() {
+
+    }
 
 </script>
 
+
+
+
+<!-- repository section -->
 <script>
 
     function loadRepositories() {

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile: <%= username %>
+    </title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1d1b34;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            background: #fff;
+            border-radius: 15px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #ccc;
+            margin: 20px auto;
+            border: 5px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .username {
+            font-size: 28px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .field {
+            margin: 20px 0;
+        }
+
+        .field label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .field input,
+        .field textarea {
+            width: 90%;
+            padding: 10px;
+            border: 2px solid #07a607;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+
+        .field input[type="file"] {
+            background: none;
+            border: none;
+        }
+
+        .field input[type="file"]::file-selector-button {
+            background: #07a607;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+
+        .save-button {
+            background: #07a607;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .save-button:hover {
+            background: #059a05;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <div class="profile-photo"></div>
+        <div class="username">
+            <%= username %>
+        </div>
+        <form>
+            <div class="field">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName">
+            </div>
+            <div class="field">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName">
+            </div>
+            <div class="field">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+            </div>
+            <div class="field">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob">
+            </div>
+            <div class="field">
+                <label for="gender">Gender:</label>
+                <input type="text" id="gender" name="gender">
+            </div>
+            <div class="field">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+            </div>
+            <div class="field">
+                <label for="bio">Bio:</label>
+                <textarea id="bio" name="bio"></textarea>
+            </div>
+            <div class="field">
+                <label for="region">Region:</label>
+                <input type="text" id="region" name="region">
+            </div>
+            <div class="field">
+                <label for="profile-photo">Profile Photo:</label>
+                <input type="file" id="profile-photo" name="profilePhoto">
+            </div>
+            <button class="save-button" type="button" onclick="save()">Save</button>
+        </form>
+    </div>
+
+    <script>
+        function loadData() {
+            const username = "<%= username %>";
+            fetch(`/loadData?username=${username}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        console.log(data);
+                        document.getElementById('firstName').value = data.user.First_name || '';
+                        document.getElementById('lastName').value = data.user.Last_name || '';
+                        document.getElementById('username').value = data.user.username || '';
+                        document.getElementById('dob').value = data.user.DOB || '';
+                        document.getElementById('gender').value = data.user.gender || '';
+                        document.getElementById('email').value = data.user.email || '';
+                        document.getElementById('bio').value = data.user.bio || '';
+                        document.getElementById('region').value = data.user.region || '';
+                    } else {
+                        alert('Failed to load profile data');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+
+
+        loadData();
+
+        function save() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const username = document.getElementById('username').value;
+            const dob = document.getElementById('dob').value;
+            const gender = document.getElementById('gender').value;
+            const email = document.getElementById('email').value;
+            const bio = document.getElementById('bio').value;
+            const region = document.getElementById('region').value;
+
+            const data = {
+                firstName,
+                lastName,
+                username,
+                dob,
+                gender,
+                email,
+                bio,
+                region,
+            };
+
+            fetch('/update-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window,location.href = "/<%= username %>"
+                    } else {
+                        alert('Profile update failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+    </script>
+</body>
+
+</html>

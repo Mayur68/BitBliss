@@ -51,6 +51,10 @@ const fileSchema = new mongoose.Schema({
 const repository = mongoose.model("repository", fileSchema);
 
 const chatHistorySchema = new mongoose.Schema({
+  name: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
+  },
   sender: {
     userID: String,
   },
@@ -58,12 +62,32 @@ const chatHistorySchema = new mongoose.Schema({
     userID: String,
   },
   message: String,
-  timestamp: Date,
+  timestamp: String,
 }, {
   collection: 'chatHistory'
 });
 
 const chatHistory = mongoose.model("chatHistory", chatHistorySchema);
+
+const roomChatHistorySchema = new mongoose.Schema({
+  name: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
+  },
+  roomName: String,
+  sender: {
+    userID: String,
+  },
+  receivers: {
+    userID: String,
+  },
+  message: String,
+  timestamp: Date,
+}, {
+  collection: 'roomChatHistory'
+});
+
+const roomChatHistory = mongoose.model("roomChatHistory", roomChatHistorySchema);
 
 const roomsSchema = new mongoose.Schema({
   name: String,
@@ -83,4 +107,4 @@ const roomsSchema = new mongoose.Schema({
 
 const rooms = mongoose.model("rooms", roomsSchema);
 
-module.exports = { db, accounts, repository, chatHistory, rooms };
+module.exports = { db, accounts, repository, chatHistory, rooms, roomChatHistory };

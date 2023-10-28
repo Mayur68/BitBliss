@@ -21,11 +21,12 @@ function setupSocket(server) {
     });
 
     socket.on("send_message", (data) => {
-      const { senderID, recipientID, message } = data;
+      const { senderID, recipientID, message, time } = data;
       if (recipientID && connectedUsers[recipientID]) {
         io.to(connectedUsers[recipientID]).emit("receiveMsg", {
           senderID,
           message,
+          time,
         });
       }
     });
@@ -42,15 +43,36 @@ function setupSocket(server) {
 
     socket.on('typing', (data) => {
       const { userId, recipientID } = data;
-      if (recipientID && connectedUsers && connectedUsers[recipientID]) {
+      if (recipientID && connectedUsers[recipientID]) {
         io.to(connectedUsers[recipientID]).emit("istyping", { userId });
       }
     });
 
 
-    socket.on('notTyping', (userId, recipientID) => {
+    socket.on('gameChallenge', (userID, recipientID) => {
       if (recipientID && connectedUsers[recipientID]) {
-        io.to(connectedUsers[recipientID]).emit("notTyping", { userId, });
+        io.to(connectedUsers[recipientID]).emit('challengereturn', userID);
+        io.to(connectedUsers[userID]).emit('challengereturn', recipientID);
+      }
+    })
+
+
+    socket.on("send_message", (data) => {
+      const { senderID, recipientID, content1, content2 } = data;
+      if (senderID && recipientID) {
+        const senderSocket = connectedUsers[senderID];
+        const recipientSocket = connectedUsers[recipientID];
+        if (recipientSocket) {
+          io.to(recipientSocket).emit("new_message", {
+            senderID,
+            content1,
+            content2,
+          });
+        }
+      } else {
+        console.log(
+          "Sender or recipient not found in the connectedUsers collection."
+        );
       }
     });
 

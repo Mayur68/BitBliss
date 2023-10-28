@@ -12,6 +12,7 @@ const home = require("./routes/home");
 const chatHistory = require("./routes/chatHistory");
 const repository = require("./routes/repository");
 const explore = require("./routes/explore");
+const profile = require("./routes/profile");
 const setupSocket = require("./socket/chat");
 setupSocket(server);
 
@@ -27,6 +28,7 @@ app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.use("/", profile);
 app.use("/", arcade);
 app.use("/", chatHistory);
 app.use("/", home);
