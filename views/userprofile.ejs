@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title>
         <%= username %>
     </title>
@@ -10,13 +14,13 @@
             font-family: Arial, sans-serif;
             background-color: #1d1b34;
             margin: 0;
-            padding: 0;
+            padding: 100px;
         }
 
         .profile-container {
             background-color: #fff;
             border-radius: 10px;
-            width: 300px;
+            width: 90%;
             margin: 20px auto;
             text-align: center;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -31,7 +35,15 @@
             margin: 20px auto;
             border: 5px solid #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
 
         .username {
             font-size: 24px;
@@ -64,15 +76,7 @@
             background-color: #059a05;
         }
 
-        .friends-list {
-            margin-top: 20px;
-            text-align: left;
-        }
 
-        .friends-list li {
-            list-style: none;
-            margin-bottom: 5px;
-        }
         #repo-container {
             display: flex;
             justify-content: space-between;
@@ -98,29 +102,83 @@
             display: flex;
             flex-direction: row;
         }
+
+        #friends-list {
+            background-color: #191961;
+            border-radius: 15px;
+            padding: 10px;
+            margin: auto;
+            height: fit-content;
+            width: 20%;
+            overflow-y: auto;
+        }
+
+        .friend-item {
+            padding: 5px;
+            margin-bottom: 5px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
 <body>
     <div class="profile-container">
-        <div class="profile-photo"></div>
-        <div class="username">
-            <%= username %>
+        <div class="profile-photo">
+            <img id="profile-image" src="" alt="Profile Photo">
         </div>
-        <div class="bio"></div>
-        <div class="email">Email: </div>
+        <div class="username" id="username"></div>
+        <div class="name" id="name"></div>
+        <div class="bio" id="bio"></div>
+        <div class="region" id="region"></div>
         <button class="add-friend-button" onclick="addFriend()">Add Friend</button>
-        <h2>Friends List:</h2>
-        <div class="friends-list">
-
-        </div>
+        <h2>Friends</h2>
+        <div id="friends-list"></div>
     </div>
     <div id="repo-container"></div>
 </body>
+
+
+<script>
+    function loadData() {
+        const username = "<%= username %>";
+        fetch(`/loadData?username=${username}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    document.getElementById('name').innerText = data.user.First_name + " " + data.user.Last_name || '';
+                    document.getElementById('username').innerText = data.user.username || '';
+                    document.getElementById('bio').innerText = data.user.bio || '';
+                    document.getElementById('region').innerText = data.user.region || '';
+
+                    if (data.user.profilePhoto) {
+                        const profileImage = document.getElementById('profile-image');
+                        profileImage.src = data.user.profilePhoto;
+                        profileImage.alt = "Profile Photo";
+                    } else {
+                        console.error('Profile photo is not defined.');
+                    }
+
+                } else {
+                    alert('Failed to load profile data');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    loadData();
+</script>
+
+
 <script>
     const userId = "<%= username %>"
     function addFriend() {
-        // To retrieve the username
         const userId = localStorage.getItem("username");
         console.log(userId)
 
@@ -151,10 +209,9 @@
                 alert("An error occurred while adding friend. Please try again later.");
             });
     }
+
     function loadRepositories() {
-        if (!userId) {
-            alert("fuck off")
-        }
+
         fetch("/loadRepository", {
             method: "POST",
             headers: {

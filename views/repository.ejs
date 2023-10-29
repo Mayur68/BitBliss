@@ -63,13 +63,19 @@
             margin: 20px;
             padding: 20px;
             width: 65%;
-            max-height: 500px;
+            height: fit-content;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
+        #view-file {
+            background-color: #1d1b34;
+            color: white;
+            border-radius: 10px;
+        }
+
         #fileTree {
-            border-radius: 20px;
+            border-radius: 10px;
             background-color: gray;
         }
 
@@ -101,6 +107,17 @@
             border-radius: 20px;
             margin-bottom: 20px;
         }
+
+        button {
+            background-color: #07a607;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -111,18 +128,18 @@
     </div>
     <main>
         <section id="file">
-            <div id="details">
-                <h2>Repository Details</h2>
-            </div>
             <div id="fileTree"></div>
+            <button>Copy</button>
+                <button>Edit</button>
+                <button>Save</button>
+            <div id="view-file"></div>
         </section>
         <section id="info">
-            <div id="repo-container">
-                <h2>Actions</h2>
-            </div>
+            <h2>Repository Details</h2>
+            <div id="details"></div>
             <div>
                 <h2>Actions</h2>
-                <button>settings</button>
+                <button onclick="settings()">settings</button>
                 <button>contributers</button>
                 <button>share</button>
             </div>
@@ -135,46 +152,18 @@
         window.location = "/<%= username %>"
     }
 </script>
+
+
 <script>
-    // Function to display files in the "fileTree" div
-    function displayFilesInRepository(files) {
-        const fileTree = document.getElementById("fileTree");
-        fileTree.innerHTML = "";
-
-        if (files.length > 0) {
-            const fileList = document.createElement("ul");
-            files.forEach((file) => {
-                const listItem = document.createElement("li");
-                listItem.innerHTML = file;
-                listItem.onclick = () => openRepository(files);
-                fileList.appendChild(listItem);
-            });
-            fileTree.appendChild(fileList);
-        } else {
-            fileTree.innerHTML += "<p>No files in this repository.</p>";
-        }
-    }
-
-    // Function to open a repository
-    function openRepository(repoName) {
-        // Implement logic to open the selected repository
-    }
-</script>
-<script>
-
-
-
     function loadRepository() {
-        data = {
-            userId: "<%= username %>",
-            repository: "<%= repository %>",
-        }
-        fetch("/getRepository", {
-            method: "POST",
+        const username = "<%= username %>";
+        const repository = "<%= repository %>";
+
+        fetch(`/getRepository?userId=${username}&repository=${repository}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ data }),
         })
             .then((response) => {
                 if (!response.ok) {
@@ -184,21 +173,22 @@
             })
             .then((data) => {
                 if (data.status === "success") {
-                    const repository = data.repositories[0];
+                    const repository = data.repository;
+                    const fileContent = data.fileContent;
 
-                    const repoContainer = document.getElementById("repo-container");
+                    const repoContainer = document.getElementById("view-file");
+                    const repoDetails = document.getElementById("details");
                     repoContainer.innerHTML = "";
 
                     const repoElement = document.createElement("div");
                     repoElement.className = "repository";
-                    // repoElement.onclick = () => openRepository(repository.name);
-                    repoElement.innerHTML = `<h3>${repository.name}</h3><p>Created on: ${repository.createdAt}</p></p>`;
-                    // <p>Description: ${repository.description}</p><p>Topics: ${repository.topics.join(', ')}
+                    repoDetails.innerHTML = `<h3>${repository.name}</h3><p>Description: ${repository.description || ' '}</p>
+                    <p>Topics: ${repository.topics || ' '}</p> <p>Contributers: ${repository.contributers || ' '} </p>`;
                     repoContainer.appendChild(repoElement);
 
-                    if (repository.files) {
-                        displayFilesInRepository(repository.files);
-                    }
+                    const fileContentElement = document.createElement("div");
+                    fileContentElement.innerHTML = `<h3>${repository.name}</h3><pre>${fileContent}</pre>`;
+                    repoContainer.appendChild(fileContentElement);
                 } else {
                     alert("Failed to load repository: " + data.message);
                 }
@@ -211,7 +201,5 @@
 
     loadRepository();
 </script>
-
-
 
 </html>

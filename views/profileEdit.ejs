@@ -89,16 +89,35 @@
             background: #059a05;
             transform: scale(1.05);
         }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 20px auto;
+            border: 5px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 
 <body>
     <div class="profile-container">
-        <div class="profile-photo"></div>
+        <div class="profile-photo">
+            <img id="profile-image" src="" alt="Profile Photo">
+        </div>
         <div class="username">
             <%= username %>
         </div>
-        <form>
+        <form enctype="multipart/form-data">
             <div class="field">
                 <label for="firstName">First Name:</label>
                 <input type="text" id="firstName" name="firstName">
@@ -140,6 +159,7 @@
     </div>
 
     <script>
+        let filepath;
         function loadData() {
             const username = "<%= username %>";
             fetch(`/loadData?username=${username}`, {
@@ -160,6 +180,14 @@
                         document.getElementById('email').value = data.user.email || '';
                         document.getElementById('bio').value = data.user.bio || '';
                         document.getElementById('region').value = data.user.region || '';
+
+                        if (data.user.profilePhoto) {
+                            const profileImage = document.getElementById('profile-image');
+                            profileImage.src = data.user.profilePhoto;
+                            profileImage.alt = "Profile Photo";
+                        } else {
+                            console.error('Profile photo is not defined.');
+                        }
                     } else {
                         alert('Failed to load profile data');
                     }
@@ -174,36 +202,35 @@
         loadData();
 
         function save() {
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
+            const first_name = document.getElementById('firstName').value;
+            const last_name = document.getElementById('lastName').value;
             const username = document.getElementById('username').value;
             const dob = document.getElementById('dob').value;
             const gender = document.getElementById('gender').value;
             const email = document.getElementById('email').value;
             const bio = document.getElementById('bio').value;
             const region = document.getElementById('region').value;
+            const profile_photo = document.getElementById('profile-photo').files[0];
 
-            const data = {
-                firstName,
-                lastName,
-                username,
-                dob,
-                gender,
-                email,
-                bio,
-                region,
-            };
+            const formData = new FormData();
+
+            formData.append("firstName", first_name);
+            formData.append("lastName", last_name);
+            formData.append("username", username);
+            formData.append("dob", dob);
+            formData.append("gender", gender);
+            formData.append("email", email);
+            formData.append("bio", bio);
+            formData.append("region", region);
+            formData.append("profilePhoto", profile_photo);
 
             fetch('/update-profile', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
+                body: formData,
             })
                 .then(response => {
                     if (response.ok) {
-                        window,location.href = "/<%= username %>"
+                        window.location.href = "/<%= username %>";
                     } else {
                         alert('Profile update failed');
                     }
@@ -212,6 +239,7 @@
                     console.error('Error:', error);
                 });
         }
+
 
     </script>
 </body>

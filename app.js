@@ -14,6 +14,8 @@ const repository = require("./routes/repository");
 const explore = require("./routes/explore");
 const profile = require("./routes/profile");
 const setupSocket = require("./socket/chat");
+
+
 setupSocket(server);
 
 const busEmitter = new EventEmitter();
@@ -23,6 +25,9 @@ for (let i = 0; i < 15; i++) {
     console.log('Exit listener', i + 1);
   });
 }
+app.use(express.urlencoded({ extended: false }))
+app.use('/profilePhotos', express.static(path.join(__dirname, './profilePhotos')));
+app.use('/repository', express.static(path.join(__dirname, '../uploads')));
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
