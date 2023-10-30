@@ -5,8 +5,6 @@ const crypto = require('crypto');
 const { db, accounts } = require("../database/database");
 const nodemailer = require('nodemailer');
 
-let username
-
 // Route for the sign-up page
 router.get("/sign-up", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/sign-up.html"));
@@ -18,13 +16,16 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { clientusername, clientpassword } = req.body;
+  const { login_id, clientpassword } = req.body;
   const expirationTime = 24 * 60 * 60 * 1000; // 24 hours
   const expirationDate = new Date(Date.now() + expirationTime);
 
   try {
     const user = await accounts.findOne({
-      username: clientusername,
+      $or: [
+        { username: login_id },
+        { email: login_id },
+      ],
       password: clientpassword,
     }, "session");
 
@@ -117,39 +118,6 @@ const transporter = nodemailer.createTransport({
     // user: 'your_email@gmail.com',
     // pass: 'your_password',
   },
-});
-
-router.post("/send-username", async (req, res) => {
-  const { clientemail } = req.body;
-
-  try {
-    const user = await accounts.findOne({ email: clientemail }, "username");
-
-    if (!user) {
-      return res.status(404).json({ message: 'Email not found' });
-    }
-
-    const username = user.username;
-
-    const mailOptions = {
-      from: 'patkarmahesh387@gmail.com',
-      to: clientemail,
-      subject: 'Your Username Recovery',
-      text: `Dear ${username},\n\nYour username is: ${username}\n\nSincerely,\nYour Cosmic Arcade team`,
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({ message: 'Failed to send email' });
-      }
-      console.log('Email sent: ' + info.response);
-      res.status(200).json({ message: 'Username recovery email sent' });
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
 });
 
 
@@ -250,28 +218,6 @@ router.post('/reset-password/:token', async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
-
-//Repository
-router.get("/new-Repository", async (req, res) => {
-  const sessionString = req.cookies.sessionToken;
-
-  try {
-    const user = await accounts.findOne({ session: sessionString }, "username");
-
-    if (user) {
-      res.render("createRepo", { username: user.username });
-    } else {
-      res.status(403).send("Unauthorized");
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal server error");
-  }
-});
-
-
-
-
 
 //logout
 router.post("/logout", (req, res) => {

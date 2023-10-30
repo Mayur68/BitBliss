@@ -129,12 +129,9 @@
             <label for="username">Username</label>
             <input type="text" id="username" name="username" placeholder="Enter username">
           </div>
-          <div class="fp">
-            <a onclick="forgotusername()">Forgot username?</a>
-          </div>
           <div class="field">
             <label for="password">Password</label>
-            <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off">
+            <input type="password" id="password" name="password" placeholder="Enter password" autocomplete="off">
           </div>
           <div class="fp">
             <a onclick="forgotpasssword()">Forgot password?</a>
@@ -152,32 +149,36 @@
 
 
 <script>
-  const input_username = document.getElementById("username");
+  const login_ID = document.getElementById("username");
   const input_password = document.getElementById("password");
 
   function senddata() {
-    const clientusername = input_username.value;
+    const login_id = login_ID.value;
     const clientpassword = input_password.value;
 
-    if (clientusername === "" || clientpassword === "")
-      alert("Incorrect username and password");
-    else {
+    if (login_id === "" || clientpassword === "") {
+      alert("Please enter both username and password");
+    } else {
       fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          clientusername,
+          login_id,
           clientpassword,
         }),
       })
         .then((response) => {
-          return response.json();
+          if (response.status === 200) {
+            return response.json();
+          } else {
+            throw new Error("Login failed");
+          }
         })
         .then((data) => {
           if (data.status === "success") {
-            localStorage.setItem("username", clientusername);
+            localStorage.setItem("username", login_id);
             window.location.href = "/";
           } else {
             alert(data.message);
@@ -189,6 +190,7 @@
         });
     }
   }
+
 
 
   function back() {
@@ -221,63 +223,8 @@
       </div>
     </div>`;
   }
-  function send_username() {
-    const clientemail = document.getElementById("email").value;
-    fetch("/send-username", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        clientemail,
-      }),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          console.log(data)
-          document.getElementById("mid").innerHTML = `<div class="title">
-        <a href="/"><img src="/assets/favicon/favicon-32x32.png"></a>
-        <h1 style="color: white;">Login</h1>
-      </div>
-      <div class="box">
-        <form class="loginForm" id="loginform" name="loginForm">
-          <div class="field">
-            <label>Username sent to your email</label>
-          </div>
-          <div class="field">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter username">
-          </div>
-          <div class="fp">
-            <a onclick="forgotusername()">Forgot username?</a>
-          </div>
-          <div class="field">
-            <label for="password">Password</label>
-            <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off">
-          </div>
-          <div class="fp">
-            <a onclick="forgotpasssword()">Forgot password?</a>
-          </div>
-          <div class="field"><button id="btnLogIn" onclick="senddata()">Login</button></div>
-        </form>
-        <div class="new-user" style="color: white;">
-          <p>Create new account?</p>
-          <a href="sign-up" style="color: rgb(219, 102, 255); padding-left: 2%;">Sign up</a>
-        </div>
-      </div>
-    </div>`;
-        } else {
-          alert(data.message);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        alert("An error occurred while trying to send email");
-      });
-  }
+
+
   function forgotusername() {
     document.getElementById("mid").innerHTML = `<div class="field">
             <label for="email">Email</label>
@@ -287,6 +234,8 @@
             <button onclick="back()">back</button>
           </div>`;
   }
+
+
   function resetpassword() {
 
     const clientEmail = document.getElementById("email").value;
@@ -314,6 +263,8 @@
       });
 
   }
+
+
   function forgotpasssword() {
     document.getElementById("mid").innerHTML = `<div class="field">
             <label for="email">Email</label>

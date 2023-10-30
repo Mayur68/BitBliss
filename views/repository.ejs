@@ -68,9 +68,9 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
-        #view-file {
-            background-color: #1d1b34;
-            color: white;
+        .view-file {
+            width: 600px;
+            height: fit-content;
             border-radius: 10px;
         }
 
@@ -118,6 +118,22 @@
             margin-top: 20px;
             font-weight: bold;
         }
+
+        textarea {
+            margin-top: 20px;
+            resize: none;
+            padding-left: 92px;
+            border: none;
+            tab-size: 8;
+            outline: none;
+            overflow: auto hidden;
+            height: auto;
+            width: 100%;
+            font-size: 12px;
+            line-height: 20px;
+            overflow-wrap: normal;
+            white-space: pre;
+        }
     </style>
 </head>
 
@@ -129,10 +145,16 @@
     <main>
         <section id="file">
             <div id="fileTree"></div>
-            <button>Copy</button>
-                <button>Edit</button>
-                <button>Save</button>
-            <div id="view-file"></div>
+            <button onclick="copy()">Copy</button>
+            <button onclick="edit()">Edit</button>
+            <button onclick="save()">Save</button>
+            <div class="view-file">
+                <textarea id="view-file" aria-label="file content" aria-readonly="true" inputmode="none" tabindex="0"
+                    aria-multiline="true" aria-haspopup="false" data-gramm="false" data-gramm_editor="false"
+                    data-enable-grammarly="false" spellcheck="false" autocorrect="off" autocapitalize="off"
+                    autocomplete="off" data-ms-editor="false" readonly></textarea>
+            </div>
+
         </section>
         <section id="info">
             <h2>Repository Details</h2>
@@ -147,17 +169,20 @@
     </main>
 
 </body>
+
+
 <script>
-    function profile() {
-        window.location = "/<%= username %>"
-    }
+    const textarea = document.getElementById("view-file");
+    textarea.style.height = "auto";
+    textarea.style.height = (textarea.scrollHeight) + "px";
 </script>
 
 
 <script>
+    const username = "<%= username %>";
+    const repository = "<%= repository %>";
+    let fileName;
     function loadRepository() {
-        const username = "<%= username %>";
-        const repository = "<%= repository %>";
 
         fetch(`/getRepository?userId=${username}&repository=${repository}`, {
             method: "GET",
@@ -175,6 +200,7 @@
                 if (data.status === "success") {
                     const repository = data.repository;
                     const fileContent = data.fileContent;
+                    fileName = data.fileName;
 
                     const repoContainer = document.getElementById("view-file");
                     const repoDetails = document.getElementById("details");
@@ -186,9 +212,8 @@
                     <p>Topics: ${repository.topics || ' '}</p> <p>Contributers: ${repository.contributers || ' '} </p>`;
                     repoContainer.appendChild(repoElement);
 
-                    const fileContentElement = document.createElement("div");
-                    fileContentElement.innerHTML = `<h3>${repository.name}</h3><pre>${fileContent}</pre>`;
-                    repoContainer.appendChild(fileContentElement);
+                    const fileContentElement = document.getElementById("view-file");
+                    fileContentElement.value = fileContent;
                 } else {
                     alert("Failed to load repository: " + data.message);
                 }
@@ -201,5 +226,68 @@
 
     loadRepository();
 </script>
+
+<script>
+    // Function to copy content
+    function copy() {
+        document.querySelector("#view-file").select();
+        document.execCommand("copy");
+        alert("File content copied to clipboard.");
+    }
+
+    // Function to edit content
+    function edit() {
+        const fileContentElement = document.querySelector("#view-file");
+        fileContentElement.removeAttribute("readonly");
+        const fileContent = document.querySelector("#view-file").value;
+        const editTextArea = document.createElement("textarea");
+        editTextArea.value = fileContent;
+        fileContentElement.innerHTML = "";
+        fileContentElement.appendChild(editTextArea);
+    }
+
+    // Function to save content
+function save() {
+    const editTextArea = document.querySelector("#view-file");
+    const editedContent = editTextArea.value;
+
+    const username = "<%= username %>";
+    const repository = "<%= repository %>";
+
+    // Create a Blob from the edited content
+    const blob = new Blob([editedContent], { type: 'text/plain' });
+    
+    // Create a FormData object to send the content as a file
+    const formData = new FormData();
+    formData.append("repositoryName", repository);
+    formData.append("editedFile", blob, "editedFile.txt"); // Use any desired filename
+
+    fetch("/updateRepositoryFile", {
+        method: "POST",
+        body: formData, // Use FormData to send the edited content as a file
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data.status === "success") {
+                alert("Content saved successfully.");
+            } else {
+                alert("Failed to save content: " + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error("Error saving content", error);
+            alert("An error occurred while saving the content. Please try again later.");
+        });
+}
+
+
+
+</script>
+
 
 </html>
