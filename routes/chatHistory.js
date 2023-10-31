@@ -2,47 +2,23 @@ const express = require("express");
 const router = express.Router();
 const { accounts, chatHistory } = require("../database/database");
 
-router.post("/saveSendingHistory", async (req, res) => {
+router.post("/saveHistory", async (req, res) => {
     const { recipientID, userId, message, time } = req.body;
     const ownerAccount = await accounts.findOne({ username: userId });
-    try {
-        const chatRecord = new chatHistory({
-            name: ownerAccount.id,
-            sender: {
-                userID: userId,
-            },
-            receiver: {
-                userID: recipientID,
-            },
-            message,
-            timestamp: time,
-        });
-        const result = await chatRecord.save();
 
-
-        if (result) {
-            return res.status(200).json({
-                status: "success",
-                message: "Chat history saved successfully!",
-            });
-        }
-
-        throw new Error("Failed to save chat history.");
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({
+    if (!ownerAccount) {
+        return res.status(401).json({
             status: "error",
-            message: "Internal server error",
+            message: "Invalid user.",
         });
     }
-});
 
-router.post("/saveRecievingHistory", async (req, res) => {
-    const { recipientID, userId, message, time } = req.body;
-    const ownerAccount = await accounts.findOne({ username: recipientID });
     try {
         const chatRecord = new chatHistory({
-            name: ownerAccount.id,
+            name: {
+                user1ID: userId,
+                user2ID: recipientID,
+            },
             sender: {
                 userID: userId,
             },
@@ -53,7 +29,6 @@ router.post("/saveRecievingHistory", async (req, res) => {
             timestamp: time,
         });
         const result = await chatRecord.save();
-
 
         if (result) {
             return res.status(200).json({
@@ -75,6 +50,14 @@ router.post("/saveRecievingHistory", async (req, res) => {
 router.post("/loadHistory", async (req, res) => {
     const { recipientID, userId } = req.body;
     const ownerAccount = await accounts.findOne({ username: userId });
+
+    if (!ownerAccount) {
+        return res.status(401).json({
+            status: "error",
+            message: "Invalid user.",
+        });
+    }
+
     try {
         const result = await chatHistory.find({
             $and: [
@@ -84,10 +67,16 @@ router.post("/loadHistory", async (req, res) => {
                         { "sender.userID": recipientID, "receiver.userID": userId },
                     ],
                 },
-                { name: ownerAccount._id },
+                {
+                    $or: [
+                        { "name.user1ID": ownerAccount.username },
+                        { "name.user2ID": ownerAccount.username },
+                    ],
+
+                },
             ],
         }).exec();
-console.log(result)
+
         return res.status(200).json({
             status: "success",
             chatHistory: result,
@@ -101,8 +90,9 @@ console.log(result)
     }
 });
 
+
 router.post("/clearChat", async (req, res) => {
-    const { recipientID, userId } = req.body;
+    const { userId } = req.body;
 
     const ownerAccount = await accounts.findOne({ username: userId });
 
@@ -114,21 +104,27 @@ router.post("/clearChat", async (req, res) => {
     }
 
     try {
+
+        await chatHistory.updateMany(
+            { "name.user1ID": ownerAccount.username },
+            { $set: { "name.user1ID": "" } }
+        );
+
+        await chatHistory.updateMany(
+            { "name.user2ID": ownerAccount.username },
+            { $set: { "name.user2ID": "" } }
+        );
+
         await chatHistory.deleteMany({
             $and: [
-                {
-                    $or: [
-                        { "sender.userID": userId, "receiver.userID": recipientID },
-                        { "sender.userID": recipientID, "receiver.userID": userId },
-                    ],
-                },
-                { name: ownerAccount._id },
+                { "name.user1ID": "" },
+                { "name.user2ID": "" },
             ],
         });
 
         return res.status(200).json({
             status: "success",
-            message: "Chat history deleted successfully.",
+            message: "Chat history cleared successfully.",
         });
     } catch (err) {
         console.error(err);
@@ -138,7 +134,6 @@ router.post("/clearChat", async (req, res) => {
         });
     }
 });
-
 
 
 //

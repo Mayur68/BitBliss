@@ -1,206 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon.ico" />
-  <link rel="stylesheet" href="/frontend/global.css" />
-  <link rel="stylesheet" href="/frontend/animation.css" />
-  <title>sign-up</title>
+  <title>Sign-Up</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+
+    form {
+      display: inline-block;
+      text-align: left;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
+      margin: 0 auto;
+    }
+
+    input {
+      width: 100%;
+      margin: 10px 0;
+      padding: 5px;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<style>
-/* Set background color for the body */
-body {
-    background-color: #1d1b34;
-    font-family: Arial, sans-serif;
-    color: white;
-    margin: 0;
-    padding: 0;
-}
-
-/* Style the title */
-.title {
-    text-align: center;
-    margin: auto;
-    margin-top: 4%;
-}
-
-.title h1 {
-    color: #07a607;
-}
-
-/* Style the form container */
-#loginform {
-    max-width: 350px;
-    margin: 0 auto;
-    padding: 2%;
-    margin-top: 10px;
-    background-color: #fff;
-    border-radius: 18px;
-    box-shadow: 0 0 10px rgba(0, 221, 255, 1.8);
-}
-
-/* Style the text input */
-#username, #email, #password, #con-password {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 2px solid #07a607;
-    border-radius: 5px;
-}
-
-/* Style the buttons */
-button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #07a607;
-    color: white;
-    font-weight: bold;
-}
-
-/* Style the error messages */
-.field p {
-    color: red;
-    margin-top: -10px;
-    margin-bottom: 10px;
-}
-
-/* Style the "New User" section */
-.new-user {
-    display: flex;
-    justify-content: center;
-    margin: auto;
-    margin-top: 5%;
-    padding: 2%;
-    width: 60%; /* Adjust the width for responsiveness */
-    border-radius: 7px;
-    color: white;
-    box-shadow: 0 0 10px rgba(0, 221, 255, 1.8);
-}
-
-.new-user a {
-    color: #07a607;
-    text-decoration: none;
-}
-
-/* Style the "Already have an account?" text */
-.new-user p {
-    color: white;
-    padding-right: 2%;
-}
-
-/* Media Query for Responsive Design */
-@media screen and (max-width: 768px) {
-    .title {
-        margin-top: 10%;
-    }
-    #loginform {
-        max-width: 80%; /* Adjust the max-width for smaller screens */
-    }
-    .new-user {
-        width: 80%; /* Adjust the width for smaller screens */
-    }
-}
-
-</style>
 
 <body>
-  <div id="container">
-    <div id="mid">
-      <div class="title">
-        <a href="/">logo</a>
-        <h1>Sign up</h1>
-      </div>
-      <div class="box">
-        <form class="loginForm" id="loginform" name="loginForm">
-          <div class="field">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter username" />
-            <p id="err-username" for="username"></p>
-          </div>
-          <div class="field">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter Email" />
-            <p id="err-email" for="email"></p>
-          </div>
-          <div class="field">
-            <label for="password">Password</label>
-            <input type="text" id="password" name="password" placeholder="Enter password" autocomplete="off" />
-            <p id="err-password" for="username"></p>
-          </div>
-          <div class="field">
-            <label for="con-password">Confirm Password</label>
-            <input type="text" id="con-password" name="con-password" placeholder="Confirm password"
-              autocomplete="off" />
-            <p id="err-con-password" for="username"></p>
-          </div>
-          <div class="field">
-            <button id="btnLogIn" onclick="send_data()">Sign up</button>
-          </div>
-        </form>
-        <div class="new-user">
-          <p>Already have an account?</p>
-          <a href="login">Login</a>
-        </div>
-      </div>
-    </div>
-  </div>
+  <h1>Sign-Up</h1>
+  <form id="signup-form" action="/sign-up" method="post">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+    <button type="submit">Sign Up</button>
+  </form>
 </body>
-
-
 <script>
-  const input_username = document.getElementById("username");
-  const input_email = document.getElementById("email");
-  const input_password = document.getElementById("password");
-  const confirm_password = document.getElementById("con-password");
+  document.addEventListener("DOMContentLoaded", function () {
+    const signUpForm = document.getElementById("signup-form");
 
-  var err_username = document.getElementById("err-username");
-  var err_email = document.getElementById("err-email");
-  var err_password = document.getElementById("err-password");
-  var err_con_password = document.getElementById("err-con-password");
+    signUpForm.addEventListener("submit", function (event) {
+      event.preventDefault();
 
-  function send_data() {
-    const clientusername = input_username.value;
-    const clientemail = input_email.value;
-    const clientpassword = input_password.value;
-    const con_password = confirm_password.value;
-    if (username === "" || password === "") {
-      alert("Enter username and password");
-    } else {
-      fetch("/sign-up", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          clientusername,
-          clientemail,
-          clientpassword,
-          con_password,
-        }),
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.status === "success") {
-            localStorage.setItem("username", clientusername);
-            window.location.href = "/";
-          } else {
-            alert(data.message);
+      const username = signUpForm.username.value;
+      const email = signUpForm.email.value;
+      const password = signUpForm.password.value;
+      const confirmPassword = signUpForm.confirmPassword.value;
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match. Please try again.");
+      } else {
+        fetch("/sign-up", {
+          method: "POST",
+          body: JSON.stringify({ username, email, password }),
+          headers: {
+            "Content-Type": "application/json"
           }
         })
-        .catch((error) => {
-          console.error(error);
-          alert("An error occurred while trying to log in");
-        });
-    }
-  }
+          .then(response => {
+            if (response.status === 201) {
+              window.location.href = "/";
+            } else {
+              alert("Account creation failed. Please try again.");
+            }
+          })
+          .catch(error => {
+            console.error("Error:", error);
+          });
+      }
+    });
+  });
+
 </script>
 
 </html>

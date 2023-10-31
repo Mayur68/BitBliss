@@ -189,47 +189,47 @@
             });
         });
 
-        // const dataToSend = {
-        //         recipientID: x,
-        //         userId: userId
-        //     };
-        // fetch("/loadHistory", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify(dataToSend)
-        // })
-        //     .then((response) => response.json())
-        //     .then((data) => {
-        //         if (data.status === "success") {
-        //             const chatHistory = data.chatHistory;
-        //             displayChatHistory(chatHistory);
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error loading History:", error);
-        //         alert("An error occurred while loading history. Please try again later.");
-        //     });
+        const dataToSend = {
+                recipientID: x,
+                userId: userId
+            };
+        fetch("/loadHistory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataToSend)
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    const chatHistory = data.chatHistory;
+                    displayChatHistory(chatHistory);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading History:", error);
+                alert("An error occurred while loading history. Please try again later.");
+            });
 
 
-        // function displayChatHistory(chatHistory) {
-        //     chatHistory.forEach((chat) => {
-        //         if (chat.message && chat.message.trim() !== '') {
-        //             const messageDiv = document.createElement('div');
-        //             if (chat.sender.userID === userId) {
-        //                 messageDiv.className = "message self";
-        //                 messageDiv.textContent = chat.message + chat.timestamp;
-        //                 messages.appendChild(messageDiv);
-        //             } else if (chat.sender.userID === recipientID) {
-        //                 messageDiv.className = "message notself";
-        //                 messageDiv.textContent = chat.message + chat.timestamp;
-        //                 messages.appendChild(messageDiv);
-        //             }
-        //         }
-        //     });
-        //     scrollToBottom();
-        // }
+        function displayChatHistory(chatHistory) {
+            chatHistory.forEach((chat) => {
+                if (chat.message && chat.message.trim() !== '') {
+                    const messageDiv = document.createElement('div');
+                    if (chat.sender.userID === userId) {
+                        messageDiv.className = "message self";
+                        messageDiv.textContent = chat.message + chat.timestamp;
+                        messages.appendChild(messageDiv);
+                    } else if (chat.sender.userID === recipientID) {
+                        messageDiv.className = "message notself";
+                        messageDiv.textContent = chat.message + chat.timestamp;
+                        messages.appendChild(messageDiv);
+                    }
+                }
+            });
+            scrollToBottom();
+        }
 
     }
     const messageInput = document.getElementById("message-input");
@@ -278,26 +278,26 @@
             time: formattedTime,
         };
 
-        // fetch("/saveSendingHistory", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(dataToSend),
-        // })
-        //     .then((response) => response.json())
-        //     .then((data) => {
-        //         console.log(data);
-        //         if (data.status === "success") {
-        //             console.log();
-        //         } else {
-        //             console.log("Failed to save History: " + data.message);
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error saving History:", error);
-        //         alert("An error occurred while saving history. Please try again later.");
-        //     });
+        fetch("/saveHistory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataToSend),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    console.log();
+                } else {
+                    console.log("Failed to save History: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error saving History:", error);
+                alert("An error occurred while saving history. Please try again later.");
+            });
 
 
         socket.emit('send_message', {
@@ -356,31 +356,30 @@
 
     function clearChat() {
         document.getElementById("messages").innerHTML = "";
-        // data = {
-        //     userId: userId,
-        //     recipientID: recipientID,
-        // }
-        // fetch("/clearChat", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(data),
-        // })
-        //     .then((response) => response.json())
-        //     .then((data) => {
-        //         console.log(data);
-        //         if (data.status === "success") {
-        //             const chat_window = document.getElementById("messages");
-        //             chat_window.innerHTML = "";
-        //         } else {
-        //             console.log("Failed to clear chat: " + data.message);
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error clearing chat:", error);
-        //         alert("An error occurred while clearing chat. Please try again later.");
-        //     });
+        data = {
+            userId: userId,
+        }
+        fetch("/clearChat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    const chat_window = document.getElementById("messages");
+                    chat_window.innerHTML = "";
+                } else {
+                    console.log("Failed to clear chat: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error clearing chat:", error);
+                alert("An error occurred while clearing chat. Please try again later.");
+            });
     }
 
 
@@ -447,43 +446,43 @@
         const messages = document.getElementById("messages");
         messages.innerHTML = "";
 
-        // fetch("/loadRoomHistory", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify(dataToSend)
-        // })
-        //     .then((response) => response.json())
-        //     .then((data) => {
-        //         if (data.status === "success") {
-        //             const chatHistory = data.chatHistory;
-        //             displayChatHistory(chatHistory);
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error loading History:", error);
-        //         alert("An error occurred while loading history. Please try again later.");
-        //     });
+        fetch("/loadRoomHistory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataToSend)
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    const chatHistory = data.chatHistory;
+                    displayChatHistory(chatHistory);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading History:", error);
+                alert("An error occurred while loading history. Please try again later.");
+            });
 
 
-        // function displayChatHistory(chatHistory) {
-        //     chatHistory.forEach((chat) => {
-        //         if (chat.message && chat.message.trim() !== '') {
-        //             const messageDiv = document.createElement('div');
-        //             if (chat.sender.userID === userId) {
-        //                 messageDiv.className = "message self";
-        //                 messageDiv.textContent = chat.message, chat.timestamp;
-        //                 messages.appendChild(messageDiv);
-        //             } else if (chat.sender.userID === recipientID) {
-        //                 messageDiv.className = "message notself";
-        //                 messageDiv.textContent = chat.message;
-        //                 messages.appendChild(messageDiv);
-        //             }
-        //         }
-        //     });
-        //     scrollToBottom();
-        // }
+        function displayChatHistory(chatHistory) {
+            chatHistory.forEach((chat) => {
+                if (chat.message && chat.message.trim() !== '') {
+                    const messageDiv = document.createElement('div');
+                    if (chat.sender.userID === userId) {
+                        messageDiv.className = "message self";
+                        messageDiv.textContent = chat.message, chat.timestamp;
+                        messages.appendChild(messageDiv);
+                    } else if (chat.sender.userID === recipientID) {
+                        messageDiv.className = "message notself";
+                        messageDiv.textContent = chat.message;
+                        messages.appendChild(messageDiv);
+                    }
+                }
+            });
+            scrollToBottom();
+        }
     }
 
     // games challenge

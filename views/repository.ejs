@@ -126,7 +126,7 @@
             border: none;
             tab-size: 8;
             outline: none;
-            overflow: auto hidden;
+            overflow: hidden;
             height: auto;
             width: 100%;
             font-size: 12px;
@@ -172,13 +172,6 @@
 
 
 <script>
-    const textarea = document.getElementById("view-file");
-    textarea.style.height = "auto";
-    textarea.style.height = (textarea.scrollHeight) + "px";
-</script>
-
-
-<script>
     const username = "<%= username %>";
     const repository = "<%= repository %>";
     let fileName;
@@ -214,6 +207,7 @@
 
                     const fileContentElement = document.getElementById("view-file");
                     fileContentElement.value = fileContent;
+                    fileContentElement.style.height = (fileContentElement.scrollHeight) + "px";
                 } else {
                     alert("Failed to load repository: " + data.message);
                 }
@@ -247,43 +241,41 @@
     }
 
     // Function to save content
-function save() {
-    const editTextArea = document.querySelector("#view-file");
-    const editedContent = editTextArea.value;
+    function save() {
+        const editTextArea = document.querySelector("#view-file");
+        const editedContent = editTextArea.value;
 
-    const username = "<%= username %>";
-    const repository = "<%= repository %>";
+        const username = "<%= username %>";
+        const repository = "<%= repository %>";
+        const blob = new Blob([editedContent], { type: 'text/plain' });
 
-    // Create a Blob from the edited content
-    const blob = new Blob([editedContent], { type: 'text/plain' });
-    
-    // Create a FormData object to send the content as a file
-    const formData = new FormData();
-    formData.append("repositoryName", repository);
-    formData.append("editedFile", blob, "editedFile.txt"); // Use any desired filename
+        const formData = new FormData()
+        formData.append("name", repository);
+        formData.append("editedFile", blob, fileName);
 
-    fetch("/updateRepositoryFile", {
-        method: "POST",
-        body: formData, // Use FormData to send the edited content as a file
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
+        fetch("/updateRepositoryFile", {
+            method: "POST",
+            body: formData,
         })
-        .then((data) => {
-            if (data.status === "success") {
-                alert("Content saved successfully.");
-            } else {
-                alert("Failed to save content: " + data.message);
-            }
-        })
-        .catch((error) => {
-            console.error("Error saving content", error);
-            alert("An error occurred while saving the content. Please try again later.");
-        });
-}
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status === "success") {
+                    alert("Content saved successfully.");
+                } else {
+                    alert("Failed to save content: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error saving content", error);
+            });
+
+            editTextArea.setAttribute("readonly", "true"); 
+    }
 
 
 

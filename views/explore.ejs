@@ -237,11 +237,12 @@
         resultsSection.innerHTML = "";
         title.innerText = "repositories"
         const prompt = "<%= promt %>";
+
         const data = {
             topics: prompt,
         };
 
-        fetch("/getRepositories", {
+        fetch("/loadPublicRepository", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

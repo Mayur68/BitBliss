@@ -4,6 +4,7 @@ const path = require("path");
 const crypto = require('crypto');
 const { db, accounts } = require("../database/database");
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
 
 // Route for the sign-up page
 router.get("/sign-up", (req, res) => {
@@ -21,24 +22,36 @@ router.post("/login", async (req, res) => {
   const expirationDate = new Date(Date.now() + expirationTime);
 
   try {
+
     const user = await accounts.findOne({
       $or: [
         { username: login_id },
         { email: login_id },
       ],
-      password: clientpassword,
-    }, "session");
+    });
 
     if (user) {
-      const sessionToken = user.session;
-      res.cookie("sessionToken", sessionToken, {
-        expires: expirationDate,
-        httpOnly: true,
-      });
-      res.status(200).json({
-        status: "success",
-        message: "Login successful!",
-      });
+
+      const passwordMatch = bcrypt.compare(clientpassword, user.password);
+
+      if (passwordMatch) {
+        const sessionToken = user.session;
+        res.cookie("sessionToken", sessionToken, {
+          expires: expirationDate,
+          httpOnly: true,
+          secure: true,
+        });
+        res.status(200).json({
+          status: "success",
+          message: "Login successful!",
+          user,
+        });
+      } else {
+        res.status(401).json({
+          status: "error",
+          message: "Incorrect username or password.",
+        });
+      }
     } else {
       res.status(401).json({
         status: "error",
@@ -56,46 +69,54 @@ router.post("/login", async (req, res) => {
 
 
 
-// sign up details
 router.post("/sign-up", async (req, res) => {
-  const { clientusername, clientemail, clientpassword, con_password } = req.body;
+  const { username, email, password } = req.body;
   const sessionString = await generateSession();
   const sessionToken = sessionString;
   const expirationTime = 24 * 60 * 60 * 1000;
   const expirationDate = new Date(Date.now() + expirationTime);
 
   try {
-    if (clientpassword === con_password) {
-      const existingUser = await accounts.findOne({ username: clientusername });
+    const emailInUse = await accounts.findOne({ email: email });
+
+    if (emailInUse) {
+      res.status(401).json({
+        status: "error",
+        message: "Email is already associated with another account",
+      });
+    } else {
+
+      const existingUser = await accounts.findOne({ username: username });
 
       if (existingUser) {
         res.status(401).json({
           status: "error",
-          message: "Account already exists!",
+          message: "Username is already taken",
         });
       } else {
+        
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
         const newUser = new accounts({
-          username: clientusername,
-          email: clientemail,
-          password: clientpassword,
+          username: username,
+          email: email,
+          password: hashedPassword,
           session: sessionString,
         });
 
         await newUser.save();
+
         res.cookie("sessionToken", sessionToken, {
           expires: expirationDate,
           httpOnly: true,
         });
-        res.json({
+
+        res.status(201).json({
           status: "success",
           message: "Sign-up successful!",
         });
       }
-    } else {
-      res.status(401).json({
-        status: "error",
-        message: "Passwords do not match",
-      });
     }
   } catch (err) {
     console.error(err);
@@ -105,6 +126,8 @@ router.post("/sign-up", async (req, res) => {
     });
   }
 });
+
+
 
 
 

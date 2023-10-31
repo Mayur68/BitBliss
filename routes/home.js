@@ -53,7 +53,7 @@ router.post("/createRoom", async (req, res) => {
 
 router.post("/addFriend", async (req, res) => {
   const { userId, friendId } = req.body;
-
+  
   if (!userId || !friendId || userId === friendId) {
     return res.status(400).json({
       status: "error",

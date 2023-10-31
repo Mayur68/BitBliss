@@ -51,6 +51,27 @@ app.set("views", [
   path.join(__dirname, "frontend"),
 ]);
 
+app.post("/check-username", (req, res) => {
+  const { username } = req.body;
+
+  if (sessionString) {
+    accounts.findOne({ username: username })
+      .then((user) => {
+        if (user) {
+          res.sendStatus(200);
+        } else {
+          res.sendStatus(401);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      });
+  } else {
+    res.sendStatus(401);
+  }
+});
+
 //Root
 app.get("/", (req, res) => {
   const sessionString = req.cookies.sessionToken;
@@ -58,7 +79,11 @@ app.get("/", (req, res) => {
     accounts.findOne({ session: sessionString })
       .then((user) => {
         if (user) {
-          res.render("user", { username: user.username });
+          if (sessionString === user.session) {
+            res.render("user", { username: user.username });
+          } else {
+            res.sendFile(__dirname + "/frontend/index.html");
+          }
         } else {
           res.sendFile(__dirname + "/frontend/index.html");
         }
@@ -71,8 +96,8 @@ app.get("/", (req, res) => {
     console.log("no session token")
     res.sendFile(__dirname + "/frontend/index.html");
   }
-
 });
+
 
 server.listen(3000, (err) => {
   if (err) {

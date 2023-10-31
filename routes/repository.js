@@ -98,6 +98,10 @@ router.post("/updateRepositoryFile", upload.single("editedFile"), async (req, re
     const repositoryName = req.body.repositoryName;
     const editedFile = req.file;
 
+    if (!editedFile) {
+      return res.status(400).json({ status: "error", message: "No file uploaded" });
+    }
+
     const existingRepository = await repository.findOne({ name: repositoryName });
 
     if (!existingRepository) {
@@ -113,6 +117,7 @@ router.post("/updateRepositoryFile", upload.single("editedFile"), async (req, re
     res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 });
+
 
 
 
@@ -181,7 +186,7 @@ router.get('/getRepository', async (req, res) => {
       return res.status(404).json({ status: "error", message: "User not found" });
     }
 
-    const repo = await repository.findOne({ owner: user._id, name: repositoryName });
+    const repo = await repository.findOne({ owner: user._id, name: repositoryName,  });
 
     if (!repo) {
       return res.status(404).json({ status: "error", message: "Repository not found" });
@@ -189,8 +194,8 @@ router.get('/getRepository', async (req, res) => {
 
     const filePath = repo.filePath;
     const fileContent = fs.readFileSync(filePath, 'utf8');
-    
-        const fileName = path.basename(filePath);
+
+    const fileName = path.basename(filePath);
 
     res.status(200).json({ status: "success", repository: repo, fileContent, fileName });
   } catch (error) {
