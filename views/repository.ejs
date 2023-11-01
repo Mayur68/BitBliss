@@ -134,6 +134,69 @@
             overflow-wrap: normal;
             white-space: pre;
         }
+
+        #repositoryForm {
+            color: #fff;
+            max-width: 900px;
+            max-height: max-content;
+            margin: auto;
+            padding: 10%;
+            background-color: #1d1b34;
+            border-radius: 10px;
+        }
+        #reponame,
+        #repodiscription {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #07a607;
+            border-radius: 5px;
+        }
+
+        #topics {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #07a607;
+            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #07a607;
+            font-weight: bold;
+        }
+
+        #file {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #07a607;
+            border-radius: 5px;
+        }
+
+        /* Style the buttons */
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #07a607;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* Style the "Cancel" button */
+        button:nth-child(1) {
+            background-color: #07a607;
+        }
+
+        /* Style the "Create Repository" button */
+        button:nth-child(2) {
+            background-color: #191961;
+        }
     </style>
 </head>
 
@@ -142,12 +205,13 @@
         <a href="/"><img src="/assets/logo2.jpg"></a>
         <button class="profile-button" onclick="profile()">Profile</button>
     </div>
-    <main>
+    <main id="main">
         <section id="file">
             <div id="fileTree"></div>
             <button onclick="copy()">Copy</button>
             <button onclick="edit()">Edit</button>
             <button onclick="save()">Save</button>
+            <button onclick="cancel()">cancel</button>
             <div class="view-file">
                 <textarea id="view-file" aria-label="file content" aria-readonly="true" inputmode="none" tabindex="0"
                     aria-multiline="true" aria-haspopup="false" data-gramm="false" data-gramm_editor="false"
@@ -274,11 +338,62 @@
                 console.error("Error saving content", error);
             });
 
-            editTextArea.setAttribute("readonly", "true"); 
+        editTextArea.setAttribute("readonly", "true");
+    }
+
+    function cancel() {
+        const fileContentElement = document.getElementById("view-file");
+        fileContentElement.value = ""
+        fetch(`/getRepository?userId=${username}&repository=${repository}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.status === "success") {
+                    const fileContent = data.fileContent;
+
+                    fileContentElement.value = fileContent;
+                    fileContentElement.style.height = (fileContentElement.scrollHeight) + "px";
+                } else {
+                    alert("Failed to load repository: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error loading repository", error);
+                alert("An error occurred while loading the repository. Please try again later.");
+            });
     }
 
 
-
+    function settings() {
+        const main = document.getElementById('main')
+        main.innerHTML = `<form enctype="multipart/form-data" id="repositoryForm">
+        <h1>Settings</h1>
+        <lable>Change repository name</label>
+        <input type="text" id="reponame" name="name" placeholder="Repository Name" />
+        <label>
+            <input type="text" id="repodiscription" name="name" placeholder="Description (optional)" />
+        </label>
+        <label>
+            <input type="radio" name="visibility" value="public" /> Public
+        </label>
+        <label>
+            <input type="radio" name="visibility" value="private" /> Private
+        </label>
+        <input type="text" id="topics" name="topics" placeholder="Topics (comma-separated)" />
+        <button type="button" onclick="cancel()">Cancel</button>
+        <button type="button" onclick="delete()">Delete</button>
+        <button type="button" onclick="createRepository()">Save</button>
+    </form>`
+    }
 </script>
 
 

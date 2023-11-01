@@ -161,7 +161,8 @@
                         profileImage.src = data.user.profilePhoto;
                         profileImage.alt = "Profile Photo";
                     } else {
-                        console.error('Profile photo is not defined.');
+                        const profileImage = document.getElementById('profile-image');
+                        profileImage.src = "../assets/default-profile.jpg";
                     }
 
                 } else {
@@ -186,7 +187,7 @@
             userId: userId,
             friendId: friendId,
         };
-
+console.log(data)
         fetch("/addFriend", {
             method: "POST",
             headers: {

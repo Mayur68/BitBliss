@@ -24,6 +24,15 @@ router.post("/createRoom", async (req, res) => {
   const { owner, roomName, members, description } = req.body;
 
   try {
+    const existingRoom = await rooms.findOne({ owner: owner, name: roomName });
+
+    if (existingRoom) {
+      return res.status(400).json({
+        status: "error",
+        message: "A room with the same name already exists for the owner.",
+      });
+    }
+
     const ownerAccount = await accounts.findOne({ username: owner });
     const memberAccounts = await accounts.find({ username: { $in: members } });
 
@@ -50,6 +59,7 @@ router.post("/createRoom", async (req, res) => {
     });
   }
 });
+
 
 router.post("/addFriend", async (req, res) => {
   const { userId, friendId } = req.body;

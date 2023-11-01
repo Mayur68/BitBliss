@@ -17,12 +17,11 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { login_id, clientpassword } = req.body;
+  const { login_id, password } = req.body;
   const expirationTime = 24 * 60 * 60 * 1000; // 24 hours
   const expirationDate = new Date(Date.now() + expirationTime);
 
   try {
-
     const user = await accounts.findOne({
       $or: [
         { username: login_id },
@@ -31,8 +30,7 @@ router.post("/login", async (req, res) => {
     });
 
     if (user) {
-
-      const passwordMatch = bcrypt.compare(clientpassword, user.password);
+      const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (passwordMatch) {
         const sessionToken = user.session;
@@ -69,6 +67,7 @@ router.post("/login", async (req, res) => {
 
 
 
+
 router.post("/sign-up", async (req, res) => {
   const { username, email, password } = req.body;
   const sessionString = await generateSession();
@@ -94,7 +93,7 @@ router.post("/sign-up", async (req, res) => {
           message: "Username is already taken",
         });
       } else {
-        
+
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 

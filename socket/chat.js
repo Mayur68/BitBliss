@@ -31,14 +31,14 @@ function setupSocket(server) {
       }
     });
 
-    socket.on('CreateRoom', (data) => {
-      const { userID, roomName } = data;
-      socket.join(roomName);
+    // socket.on('CreateRoom', (data) => {
+    //   const { userID, roomName } = data;
+    //   socket.join(roomName);
 
-      socket.emit('roomCreated', `Room ${roomName} created successfully!`);
+    //   socket.emit('roomCreated', `Room ${roomName} created successfully!`);
 
-      io.to(roomName).emit('roomMessage', `User ${userID} has joined the room.`);
-    });
+    //   io.to(roomName).emit('roomMessage', `User ${userID} has joined the room.`);
+    // });
 
 
     socket.on('typing', (data) => {
@@ -60,7 +60,6 @@ function setupSocket(server) {
     socket.on("send_message", (data) => {
       const { senderID, recipientID, content1, content2 } = data;
       if (senderID && recipientID) {
-        const senderSocket = connectedUsers[senderID];
         const recipientSocket = connectedUsers[recipientID];
         if (recipientSocket) {
           io.to(recipientSocket).emit("new_message", {
@@ -81,10 +80,10 @@ function setupSocket(server) {
       delete connectedUsers[userID];
       socket.leaveAll();
     });
-  })
+  });
 }
 
-async function loadFriends(io, socket, connectedUsers) {
+async function loadFriends(io, socket) {
   const userID = socket.userID;
 
   try {
@@ -94,23 +93,16 @@ async function loadFriends(io, socket, connectedUsers) {
       return;
     }
 
-    const onlineFriends = [];
     const friends = user.friends || [];
-    friends.forEach((friendID) => {
-      if (connectedUsers[friendID]) {
-        onlineFriends.push(friendID);
-      }
-    });
 
     socket.emit("Friends", { friends });
-    socket.emit("onlineFriends", { onlineFriends });
   } catch (error) {
     console.error("Error loading friends:", error);
   }
 }
 
 
-async function loadRooms(io, socket, connectedUsers) {
+async function loadRooms(io, socket) {
   const userID = socket.userID;
 
   try {
@@ -125,7 +117,6 @@ async function loadRooms(io, socket, connectedUsers) {
     });
 
     if (userRooms.length === 0) {
-      console.log("User has no rooms as owner or member:", userID);
       return;
     }
     socket.emit("UserRooms", { userRooms });
@@ -134,7 +125,5 @@ async function loadRooms(io, socket, connectedUsers) {
     console.error("Error loading rooms:", error);
   }
 }
-
-
 
 module.exports = setupSocket;

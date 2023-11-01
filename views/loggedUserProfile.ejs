@@ -163,7 +163,8 @@
                         profileImage.src = data.user.profilePhoto;
                         profileImage.alt = "Profile Photo";
                     } else {
-                        console.error('Profile photo is not defined.');
+                        const profileImage = document.getElementById('profile-image');
+                        profileImage.src = "../assets/default-profile.jpg";
                     }
 
                 } else {
@@ -221,6 +222,9 @@
             .then(response => {
 
                 if (response.ok) {
+
+                    localStorage.clear();
+
                     window.location.href = "/";
                 } else {
                     alert(data.message);
