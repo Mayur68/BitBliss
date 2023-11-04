@@ -19,12 +19,8 @@ router.post("/saveHistory", async (req, res) => {
                 user1ID: userId,
                 user2ID: recipientID,
             },
-            sender: {
-                userID: userId,
-            },
-            receiver: {
-                userID: recipientID,
-            },
+            sender: userId,
+            receiver: recipientID,
             message,
             timestamp: time,
         });
@@ -63,8 +59,8 @@ router.post("/loadHistory", async (req, res) => {
             $and: [
                 {
                     $or: [
-                        { "sender.userID": userId, "receiver.userID": recipientID },
-                        { "sender.userID": recipientID, "receiver.userID": userId },
+                        { "sender": userId, "receiver": recipientID },
+                        { "sender": recipientID, "receiver": userId },
                     ],
                 },
                 {
@@ -137,56 +133,17 @@ router.post("/clearChat", async (req, res) => {
 
 
 //
-//
+//  Room
 //
 
-router.post("/saveSendingRoomHistory", async (req, res) => {
+router.post("/saveRoomHistory", async (req, res) => {
     const { recipientID, userId, message, time } = req.body;
     const ownerAccount = await accounts.findOne({ username: userId });
     try {
         const chatRecord = new chatHistory({
             name: ownerAccount.id,
-            sender: {
-                userID: userId,
-            },
-            receiver: {
-                userID: recipientID,
-            },
-            message,
-            timestamp: time,
-        });
-        const result = await chatRecord.save();
-
-
-        if (result) {
-            return res.status(200).json({
-                status: "success",
-                message: "Chat history saved successfully!",
-            });
-        }
-
-        throw new Error("Failed to save chat history.");
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({
-            status: "error",
-            message: "Internal server error",
-        });
-    }
-});
-
-router.post("/saveRecievingRoomHistory", async (req, res) => {
-    const { recipientID, userId, message, time } = req.body;
-    const ownerAccount = await accounts.findOne({ username: recipientID });
-    try {
-        const chatRecord = new chatHistory({
-            name: ownerAccount.id,
-            sender: {
-                userID: userId,
-            },
-            receiver: {
-                userID: recipientID,
-            },
+            sender: userId,
+            receiver: recipientID,
             message,
             timestamp: time,
         });
@@ -218,8 +175,8 @@ router.post("/loadRoomHistory", async (req, res) => {
             $and: [
                 {
                     $or: [
-                        { "sender.userID": userId, "receiver.userID": recipientID },
-                        { "sender.userID": recipientID, "receiver.userID": userId },
+                        { "sender": userId, "receiver": recipientID },
+                        { "sender": recipientID, "receiver": userId },
                     ],
                 },
                 { name: ownerAccount._id },
@@ -256,8 +213,8 @@ router.post("/clearRoomChat", async (req, res) => {
             $and: [
                 {
                     $or: [
-                        { "sender.userID": userId, "receiver.userID": recipientID },
-                        { "sender.userID": recipientID, "receiver.userID": userId },
+                        { "sender": userId, "receiver": recipientID },
+                        { "sender": recipientID, "receiver": userId },
                     ],
                 },
                 { name: ownerAccount._id },
@@ -276,8 +233,5 @@ router.post("/clearRoomChat", async (req, res) => {
         });
     }
 });
-
-
-
 
 module.exports = router;

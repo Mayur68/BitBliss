@@ -5,6 +5,11 @@ const multer = require("multer");
 const fs = require('fs');
 const path = require("path");
 
+router.get("/Products/BitBlissIDE", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/products.html"));
+});
+
+
 
 //Repository
 router.get("/new-Repository", async (req, res) => {
@@ -118,12 +123,8 @@ router.post("/updateRepositoryFile", upload.single("editedFile"), async (req, re
   }
 });
 
-
-
-
-
-
 router.post("/loadRepository", async (req, res) => {
+  console.log(req.body.userId)
   try {
     const username = req.body.userId;
     const user = await accounts.findOne({ username });

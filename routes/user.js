@@ -247,6 +247,27 @@ router.post("/logout", (req, res) => {
   res.sendStatus(200);
 });
 
+router.post('/deleteAccount', async (req, res) => {
+  const username = req.body.username;
+console.log(username)
+  try {
+      // Assuming you want to delete an account based on the username
+      const deletedAccount = await accounts.findOneAndDelete({ username: username });
+
+      if (deletedAccount) {
+          res.sendStatus(200); // Success
+      } else {
+          res.status(404).json({ message: 'Account not found.' });
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'An error occurred while deleting the account.' });
+  }
+});
+
+
+
+
 // user profile page
 router.get("/:username", async (req, res) => {
   try {

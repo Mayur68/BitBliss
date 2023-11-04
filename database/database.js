@@ -25,7 +25,10 @@ const accountSchema = new mongoose.Schema({
   region: String,
   password: String,
   session: String,
-  friends: [String],
+  friends: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
+  },],
   bio: String,
 });
 
@@ -42,7 +45,10 @@ const fileSchema = new mongoose.Schema({
   createdAt: Date,
   filePath: String,
   topics: [String],
-  collaboraters: [String],
+  collaboraters: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
+  },],
   permissions: [String]
 }, {
   collection: 'repository'
@@ -52,14 +58,22 @@ const repository = mongoose.model("repository", fileSchema);
 
 const chatHistorySchema = new mongoose.Schema({
   name: {
-    user1ID: String,
-    user2ID: String,
+    user1ID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "accounts",
+    },
+    user2ID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "accounts",
+    },
   },
   sender: {
-    userID: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
   },
   receiver: {
-    userID: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
   },
   message: String,
   timestamp: String,
@@ -76,13 +90,21 @@ const roomChatHistorySchema = new mongoose.Schema({
   },
   roomName: String,
   sender: {
-    userID: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
   },
   receivers: {
-    userID: String,
+    userID: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "accounts",
+    },],
   },
   message: String,
   timestamp: Date,
+  names: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
+  },],
 }, {
   collection: 'roomChatHistory'
 });

@@ -137,6 +137,7 @@
     </div>
     <div id="repo-container"></div>
     <button class="add-friend-button" onclick="logout()">Logout</button>
+    <button class="add-friend-button" onclick="deleteAccount()">Delete Account</button>
 </body>
 
 
@@ -232,14 +233,43 @@
             })
             .catch(error => {
                 console.error(error);
-                alert("An error occurred while trying to log in");
+                alert("An error occurred while trying to log out");
             });
     }
+
+    function deleteAccount() {
+
+    const username = "<%= username %>";
+
+    fetch('/deleteAccount', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username }),
+    })
+    .then(response => {
+        if (response.ok) {
+            localStorage.clear();
+            window.location.href = "/";
+        } else {
+            return response.json();
+        }
+    })
+    .catch(error => {
+        console.error(error);
+    });
+}
+
+
 
 
     function edit() {
         window.location.href = "/Edit/<%= username %>";
     }
+
+
     function loadRepositories() {
         fetch("/loadRepository", {
             method: "POST",
