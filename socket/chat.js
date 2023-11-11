@@ -95,11 +95,20 @@ async function loadFriends(io, socket) {
 
     const friends = user.friends || [];
 
-    socket.emit("Friends", { friends });
+    // Map user IDs to usernames
+    const friendUsernames = await Promise.all(
+      friends.map(async (friendID) => {
+        const friend = await accounts.findOne({ _id: friendID });
+        return friend ? friend.username : null;
+      })
+    );
+
+    socket.emit("Friends", { friends: friendUsernames });
   } catch (error) {
     console.error("Error loading friends:", error);
   }
 }
+
 
 
 async function loadRooms(io, socket) {

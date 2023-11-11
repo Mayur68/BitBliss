@@ -81,7 +81,8 @@ router.post("/addFriend", async (req, res) => {
     }
 
     const user = await accounts.findOne({ username: userId });
-    if (user && user.friends.includes(friendId)) {
+    
+    if (user && user.friends.includes(friend._id)) {
       return res.status(400).json({
         status: "error",
         message: "Friend already exists!",
@@ -89,7 +90,7 @@ router.post("/addFriend", async (req, res) => {
     }
 
     if (user) {
-      user.friends.push(friendId);
+      user.friends.push(friend._id);
       await user.save();
     }
 

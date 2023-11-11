@@ -124,7 +124,6 @@ router.post("/updateRepositoryFile", upload.single("editedFile"), async (req, re
 });
 
 router.post("/loadRepository", async (req, res) => {
-  console.log(req.body.userId)
   try {
     const username = req.body.userId;
     const user = await accounts.findOne({ username });

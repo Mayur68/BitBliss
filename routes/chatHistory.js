@@ -4,7 +4,9 @@ const { accounts, chatHistory } = require("../database/database");
 
 router.post("/saveHistory", async (req, res) => {
     const { recipientID, userId, message, time } = req.body;
+
     const ownerAccount = await accounts.findOne({ username: userId });
+    const receiver = await accounts.findOne({ username: recipientID });
 
     if (!ownerAccount) {
         return res.status(401).json({
@@ -16,11 +18,11 @@ router.post("/saveHistory", async (req, res) => {
     try {
         const chatRecord = new chatHistory({
             name: {
-                user1ID: userId,
-                user2ID: recipientID,
+                user1ID: ownerAccount._id,
+                user2ID: receiver._id,
             },
-            sender: userId,
-            receiver: recipientID,
+            sender: ownerAccount._id,
+            receiver: receiver._id,
             message,
             timestamp: time,
         });
@@ -45,37 +47,45 @@ router.post("/saveHistory", async (req, res) => {
 
 router.post("/loadHistory", async (req, res) => {
     const { recipientID, userId } = req.body;
-    const ownerAccount = await accounts.findOne({ username: userId });
-
-    if (!ownerAccount) {
-        return res.status(401).json({
-            status: "error",
-            message: "Invalid user.",
-        });
-    }
 
     try {
-        const result = await chatHistory.find({
-            $and: [
+        const ownerAccount = await accounts.findOne({ username: userId });
+
+        const receiver = await accounts.findOne({ username: recipientID });
+
+        if (!ownerAccount || !receiver) {
+            return res.status(401).json({
+                status: "error",
+                message: "Invalid user or recipient.",
+            });
+        }
+
+        const ChatHistory = await chatHistory.find({
+            $or: [
                 {
-                    $or: [
-                        { "sender": userId, "receiver": recipientID },
-                        { "sender": recipientID, "receiver": userId },
-                    ],
+                    sender: ownerAccount._id,
+                    receiver: receiver._id,
                 },
                 {
-                    $or: [
-                        { "name.user1ID": ownerAccount.username },
-                        { "name.user2ID": ownerAccount.username },
-                    ],
-
+                    sender: receiver._id,
+                    receiver: ownerAccount._id,
                 },
             ],
-        }).exec();
+        })
+            .populate("sender", "username")
+            .populate("receiver", "username")
+            .exec();
+
+        const chatHistoryWithUsernames = ChatHistory.map((chat) => ({
+            sender: chat.sender.username,
+            receiver: chat.receiver.username,
+            message: chat.message,
+            timestamp: chat.timestamp,
+        }));
 
         return res.status(200).json({
             status: "success",
-            chatHistory: result,
+            chatHistory: chatHistoryWithUsernames,
         });
     } catch (err) {
         console.error(err);
@@ -85,6 +95,11 @@ router.post("/loadHistory", async (req, res) => {
         });
     }
 });
+
+
+
+
+
 
 
 router.post("/clearChat", async (req, res) => {

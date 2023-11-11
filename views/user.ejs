@@ -288,13 +288,14 @@
     }
 
     function displayChatHistory(chatHistory) {
+       
         const messages = document.getElementById("messages");
         chatHistory.forEach((chat) => {
             if (chat.message && chat.message.trim() !== '') {
                 const messageDiv = document.createElement('div');
-                if (chat.sender.userID === userId) {
+                if (chat.sender === userId) {
                     messageDiv.className = "message self";
-                } else if (chat.sender.userID === recipientID) {
+                } else if (chat.sender === recipientID) {
                     messageDiv.className = "message notself";
                 }
 

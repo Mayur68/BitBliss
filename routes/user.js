@@ -249,45 +249,54 @@ router.post("/logout", (req, res) => {
 
 router.post('/deleteAccount', async (req, res) => {
   const username = req.body.username;
-console.log(username)
+  console.log(username)
   try {
-      // Assuming you want to delete an account based on the username
-      const deletedAccount = await accounts.findOneAndDelete({ username: username });
+    // Assuming you want to delete an account based on the username
+    const deletedAccount = await accounts.findOneAndDelete({ username: username });
 
-      if (deletedAccount) {
-          res.sendStatus(200); // Success
-      } else {
-          res.status(404).json({ message: 'Account not found.' });
-      }
+    if (deletedAccount) {
+      res.sendStatus(200); // Success
+    } else {
+      res.status(404).json({ message: 'Account not found.' });
+    }
   } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'An error occurred while deleting the account.' });
+    console.error(err);
+    res.status(500).json({ message: 'An error occurred while deleting the account.' });
   }
 });
 
 
+// Middleware to handle favicon.ico requests
+router.get('/favicon.ico', (req, res) => {
+  res.status(204); // No content response for favicon requests
+});
 
-
-// user profile page
+// User profile page route
 router.get("/:username", async (req, res) => {
   try {
     const username = req.params.username;
+    console.log(username)
     const sessionString = req.cookies.sessionToken;
 
-    const user1 = await accounts.findOne({ username, session: sessionString });
-    const user2 = await accounts.findOne({ username });
-    if (user1) {
-      res.render("loggedUserProfile", { username: user1.username });
-    } else if (user2) {
-      res.render("userProfile", { username: user2.username });
+    const loggedInUser = await accounts.findOne({ username: username, session: sessionString });
+    console.log(loggedInUser)
+    if (loggedInUser) {
+      res.render("loggedUserProfile", { username: loggedInUser.username });
     } else {
-      res.render("notfound");
+      const user = await accounts.findOne({ username: username });
+      console.log(user)
+      if (user) {
+        res.render("userProfile", { username: user.username });
+      } else {
+        res.render("notfound");
+      }
     }
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal server error');
   }
 });
+
 
 //genetare session
 function generateSession() {

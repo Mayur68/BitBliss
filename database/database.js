@@ -58,14 +58,8 @@ const repository = mongoose.model("repository", fileSchema);
 
 const chatHistorySchema = new mongoose.Schema({
   name: {
-    user1ID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "accounts",
-    },
-    user2ID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "accounts",
-    },
+    user1ID: String,
+    user2ID: String,
   },
   sender: {
     type: mongoose.Schema.Types.ObjectId,
@@ -111,8 +105,9 @@ const roomChatHistorySchema = new mongoose.Schema({
 
 const roomChatHistory = mongoose.model("roomChatHistory", roomChatHistorySchema);
 
-const roomsSchema = new mongoose.Schema({
+const roomSchema = new mongoose.Schema({
   name: String,
+  profilePhoto: String,
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "accounts"
@@ -127,6 +122,6 @@ const roomsSchema = new mongoose.Schema({
   collection: 'rooms'
 });
 
-const rooms = mongoose.model("rooms", roomsSchema);
+const rooms = mongoose.model("rooms", roomSchema);
 
 module.exports = { db, accounts, repository, chatHistory, rooms, roomChatHistory };

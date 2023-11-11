@@ -33,13 +33,15 @@ app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+
+app.use("/", user);
 app.use("/", profile);
 app.use("/", arcade);
 app.use("/", chatHistory);
 app.use("/", home);
 app.use("/", explore);
 app.use("/", repository);
-app.use("/", user);
+
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
