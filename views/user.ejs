@@ -76,7 +76,7 @@
 <script>
 
     function createRepository() {
-        window.location.href = "/new-Repository";
+        window.location.href = "/<%= username %>/new-Repository";
     }
 
     function profile() {
@@ -131,14 +131,19 @@
     loadFriends()
 
 
-
-
     function updateFriendsList(friends) {
         const friendsListDiv = document.getElementById("friends-list");
-        friendsListDiv.innerHTML = "";
-        friends.forEach((friend) => {
-            loadData(friend);
-        });
+        if (!friends) {
+            console.log("empy")
+            friendsListDiv.innerHTML = "";
+            friends.forEach((friend) => {
+                loadData(friend);
+            });
+        } else {
+            console.log("empy")
+            friendsListDiv.innerHTML = `<label style="margin: auto;">Add people to chat</label>`;
+        }
+
     }
 
     function loadData(friend) {
@@ -288,7 +293,7 @@
     }
 
     function displayChatHistory(chatHistory) {
-       
+
         const messages = document.getElementById("messages");
         chatHistory.forEach((chat) => {
             if (chat.message && chat.message.trim() !== '') {

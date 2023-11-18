@@ -13,7 +13,9 @@ const chatHistory = require("./routes/chatHistory");
 const repository = require("./routes/repository");
 const explore = require("./routes/explore");
 const profile = require("./routes/profile");
+const other = require("./routes/other");
 const setupSocket = require("./socket/chat");
+
 
 
 setupSocket(server);
@@ -41,6 +43,7 @@ app.use("/", chatHistory);
 app.use("/", home);
 app.use("/", explore);
 app.use("/", repository);
+app.use("/", other);
 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -79,10 +82,13 @@ app.get("/", (req, res) => {
 });
 
 
-server.listen(3000, (err) => {
+const PORT = process.env.PORT || 3000;
+
+
+server.listen(PORT, (err) => {
   if (err) {
     console.error("Error starting server:", err);
   } else {
-    console.log("Server is running at 3000...");
+    console.log("Server is running at", PORT);
   }
 });

@@ -2,10 +2,8 @@ const express = require("express");
 const request = require("supertest");
 const app = express();
 
-// Import the route you want to test
-const repositoryRoutes = require("../routes/repository"); // Update with the correct path
+const repositoryRoutes = require("../routes/repository");
 
-// Create mock database functions
 const mockAccounts = {
   findOne: jest.fn().mockResolvedValue({ _id: "mockUserId" }),
 };
@@ -19,7 +17,6 @@ jest.mock("../database/database", () => ({
   repository: mockRepository,
 }));
 
-// Use the route in your Express app
 app.use(repositoryRoutes);
 
 describe("Test '/createRepository' route", () => {
@@ -36,18 +33,17 @@ describe("Test '/createRepository' route", () => {
       message: "Repository created successfully",
     });
 
-    // Ensure database queries were called as expected
     expect(mockAccounts.findOne).toHaveBeenCalledWith({ username: "testuser" });
     expect(mockRepository.create).toHaveBeenCalledWith({
       name: "Test Repository",
-      owner: "mockUserId", // Mocked user ID
+      owner: "mockUserId",
       createdAt: expect.any(Date),
-      filePath: expect.any(String), // You can use a regex to match the path
+      filePath: expect.any(String),
     });
   });
 
   it("should handle a missing user", async () => {
-    // Simulate a missing user in the database
+
     mockAccounts.findOne.mockResolvedValue(null);
 
     const response = await request(app)

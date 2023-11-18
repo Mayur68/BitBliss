@@ -5,21 +5,16 @@ const multer = require("multer");
 const fs = require('fs');
 const path = require("path");
 
-router.get("/Products/BitBlissIDE", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/products.html"));
-});
-
-
-
 //Repository
-router.get("/new-Repository", async (req, res) => {
+router.get("/:username/new-Repository", async (req, res) => {
   const sessionString = req.cookies.sessionToken;
+  const username = req.params.username;
 
   try {
-    const user = await accounts.findOne({ session: sessionString }, "username");
+    const user = await accounts.findOne({ session: sessionString });
 
     if (user) {
-      res.render("createRepo", { username: user.username });
+      res.render("createRepo", { username: username });
     } else {
       res.status(403).send("Unauthorized");
     }
