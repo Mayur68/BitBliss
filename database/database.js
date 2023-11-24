@@ -43,7 +43,7 @@ const fileSchema = new mongoose.Schema({
   visibility: String,
   description: String,
   createdAt: Date,
-  filePath: String,
+  filePaths: [String],
   topics: [String],
   collaboraters: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -124,4 +124,19 @@ const roomSchema = new mongoose.Schema({
 
 const rooms = mongoose.model("rooms", roomSchema);
 
-module.exports = { db, accounts, repository, chatHistory, rooms, roomChatHistory };
+
+const notificationSchema = new mongoose.Schema({
+  name: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
+  },
+  timestamp: Date,
+  friendRequest: [String],
+},
+  {
+    collection: 'notifications'
+  });
+
+const notification = mongoose.model("notification", notificationSchema);
+
+module.exports = { db, accounts, repository, chatHistory, rooms, roomChatHistory, notification };

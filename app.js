@@ -4,6 +4,7 @@ const server = require("http").Server(app);
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const cors = require('cors');
 const { accounts } = require("./database/database");
 const { EventEmitter } = require('events');
 const arcade = require("./routes/arcade");
@@ -34,7 +35,7 @@ app.use('/repository', express.static(path.join(__dirname, '../uploads')));
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(cookieParser());
-
+app.use(cors());
 
 app.use("/", user);
 app.use("/", profile);

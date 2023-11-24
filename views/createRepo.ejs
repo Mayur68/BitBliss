@@ -4,32 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>New Repository</title>
     <style>
-        /* Set background color for the body */
         body {
-            background-color: #1d1b34;
             font-family: Arial, sans-serif;
         }
 
         .header {
             display: flex;
             justify-content: space-between;
-            background-color: #1d1b34;
-            color: #fff;
-            padding: 20px;
             text-align: center;
         }
 
         .profile-button {
             background-color: transparent;
             border: none;
-            color: #fff;
             font-size: 18px;
             margin-right: 10px;
             cursor: pointer;
         }
 
+        /* Link and image */
         a {
             width: 50px;
             height: 50px;
@@ -42,45 +37,19 @@
             border-radius: 30px;
         }
 
-        /* Style the form container */
+        /* Form container */
         #repositoryForm {
-            color: #fff;
             max-width: 900px;
             max-height: max-content;
             margin: 0 auto;
             padding: 10%;
-            background-color: #1d1b34;
             border-radius: 10px;
-            /* box-shadow: 0 0 10px rgba(0, 221, 255, 1.8); */
         }
 
-        /* Style the text input */
+        /* Text input */
         #reponame,
-        #repodiscription {
-            width: 90%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 2px solid #07a607;
-            border-radius: 5px;
-        }
-
-        #topics {
-            width: 90%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 2px solid #07a607;
-            border-radius: 5px;
-        }
-
-        /* Style the radio buttons and their labels */
-        label {
-            display: block;
-            margin-bottom: 10px;
-            color: #07a607;
-            font-weight: bold;
-        }
-
-        /* Style the file input */
+        #repodiscription,
+        #topics,
         #file {
             width: 90%;
             padding: 10px;
@@ -89,26 +58,36 @@
             border-radius: 5px;
         }
 
-        /* Style the buttons */
+        /* Radio buttons and labels */
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* Buttons */
         button {
             padding: 10px 20px;
             margin-right: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            background-color: #07a607;
-            color: #fff;
+            background-color: rgb(54, 54, 255);
             font-weight: bold;
         }
 
-        /* Style the "Cancel" button */
-        button:nth-child(1) {
-            background-color: #07a607;
+        #dropArea {
+            border: 2px dashed #aaa;
+            height: 100px;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 10px;
         }
 
-        /* Style the "Create Repository" button */
-        button:nth-child(2) {
-            background-color: #191961;
+        .drop-area.highlight {
+            background-color: #bebebe;
+            border-color: rgb(62, 62, 255);
         }
     </style>
 </head>
@@ -131,19 +110,57 @@
             <input type="radio" name="visibility" value="private" /> Private
         </label>
         <input type="text" id="topics" name="topics" placeholder="Topics (comma-separated)" />
-        <input type="file" id="file" name="file" placeholder="File" />
+        <div id="dropArea" class="drop-area">
+            <p>Drop files here or click to upload</p>
+            <input type="file" id="fileInput" name="file" multiple style="display: none;" />
+            <label for="fileInput" id="fileInputLabel">Choose Files</label>
+        </div>
         <button type="button" onclick="cancel()">Cancel</button>
         <button type="button" onclick="createRepository()">Create Repository</button>
     </form>
 </body>
 
+<script src="https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js"></script>
+
 <script>
-    const userId = "<%= username %>";
+
     function cancel() {
         window.location.href = "/";
     }
 
+
+    const dropArea = document.getElementById('dropArea');
+    const fileInput = document.getElementById('fileInput');
+    let filesToUpload = [];
+    const userId = "<%= username %>";
     let visibility = "public";
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(event) {
+        dropArea.classList.add('highlight');
+    }
+
+    function unhighlight(event) {
+        dropArea.classList.remove('highlight');
+    }
+
+    dropArea.addEventListener('drop', handleDrop, false);
 
     function updateVisibility(event) {
         visibility = event.target.value;
@@ -153,6 +170,59 @@
         radio.addEventListener('change', updateVisibility);
     });
 
+    function handleDrop(event) {
+        const dt = event.dataTransfer;
+        const files = dt.files;
+        filesToUpload = [...files];
+        handleFiles(files);
+    }
+
+    function handleFiles(files) {
+        dropArea.innerHTML = '';
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const fileInfo = document.createElement('div');
+            fileInfo.textContent = file.name;
+            dropArea.appendChild(fileInfo);
+        }
+    }
+
+    function zipFiles(files) {
+    const zip = new JSZip();
+    const promises = [];
+
+    files.forEach(file => {
+        const promise = new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const arrayBuffer = event.target.result;
+                zip.file(file.name, arrayBuffer, { binary: true });
+                resolve();
+            };
+
+            reader.onerror = function (event) {
+                reject(event.target.error);
+            };
+
+            console.log('Reading file:', file.name);
+
+            reader.readAsArrayBuffer(file);
+        });
+
+        promises.push(promise);
+    });
+
+    return Promise.all(promises)
+        .then(() => {
+            return zip.generateAsync({ type: 'blob' });
+        })
+        .catch(error => {
+            throw new Error('Error zipping files: ' + error.message);
+        });
+}
+
     function createRepository() {
         const name = document.getElementById("reponame");
         const reponame = name.value;
@@ -160,34 +230,68 @@
         const topics = topicsInput.value;
         const repodescription = document.getElementById("repodiscription");
         const description = repodescription.value;
-        const file = document.getElementById("file");
-        const repofile = file.files[0];
         const formData = new FormData();
-        
+
         formData.append("name", reponame);
         formData.append("visibility", visibility);
         formData.append("topics", topics);
         formData.append("description", description);
         formData.append("accountId", userId);
-        formData.append("file", repofile);
 
-        fetch("/createRepository", {
-            method: "POST",
-            body: formData,
+        zipFiles(filesToUpload)
+        .then(zipBlob => {
+            console.log('Generated ZIP size:', zipBlob.size);
+            console.log('Generated ZIP:', zipBlob);
+
+            formData.append('zipFile', zipBlob, 'files.zip');
+            const zipFileSize = zipBlob.size;
+            if (zipFileSize > 0) {
+                sendToServer(formData);
+            } else {
+                alert('No files selected or error zipping files. Please try again.');
+            }
         })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === "success") {
-                    window.location.href = "/";
+        .catch(error => {
+            console.error('Error zipping files', error);
+            alert('An error occurred while zipping the files. Please try again later.');
+        });
+
+        zipFiles(filesToUpload)
+            .then(zipBlob => {
+                formData.append('zipFile', zipBlob, 'files.zip');
+                const zipFileSize = zipBlob.size;
+                if (zipFileSize > 0) {
+                    sendToServer(formData);
                 } else {
-                    alert("Failed to create Repository: " + data.message);
+                    alert('No files selected or error zipping files. Please try again.');
                 }
             })
-            .catch((error) => {
-                console.error("Error creating Repository", error);
-                alert("An error occurred while creating the Repository. Please try again later.");
+            .catch(error => {
+                console.error('Error zipping files', error);
+                alert('An error occurred while zipping the files. Please try again later.');
             });
     }
+
+
+    function sendToServer(formData) {
+        fetch('/createRepository', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = '/';
+                } else {
+                    alert('Failed to create Repository: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error creating Repository', error);
+                alert('An error occurred while creating the Repository. Please try again later.');
+            });
+    }
+
 </script>
 
 </html>

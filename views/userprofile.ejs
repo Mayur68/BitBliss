@@ -159,7 +159,7 @@
             friendId: friendId,
         };
         console.log(data)
-        fetch("/addFriend", {
+        fetch("/addFriendRequest", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -170,14 +170,14 @@
             .then((data) => {
                 console.log(data);
                 if (data.status === "success") {
-                    alert("Friend added successfully!");
+                    alert("Request sent!");
                 } else {
-                    alert("Failed to add friend: " + data.message);
+                    alert("Failed to send Request: " + data.message);
                 }
             })
             .catch((error) => {
-                console.error("Error adding friend:", error);
-                alert("An error occurred while adding friend. Please try again later.");
+                console.error("Error sending Request:", error);
+                alert("An error occurred while sending Request. Please try again later.");
             });
     }
 

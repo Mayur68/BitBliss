@@ -4,6 +4,8 @@ const { accounts, repository } = require("../database/database");
 const multer = require("multer");
 const fs = require('fs');
 const path = require("path");
+const JSZip = require('jszip');
+
 
 //Repository
 router.get("/:username/new-Repository", async (req, res) => {
@@ -27,15 +29,21 @@ router.get("/:username/new-Repository", async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const repositoryName = req.body.name;
-    const uploadDir = path.join(__dirname, "../../../uploads", repositoryName);
+    if (file.fieldname === 'zipFile') {
+      // Destination for the ZIP file upload
+      cb(null, '../../../webapp_temp');
+    } else {
+      const repositoryName = req.body.name;
+      const uploadDir = path.join(__dirname, "../../../uploads", repositoryName);
 
-    fs.mkdir(uploadDir, { recursive: true }, (err) => {
-      if (err) {
-        console.error("Error creating repository directory:", err);
-      }
-      cb(null, uploadDir);
-    });
+      // Create repository directory if it doesn't exist
+      fs.mkdir(uploadDir, { recursive: true }, (err) => {
+        if (err) {
+          console.error("Error creating repository directory:", err);
+        }
+        cb(null, uploadDir);
+      });
+    }
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -45,17 +53,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Create a new repository
-router.post("/createRepository", upload.single("file"), async (req, res) => {
+router.post("/createRepository", upload.array(['zipFile']), async (req, res) => {
   try {
+    const repositoryName = req.body.name;
+    console.log(req.body)
     const username = req.body.accountId;
     const user = await accounts.findOne({ username });
 
     if (!user) {
       return res.status(404).json({ status: "error", message: "User not found" });
     }
-
-    const repositoryName = req.body.name;
-    const repositoryDirectory = path.join(__dirname, "../../../uploads", repositoryName);
 
     const existingRepository = await repository.findOne({ name: repositoryName });
 
@@ -72,14 +79,39 @@ router.post("/createRepository", upload.single("file"), async (req, res) => {
       topics: req.body.topics.split(",").map((topic) => topic.trim()),
     });
 
+    const repositoryDirectory = path.join(__dirname, "../../../uploads", repositoryName);
+    fs.mkdirSync(repositoryDirectory, { recursive: true });
+
+    // Extract ZIP file if available
+    if (req.files && req.files.length > 0) {
+      const zipFile = req.files.find(file => file.fieldname === 'zipFile');
+      if (zipFile) {
+        const zipFilePath = zipFile.path;
+        const AdmZip = require('adm-zip');
+        const zip = new AdmZip(zipFilePath);
+
+        try {
+          zip.extractAllTo(repositoryDirectory, true);
+          const extractedFiles = fs.readdirSync(repositoryDirectory);
+          console.log('Extracted files:', extractedFiles);
+      } catch (error) {
+          console.error('Error extracting zip file:', error);
+          return res.status(500).json({ status: "error", message: "Error extracting ZIP file", error });
+      }
+      }
+
+      // Process other files
+      const filePaths = req.files
+        .filter(file => file.fieldname !== 'zipFile')
+        .map(file => file.path);
+
+      newRepository.filePaths = filePaths;
+    }
+
     fs.mkdir(repositoryDirectory, { recursive: true }, async (err) => {
       if (err) {
         console.error("Error creating repository directory:", err);
         return res.status(500).json({ status: "error", message: "Internal Server Error" });
-      }
-
-      if (req.file) {
-        newRepository.filePath = req.file.path;
       }
 
       await newRepository.save();
@@ -91,6 +123,7 @@ router.post("/createRepository", upload.single("file"), async (req, res) => {
     res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 });
+
 
 // Update repository file
 router.post("/updateRepositoryFile", upload.single("editedFile"), async (req, res) => {
@@ -181,7 +214,7 @@ router.get('/getRepository', async (req, res) => {
       return res.status(404).json({ status: "error", message: "User not found" });
     }
 
-    const repo = await repository.findOne({ owner: user._id, name: repositoryName,  });
+    const repo = await repository.findOne({ owner: user._id, name: repositoryName, });
 
     if (!repo) {
       return res.status(404).json({ status: "error", message: "Repository not found" });
