@@ -100,9 +100,9 @@
             <img id="profile-image" src="" alt="Profile Photo">
         </div>
         <div class="username" id="username"></div>
-        <div class="name" id="name"></div>
-        <div class="bio" id="bio"></div>
-<div id="friend">        <button class="add-friend-button" onclick="addFriend()">Add Friend</button></div>
+        <div id="name" id="name"></div>
+        <div itemid="bio" id="bio"></div>
+        <div id="friend"><button class="add-friend-button" onclick="addFriend()">Add Friend</button></div>
         <h2>Friends</h2>
         <div id="friends-list"></div>
     </div>
@@ -111,28 +111,35 @@
 
 
 <script>
+
+    const storedUsername = localStorage.getItem('username');
+
     function loadData() {
+        console.log("aedsrfrafedgh")
         const username = "<%= username %>";
         fetch('/loadData', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username }),
-            })
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username }),
+        })
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    document.getElementById('name').innerText = data.user.First_name + " " + data.user.Last_name || '';
+                    // document.getElementById('name').innerText = data.user.First_name + " " + data.user.Last_name || '';
                     document.getElementById('username').innerText = data.user.username || '';
                     document.getElementById('bio').innerText = data.user.bio || '';
-                    document.getElementById('region').innerText = data.user.region || '';
-
+                    console.log("aedsrfrafedgh")
+                    // document.getElementById('region').innerText = data.user.region || '';
+                    console.log("aedsrfrafedgh")
                     if (data.user.profilePhoto) {
+                        console.log("aedsrfrafedgh")
                         const profileImage = document.getElementById('profile-image');
                         profileImage.src = data.user.profilePhoto;
                         profileImage.alt = "Profile Photo";
                     } else {
+                        console.log("aedsrfrafedgh")
                         const profileImage = document.getElementById('profile-image');
                         profileImage.src = "../assets/default-profile.jpg";
                     }
@@ -148,38 +155,17 @@
     loadData();
 </script>
 
-
+<script src="/socket.io/socket.io.js"></script>
 <script>
-    const userId = "<%= username %>"
-    function addFriend() {
-        const userId = localStorage.getItem("username");
+    const userId = localStorage.getItem("username");
+    const friendId = "<%= username %>"
+    const socket = io();
+    socket.emit("connection");
 
-        const friendId = "<%= username %>"
-        const data = {
-            userId: userId,
-            friendId: friendId,
-        };
-        console.log(data)
-        fetch("/addFriendRequest", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                if (data.status === "success") {
-                    alert("Request sent!");
-                } else {
-                    alert("Failed to send Request: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error sending Request:", error);
-                alert("An error occurred while sending Request. Please try again later.");
-            });
+    function addFriend() {
+        console.log(userId, friendId)
+        socket.emit("sendRequest", { userId, friendId });
+        alert("Request sent!")
     }
 
     function loadRepositories() {

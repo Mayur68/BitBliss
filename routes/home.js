@@ -62,7 +62,7 @@ router.post("/createRoom", async (req, res) => {
 
 router.post("/addFriendRequest", async (req, res) => {
   const { userId, friendId } = req.body;
-  
+
   if (!userId || !friendId || userId === friendId) {
     return res.status(400).json({
       status: "error",
@@ -95,11 +95,9 @@ router.post("/addFriendRequest", async (req, res) => {
   }
 });
 
-
-
 router.post("/addFriend", async (req, res) => {
   const { userId, friendId } = req.body;
-  
+
   if (!userId || !friendId || userId === friendId) {
     return res.status(400).json({
       status: "error",
@@ -108,27 +106,34 @@ router.post("/addFriend", async (req, res) => {
   }
 
   try {
-    const friend = await accounts.findOne({ username: friendId });
-    if (!friend) {
+    const [user, friend] = await Promise.all([
+      accounts.findOne({ username: userId }),
+      accounts.findOne({ username: friendId }),
+    ]);
+
+    if (!user || !friend) {
       return res.status(404).json({
         status: "error",
-        message: "Friend not found!",
+        message: "User or friend not found!",
       });
     }
 
-    const user = await accounts.findOne({ username: userId });
-    
-    if (user && user.friends.includes(friend._id)) {
+    if (user.friends.includes(friend._id) || friend.friends.includes(user._id)) {
       return res.status(400).json({
         status: "error",
         message: "Friend already exists!",
       });
     }
 
-    if (user) {
-      user.friends.push(friend._id);
+    const addFriendToUser = async (user, friendId) => {
+      user.friends.push(friendId);
       await user.save();
-    }
+    };
+
+    await Promise.all([
+      addFriendToUser(user, friend._id),
+      addFriendToUser(friend, user._id),
+    ]);
 
     res.json({
       status: "success",
@@ -142,5 +147,8 @@ router.post("/addFriend", async (req, res) => {
     });
   }
 });
+
+module.exports = router;
+
 
 module.exports = router;

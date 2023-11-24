@@ -36,6 +36,44 @@ function setupSocket(server) {
       }
     });
 
+    socket.on("sendRequest", async (data) => {
+      const { userId, friendId } = data;
+      console.log('Received sendRequest with data:', data);
+
+      if (userId && connectedUsers[friendId]) {
+        const friendSocketId = connectedUsers[friendId];
+        console.log('Friend Socket ID:', friendSocketId);
+
+        if (friendSocketId) {
+          io.to(friendSocketId).emit("friendRequest", { userId });
+          console.log('friendRequest emitted successfully to friend:', friendId);
+        }
+      } else {
+        console.log('Friend Socket ID not found or user not connected');
+
+        try {
+          const user = await accounts.findOne({ username: userId });
+
+          if (user) {
+            const newUser = new accounts({
+              username: friendId._id,
+              friendRequest: userId,
+            });
+
+            await newUser.save();
+            console.log('Pending request added to Notification schema for user:', friendId);
+          } else {
+            console.log('User not found');
+          }
+        } catch (err) {
+          console.error('Error adding pending request:', err);
+        }
+      }
+    });
+
+
+
+
     // socket.on('CreateRoom', (data) => {
     //   const { userID, roomName } = data;
     //   socket.join(roomName);

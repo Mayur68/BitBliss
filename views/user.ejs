@@ -8,7 +8,6 @@
     <title>BitBliss</title>
     <style>
         #notifications {
-            background-color: aliceblue;
             width: 200px;
             height: max-content;
         }
@@ -21,7 +20,11 @@
         <button class="profile-button" onclick="profile()">Profile</button>
         <input type="text" class="explore-bar" id="explore" placeholder="Explore...">
         <button onclick="explore()">explore</button>
-        <div id="notifications"></div>
+        <div>
+            <h3>Notifications</h3>
+            <div id="notifications"></div>
+        </div>
+
     </div>
     <div>
         <div class="section">
@@ -121,6 +124,15 @@
         updateFriendsList(friends);
     });
 
+    socket.on("friendRequest", (data) => {
+        console.log("data");
+        console.log(data);
+        const { userId } = data;
+        console.log(userId);
+        notifications(userId);
+    });
+
+
     socket.on("UserRooms", (data) => {
         const { userRooms } = data;
         updateRoomsList(userRooms);
@@ -144,6 +156,48 @@
     loadNotifications()
     loadFriends()
 
+
+    function notifications(userId) {
+        const friendsListDiv = document.getElementById("notifications");
+        if (userId) {
+            friendsListDiv.innerHTML = `<button class="add-friend-button" onclick="addFriend('${userId}')">Accept request from ${userId}</button>`;
+        } else {
+            friendsListDiv.innerHTML = ``;
+        }
+    }
+
+    function addFriend(friendId) {
+        const friendsListDiv = document.getElementById("notifications");
+        const userId = localStorage.getItem("username");
+
+        const data = {
+            userId: userId,
+            friendId: friendId,
+        };
+        console.log(data);
+
+        fetch("/addFriend", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    friendsListDiv.innerHTML = ``;
+                    loadFriends()
+                } else {
+                    alert("Failed to send Request: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error sending Request:", error);
+                alert("An error occurred while sending Request. Please try again later.");
+            });
+    }
 
 
     function updateFriendsList(friends) {
