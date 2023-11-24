@@ -102,7 +102,7 @@
         <div class="username" id="username"></div>
         <div class="name" id="name"></div>
         <div class="bio" id="bio"></div>
-        <button class="add-friend-button" onclick="addFriend()">Add Friend</button>
+<div id="friend">        <button class="add-friend-button" onclick="addFriend()">Add Friend</button></div>
         <h2>Friends</h2>
         <div id="friends-list"></div>
     </div>
@@ -113,12 +113,13 @@
 <script>
     function loadData() {
         const username = "<%= username %>";
-        fetch(`/loadData?username=${username}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
+        fetch('/loadData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username }),
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {

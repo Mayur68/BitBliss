@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose')
-const { accounts, rooms } = require("../database/database");
+const { accounts, rooms, notification } = require("../database/database");
 
 
 
@@ -80,25 +80,14 @@ router.post("/addFriendRequest", async (req, res) => {
     }
 
     const user = await accounts.findOne({ username: userId });
-    
-    if (user && user.friends.includes(friend._id)) {
-      return res.status(400).json({
-        status: "error",
-        message: "Friend already exists!",
-      });
-    }
 
-    if (user) {
-      user.friends.push(friend._id);
-      await user.save();
-    }
 
     res.json({
       status: "success",
-      message: "Friend added successfully!",
+      message: "Friend request semt successfully!",
     });
   } catch (err) {
-    console.error("Error adding a friend:", err);
+    console.error("Error sending request:", err);
     res.status(500).json({
       status: "error",
       message: "Internal server error",

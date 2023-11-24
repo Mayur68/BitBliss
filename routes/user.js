@@ -275,16 +275,14 @@ router.get('/favicon.ico', (req, res) => {
 router.get("/:username", async (req, res) => {
   try {
     const username = req.params.username;
-    console.log(username)
     const sessionString = req.cookies.sessionToken;
 
     const loggedInUser = await accounts.findOne({ username: username, session: sessionString });
-    console.log(loggedInUser)
+
     if (loggedInUser) {
       res.render("loggedUserProfile", { username: loggedInUser.username });
     } else {
       const user = await accounts.findOne({ username: username });
-      console.log(user)
       if (user) {
         res.render("userProfile", { username: user.username });
       } else {

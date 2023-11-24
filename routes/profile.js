@@ -5,30 +5,38 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 
-router.get('/loadData', async (req, res) => {
+router.post('/loadData', async (req, res) => {
     try {
-        const { username } = req.query;
+        const { username } = req.body;
+
+        if (!username) {
+            return res.status(400).json({ message: 'Username not provided' });
+        }
+
         const user = await accounts.findOne({ username });
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        if (user.DOB && user.DOB instanceof Date) {
+        if (user.DOB instanceof Date) {
             user.DOB = user.DOB.toISOString().split('T')[0];
         } else {
             user.DOB = '';
         }
 
         const profilePhoto = user.profilePhoto;
-        user.profilePhoto = profilePhoto ? `https://0xc7gx14-3000.inc1.devtunnels.ms/${profilePhoto}` : '';
+        user.profilePhoto = profilePhoto ? `https://g02bq8d9-3000.inc1.devtunnels.ms/${profilePhoto}` : '';
 
-        return res.status(200).json({ status: 'success', user: user });
+        return res.status(200).json({ status: 'success', user });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to load profile data' });
     }
 });
+
+
+
 
 
 

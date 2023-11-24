@@ -1,5 +1,5 @@
 const socketIO = require("socket.io");
-const { accounts, rooms } = require("../database/database");
+const { accounts, rooms, notification } = require("../database/database");
 
 function setupSocket(server) {
   const io = socketIO(server);
@@ -10,6 +10,11 @@ function setupSocket(server) {
       const { userID } = data;
       socket.userID = userID;
       connectedUsers[userID] = socket.id;
+
+      socket.on("loadNotifications", (data) => {
+        loadNotifications(io, socket, data);
+      })
+
 
       socket.on("loadFriends", (data) => {
         loadFriends(io, socket, connectedUsers);
@@ -81,6 +86,21 @@ function setupSocket(server) {
       socket.leaveAll();
     });
   });
+}
+
+
+async function loadNotifications(io, socket, data) {
+  const userID = socket.userID;
+
+  try {
+    const user = await accounts.findOne({ username: userID });
+    if (!user) {
+      console.log("User not found with userID:", userID);
+      return;
+    }
+  } catch (error) {
+    console.error("Error loading Notifications:", error);
+  }
 }
 
 async function loadFriends(io, socket) {

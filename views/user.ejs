@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="/frontend/user.css">
     <title>BitBliss</title>
     <style>
-    #notifications{
-        background-color: aliceblue;
-        width: 200px;
-        height: max-content;
-    }
+        #notifications {
+            background-color: aliceblue;
+            width: 200px;
+            height: max-content;
+        }
     </style>
 </head>
 
@@ -21,7 +21,7 @@
         <button class="profile-button" onclick="profile()">Profile</button>
         <input type="text" class="explore-bar" id="explore" placeholder="Explore...">
         <button onclick="explore()">explore</button>
-    <div id="notifications"></div>
+        <div id="notifications"></div>
     </div>
     <div>
         <div class="section">
@@ -33,7 +33,7 @@
 
             <div class="chat-container flex">
                 <div id="friends-list">
-                    <label style="margin: auto;">Add people to chat</label>
+                    <label style="margin: auto; color: white;">Add people to chat</label>
                 </div>
                 <div class="chat-window" id="chat-window">
                     <label style="margin: auto;">Select people to message</label>
@@ -126,6 +126,11 @@
         updateRoomsList(userRooms);
     });
 
+
+    function loadNotifications() {
+        socket.emit("loadNotifications", userId);
+    }
+
     function loadFriends() {
         socket.emit("loadFriends", userId);
     }
@@ -136,46 +141,55 @@
         socket.emit("loadRooms", userId);
     }
 
+    loadNotifications()
     loadFriends()
+
 
 
     function updateFriendsList(friends) {
         const friendsListDiv = document.getElementById("friends-list");
-        if (!friends) {
-            console.log("empy")
+        if (friends) {
             friendsListDiv.innerHTML = "";
             friends.forEach((friend) => {
                 loadData(friend);
             });
         } else {
-            console.log("empy")
-            friendsListDiv.innerHTML = `<label style="margin: auto;">Add people to chat</label>`;
+            friendsListDiv.innerHTML = `<label style="margin: auto; color:white;">Add people to chat</label>`;
         }
 
     }
 
-    function loadData(friend) {
-        const username = friend;
-        fetch(`/loadData?username=${username}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    const friendElement = createFriendElement(data.user);
-                    const friendsListDiv = document.getElementById("friends-list");
-                    friendsListDiv.appendChild(friendElement);
-                } else {
-                    alert('Failed to load profile data for ' + friend);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+    async function loadData(friend) {
+        try {
+            const username = friend;
+            const response = await fetch('/loadData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username }),
             });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch');
+            }
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                const friendElement = createFriendElement(data.user);
+                const friendsListDiv = document.getElementById('friends-list');
+                friendsListDiv.appendChild(friendElement);
+            } else {
+                throw new Error('Failed to load profile data for ' + friend);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to load profile data for ' + friend);
+        }
     }
+
+
 
     function createFriendElement(user) {
         const friendElement = document.createElement("div");

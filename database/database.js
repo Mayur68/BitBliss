@@ -131,7 +131,10 @@ const notificationSchema = new mongoose.Schema({
     ref: "accounts",
   },
   timestamp: Date,
-  friendRequest: [String],
+  friendRequest: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts"
+  }],
 },
   {
     collection: 'notifications'
