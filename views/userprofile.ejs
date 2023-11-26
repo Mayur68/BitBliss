@@ -102,7 +102,7 @@
         <div class="username" id="username"></div>
         <div id="name" id="name"></div>
         <div itemid="bio" id="bio"></div>
-        <div id="friend"><button class="add-friend-button" onclick="addFriend()">Add Friend</button></div>
+        <div id="friend"></div>
         <h2>Friends</h2>
         <div id="friends-list"></div>
     </div>
@@ -111,11 +111,16 @@
 
 
 <script>
-
+    let friends;
     const storedUsername = localStorage.getItem('username');
-
+    function checkFriend() {
+        if (storedUsername in friends && Object.keys(friends).length !== 0) {
+            document.getElementById('friend').style.display = 'none';
+        } else {
+            document.getElementById('friend').innerHTML = `<button class="add-friend-button" onclick="addFriend()">Add Friend</button>`;
+        }
+    }
     function loadData() {
-        console.log("aedsrfrafedgh")
         const username = "<%= username %>";
         fetch('/loadData', {
             method: 'POST',
@@ -130,20 +135,18 @@
                     // document.getElementById('name').innerText = data.user.First_name + " " + data.user.Last_name || '';
                     document.getElementById('username').innerText = data.user.username || '';
                     document.getElementById('bio').innerText = data.user.bio || '';
-                    console.log("aedsrfrafedgh")
-                    // document.getElementById('region').innerText = data.user.region || '';
-                    console.log("aedsrfrafedgh")
+                    // document.getElementById('region').innerText = data.user.region || '';  
+                    friends = data.user.friends;
+
                     if (data.user.profilePhoto) {
-                        console.log("aedsrfrafedgh")
                         const profileImage = document.getElementById('profile-image');
                         profileImage.src = data.user.profilePhoto;
                         profileImage.alt = "Profile Photo";
                     } else {
-                        console.log("aedsrfrafedgh")
                         const profileImage = document.getElementById('profile-image');
                         profileImage.src = "../assets/default-profile.jpg";
                     }
-
+                    checkFriend()
                 } else {
                     alert('Failed to load profile data');
                 }
@@ -155,6 +158,9 @@
     loadData();
 </script>
 
+
+
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const userId = localStorage.getItem("username");
@@ -163,11 +169,16 @@
     socket.emit("connection");
 
     function addFriend() {
-        console.log(userId, friendId)
         socket.emit("sendRequest", { userId, friendId });
-        alert("Request sent!")
+        document.getElementById('friend').innerHTML = `<button class="add-friend-button">Invite sent</button>`;
     }
+</script>
 
+
+
+
+
+<script>
     function loadRepositories() {
 
         fetch("/loadPublicRepository", {

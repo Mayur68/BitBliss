@@ -145,11 +145,12 @@
 <script>
     function loadData() {
         const username = "<%= username %>";
-        fetch(`/loadData?username=${username}`, {
-            method: 'GET',
+        fetch('/loadData', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+            body: JSON.stringify({ username }),
         })
             .then(response => response.json())
             .then(data => {

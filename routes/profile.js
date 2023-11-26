@@ -8,7 +8,6 @@ const path = require('path');
 router.post('/loadData', async (req, res) => {
     try {
         const { username } = req.body;
-
         if (!username) {
             return res.status(400).json({ message: 'Username not provided' });
         }
@@ -66,19 +65,14 @@ const storage = multer.diskStorage({
         const profileName = req.body.username;
         const uploadDir = path.join(__dirname, '../profilePhotos', profileName);
 
-        if (req.file) {
-            fs.rmSync(uploadDir, { recursive: true, force: true });
-            fs.mkdir(uploadDir, { recursive: true }, (err) => {
-                if (err) {
-                    console.error('Error creating repository directory:', err);
-                    cb(err, null);
-                } else {
-                    cb(null, uploadDir);
-                }
-            });
-        } else {
-            cb(null, uploadDir);
-        }
+        fs.mkdir(uploadDir, { recursive: true }, (err) => {
+            if (err) {
+                console.error('Error creating repository directory:', err);
+                cb(err, null);
+            } else {
+                cb(null, uploadDir);
+            }
+        });
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);

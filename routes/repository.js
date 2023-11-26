@@ -165,7 +165,7 @@ router.post("/loadRepository", async (req, res) => {
     const repositoriesData = repositories.map((repo) => ({
       name: repo.name,
       createdAt: repo.createdAt,
-      filePath: repo.filePath,
+      filePath: repo.filePaths,
     }));
 
     res.status(200).json({ status: "success", repositories: repositoriesData });
@@ -190,7 +190,7 @@ router.post("/loadPublicRepository", async (req, res) => {
     const repositoriesData = repositories.map((repo) => ({
       name: repo.name,
       createdAt: repo.createdAt,
-      filePath: repo.filePath,
+      filePath: repo.filePaths,
     }));
 
     res.status(200).json({ status: "success", repositories: repositoriesData });
@@ -220,7 +220,7 @@ router.get('/getRepository', async (req, res) => {
       return res.status(404).json({ status: "error", message: "Repository not found" });
     }
 
-    const filePath = repo.filePath;
+    const filePath = repo.filePaths;
     const fileContent = fs.readFileSync(filePath, 'utf8');
 
     const fileName = path.basename(filePath);

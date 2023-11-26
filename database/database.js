@@ -126,12 +126,12 @@ const rooms = mongoose.model("rooms", roomSchema);
 
 
 const notificationSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "accounts",
   },
   timestamp: Date,
-  friendRequest: [{
+  friendRequests: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "accounts"
   }],

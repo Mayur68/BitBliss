@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const crypto = require('crypto');
-const { db, accounts } = require("../database/database");
+const { db, accounts, notification } = require("../database/database");
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 
@@ -105,6 +105,15 @@ router.post("/sign-up", async (req, res) => {
         });
 
         await newUser.save();
+
+        const user = await accounts.findOne({ username: username });
+
+        const newUserNotification = new notification({
+          username: user._id,
+        });
+
+        await newUserNotification.save();
+
 
         res.cookie("sessionToken", sessionToken, {
           expires: expirationDate,
@@ -251,11 +260,10 @@ router.post('/deleteAccount', async (req, res) => {
   const username = req.body.username;
   console.log(username)
   try {
-    // Assuming you want to delete an account based on the username
     const deletedAccount = await accounts.findOneAndDelete({ username: username });
 
     if (deletedAccount) {
-      res.sendStatus(200); // Success
+      res.sendStatus(200);
     } else {
       res.status(404).json({ message: 'Account not found.' });
     }
@@ -266,9 +274,8 @@ router.post('/deleteAccount', async (req, res) => {
 });
 
 
-// Middleware to handle favicon.ico requests
 router.get('/favicon.ico', (req, res) => {
-  res.status(204); // No content response for favicon requests
+  res.status(204);
 });
 
 // User profile page route

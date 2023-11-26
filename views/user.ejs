@@ -11,6 +11,13 @@
             width: 200px;
             height: max-content;
         }
+
+        #notification{
+            background-color: aliceblue;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
     </style>
 </head>
 
@@ -18,11 +25,10 @@
     <div class="header">
         <a href="/"><img src="/assets/logo2.jpg"></a>
         <button class="profile-button" onclick="profile()">Profile</button>
-        <input type="text" class="explore-bar" id="explore" placeholder="Explore...">
+        <input type="text" class="explore-bar" id="explore" placeholder="Explore..." />
         <button onclick="explore()">explore</button>
         <div>
-            <h3>Notifications</h3>
-            <div id="notifications"></div>
+            <div id="notifications"><h3>Notifications</h3></div>
         </div>
 
     </div>
@@ -83,46 +89,19 @@
     </div>
 </body>
 
+
+
+
+
 <!-- home.js -->
-<script>
-
-    function createRepository() {
-        window.location.href = "/<%= username %>/new-Repository";
-    }
-
-    function profile() {
-        window.location = "/<%= username %>"
-    }
-
-    const explores = document.getElementById("explore")
-    function explore() {
-        window.location.href = "/Explore/" + explores.value
-    }
-
-</script>
-
-
-
-
-
-
-<!-- chat section -->
 <script src="/socket.io/socket.io.js"></script>
 <script>
-
-    const userId = "<%= username %>"
-    let recipientID;
-    let receivedMessage;
-
-
+    const userId = "<%= username %>";
     const socket = io();
+
     socket.emit("connection");
     socket.emit("authenticate", { userID: userId });
 
-    socket.on("Friends", (data) => {
-        const { friends } = data;
-        updateFriendsList(friends);
-    });
 
     socket.on("friendRequest", (data) => {
         console.log("data");
@@ -132,44 +111,46 @@
         notifications(userId);
     });
 
-
-    socket.on("UserRooms", (data) => {
-        const { userRooms } = data;
-        updateRoomsList(userRooms);
-    });
-
-
     function loadNotifications() {
         socket.emit("loadNotifications", userId);
     }
 
-    function loadFriends() {
-        socket.emit("loadFriends", userId);
+    loadNotifications();
+
+    function notifications() {
+        const data = { username: userId };
+        fetch("/notifications", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.status === "success") {
+                    notify(data.friendRequests);
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
-    function loadRooms() {
-        const friendsListDiv = document.getElementById("friends-list");
-        friendsListDiv.innerHTML = "";
-        socket.emit("loadRooms", userId);
-    }
+    // notifications();
 
-    loadNotifications()
-    loadFriends()
-
-
-    function notifications(userId) {
+    function notify(userId) {
         const friendsListDiv = document.getElementById("notifications");
-        if (userId) {
-            friendsListDiv.innerHTML = `<button class="add-friend-button" onclick="addFriend('${userId}')">Accept request from ${userId}</button>`;
+        if (userId == null) {
+            friendsListDiv.innerHTML = `<button  id="request" onclick="acceptRequest('${userId}')">Accept request from ${userId}</button>
+        <button id="request" onclick="rejectRequest('${userId}')">Reject</button>`;
         } else {
             friendsListDiv.innerHTML = ``;
         }
     }
 
-    function addFriend(friendId) {
+    function acceptRequest(friendId) {
         const friendsListDiv = document.getElementById("notifications");
-        const userId = localStorage.getItem("username");
-
         const data = {
             userId: userId,
             friendId: friendId,
@@ -185,7 +166,37 @@
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                if (data.status === "success") {
+                    friendsListDiv.innerHTML = ``;
+                    loadFriends()
+                } else {
+                    alert("Failed to send Request: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error sending Request:", error);
+                alert("An error occurred while sending Request. Please try again later.");
+            });
+    
+    }
+
+    function rejectRequest(friendId) {
+        const friendsListDiv = document.getElementById("notifications");
+        const data = {
+            userId: userId,
+            friendId: friendId,
+        };
+        console.log(data);
+
+        fetch("/deleteFriendRequest", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => response.json())
+            .then((data) => {
                 if (data.status === "success") {
                     friendsListDiv.innerHTML = ``;
                     loadFriends()
@@ -198,6 +209,61 @@
                 alert("An error occurred while sending Request. Please try again later.");
             });
     }
+</script>
+
+
+
+<script>
+
+    function createRepository() {
+        window.location.href = "/<%= username %>/new-Repository";
+    }
+
+    function profile() {
+        window.location = "/<%= username %>"
+    }
+
+
+
+    const explores = document.getElementById("explore")
+    function explore() {
+        window.location.href = "/Explore/" + explores.value
+    }
+
+    explores.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            explore()
+        }
+    });
+</script>
+
+<!-- chat section -->
+
+<script>
+
+    let recipientID;
+    let receivedMessage;
+
+    socket.on("Friends", (data) => {
+        const { friends } = data;
+        updateFriendsList(friends);
+    });
+
+    socket.on("UserRooms", (data) => {
+        const { userRooms } = data;
+        updateRoomsList(userRooms);
+    });
+
+    function loadFriends() {
+        socket.emit("loadFriends", userId);
+    }
+
+    function loadRooms() {
+        const friendsListDiv = document.getElementById("friends-list");
+        friendsListDiv.innerHTML = "";
+        socket.emit("loadRooms", userId);
+    }
+    loadFriends()
 
 
     function updateFriendsList(friends) {

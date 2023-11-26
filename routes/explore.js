@@ -2,14 +2,19 @@ const express = require("express");
 const router = express.Router();
 const { accounts, repository } = require("../database/database");
 
+
+
 router.post("/getUsers", async (req, res) => {
     const { user } = req.body;
 
     try {
-        const users = await accounts.find({ username: { $regex: user, $options: 'i' } });
+        const searchString = String(user);
+
+        const users = await accounts.find({ username: { $regex: searchString, $options: 'i' } });
 
         if (users.length > 0) {
-            return res.status(200).json({ status: "success", relatedUsers: users });
+            const usernames = users.map(user => user.username);
+            return res.status(200).json({ status: "success", relatedUsers: usernames });
         } else {
             return res.status(404).json({ status: "error", message: "No related users found" });
         }
@@ -18,6 +23,10 @@ router.post("/getUsers", async (req, res) => {
         return res.status(500).json({ status: "error", message: "Internal Server Error" });
     }
 });
+
+
+
+
 
 
 router.post("/getRepositories", async (req, res) => {

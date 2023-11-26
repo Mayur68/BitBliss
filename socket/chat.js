@@ -37,39 +37,47 @@ function setupSocket(server) {
     });
 
     socket.on("sendRequest", async (data) => {
-      const { userId, friendId } = data;
-      console.log('Received sendRequest with data:', data);
+      try {
+        const { userId, friendId } = data;
 
-      if (userId && connectedUsers[friendId]) {
-        const friendSocketId = connectedUsers[friendId];
-        console.log('Friend Socket ID:', friendSocketId);
-
-        if (friendSocketId) {
-          io.to(friendSocketId).emit("friendRequest", { userId });
-          console.log('friendRequest emitted successfully to friend:', friendId);
+        if (!userId || !friendId) {
+          console.log('Missing userId or friendId');
+          return;
         }
-      } else {
-        console.log('Friend Socket ID not found or user not connected');
 
-        try {
-          const user = await accounts.findOne({ username: userId });
+        if (connectedUsers[friendId]) {
+          const friendSocketId = connectedUsers[friendId];
+          console.log('Friend Socket ID:', friendSocketId);
 
-          if (user) {
-            const newUser = new accounts({
-              username: friendId._id,
-              friendRequest: userId,
-            });
-
-            await newUser.save();
-            console.log('Pending request added to Notification schema for user:', friendId);
-          } else {
-            console.log('User not found');
+          if (friendSocketId) {
+            io.to(friendSocketId).emit("friendRequest", { userId });
+            console.log('friendRequest emitted successfully to friend:', friendId);
           }
-        } catch (err) {
-          console.error('Error adding pending request:', err);
         }
+
+        const user = await accounts.findOne({ username: userId });
+        const friend = await accounts.findOne({ username: friendId });
+
+        if (!user || !friend) {
+          console.log('User or friend not found');
+          return;
+        }
+
+        const userNotification = await notification.findOne({ username: user._id });
+        if (!userNotification) {
+          console.log('User notification not found');
+          return;
+        }
+
+        userNotification.friendRequests.push(friend);
+        await userNotification.save();
+        console.log('Pending request added to Notification schema for user:', friendId);
+      } catch (err) {
+        console.error('Error adding pending request:', err);
       }
     });
+
+
 
 
 

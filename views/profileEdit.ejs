@@ -162,16 +162,16 @@
         let filepath;
         function loadData() {
             const username = "<%= username %>";
-            fetch(`/loadData?username=${username}`, {
-                method: 'GET',
+            fetch('/loadData', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({ username }),
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
-                        console.log(data);
                         document.getElementById('firstName').value = data.user.First_name || '';
                         document.getElementById('lastName').value = data.user.Last_name || '';
                         document.getElementById('username').value = data.user.username || '';
