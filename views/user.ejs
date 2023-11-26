@@ -12,11 +12,25 @@
             height: max-content;
         }
 
-        #notification{
+        #notifications {
             background-color: aliceblue;
-            width: 50px;
-            height: 50px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
             border-radius: 50%;
+        }
+
+        .blurred-div {
+            position: absolute;
+            top: 35px;
+            left: 83%;
+            transform: translateX(-50%);
+            border: solid 1px rgb(92, 92, 92);
+            border-radius: 10px;
+            width: 400px;
+            height: 400px;
+            background-color: rgba(255, 255, 255);
+
         }
     </style>
 </head>
@@ -28,7 +42,7 @@
         <input type="text" class="explore-bar" id="explore" placeholder="Explore..." />
         <button onclick="explore()">explore</button>
         <div>
-            <div id="notifications"><h3>Notifications</h3></div>
+            <div id="notifications" onclick="notifications()"></div>
         </div>
 
     </div>
@@ -140,12 +154,14 @@
     // notifications();
 
     function notify(userId) {
-        const friendsListDiv = document.getElementById("notifications");
+        const blurredDiv = document.createElement('div');
+        blurredDiv.classList.add('blurred-div');
+        document.body.appendChild(blurredDiv);
         if (userId == null) {
-            friendsListDiv.innerHTML = `<button  id="request" onclick="acceptRequest('${userId}')">Accept request from ${userId}</button>
+            blurredDiv.innerHTML = `<button  id="request" onclick="acceptRequest('${userId}')">Accept request from ${userId}</button>
         <button id="request" onclick="rejectRequest('${userId}')">Reject</button>`;
         } else {
-            friendsListDiv.innerHTML = ``;
+            blurredDiv.innerHTML = ``;
         }
     }
 
@@ -177,7 +193,7 @@
                 console.error("Error sending Request:", error);
                 alert("An error occurred while sending Request. Please try again later.");
             });
-    
+
     }
 
     function rejectRequest(friendId) {
@@ -345,7 +361,7 @@
     function updateRoomsList(rooms) {
         const friendsListDiv = document.getElementById("friends-list");
         if (!rooms) {
-            friendsListDiv.innerHTML = ` <label style="margin: auto;">Add people to chat</label>`;
+            friendsListDiv.innerHTML = `<label style="margin: auto;">Add people to chat</label>`;
         } else {
             friendsListDiv.innerHTML = " ";
             rooms.forEach((room) => {
