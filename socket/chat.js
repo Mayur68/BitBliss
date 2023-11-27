@@ -63,14 +63,15 @@ function setupSocket(server) {
           return;
         }
 
-        const userNotification = await notification.findOne({ username: user._id });
+        const userNotification = await notification.findOne({ username: friend._id });
         if (!userNotification) {
           console.log('User notification not found');
           return;
         }
 
-        userNotification.friendRequests.push(friend);
+        userNotification.friendRequests.push(user._id);
         await userNotification.save();
+        
         console.log('Pending request added to Notification schema for user:', friendId);
       } catch (err) {
         console.error('Error adding pending request:', err);

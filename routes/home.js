@@ -136,8 +136,8 @@ router.post("/addFriend", async (req, res) => {
     ]);
 
     const requestingUser = await notification.findOneAndUpdate(
-      { username: friend._id },
-      { $pull: { friendRequests: user._id } },
+      { username: user._id },
+      { $pull: { friendRequests: friend._id } },
       { new: true }
     );
 
