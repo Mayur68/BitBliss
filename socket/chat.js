@@ -47,11 +47,9 @@ function setupSocket(server) {
 
         if (connectedUsers[friendId]) {
           const friendSocketId = connectedUsers[friendId];
-          console.log('Friend Socket ID:', friendSocketId);
 
           if (friendSocketId) {
             io.to(friendSocketId).emit("friendRequest", { userId });
-            console.log('friendRequest emitted successfully to friend:', friendId);
           }
         }
 
@@ -71,16 +69,11 @@ function setupSocket(server) {
 
         userNotification.friendRequests.push(user._id);
         await userNotification.save();
-        
-        console.log('Pending request added to Notification schema for user:', friendId);
+
       } catch (err) {
         console.error('Error adding pending request:', err);
       }
     });
-
-
-
-
 
 
     // socket.on('CreateRoom', (data) => {

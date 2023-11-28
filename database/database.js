@@ -58,8 +58,14 @@ const repository = mongoose.model("repository", fileSchema);
 
 const chatHistorySchema = new mongoose.Schema({
   name: {
-    user1ID: String,
-    user2ID: String,
+    user1ID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "accounts",
+    },
+    user2ID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "accounts",
+    },
   },
   sender: {
     type: mongoose.Schema.Types.ObjectId,

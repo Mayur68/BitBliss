@@ -81,6 +81,7 @@
             border-radius: 15px;
             padding: 10px;
             margin: auto;
+            height: fit-content;
             width: 20%;
             overflow-y: auto;
         }
@@ -166,11 +167,28 @@
     const userId = localStorage.getItem("username");
     const friendId = "<%= username %>"
     const socket = io();
-    socket.emit("connection");
+    socket.emit("authenticate", { userID: userId });
 
     function addFriend() {
         socket.emit("sendRequest", { userId, friendId });
         document.getElementById('friend').innerHTML = `<button class="add-friend-button">Invite sent</button>`;
+    }
+
+    socket.emit("loadFriends", userId);
+    socket.on("Friends", (data) => {
+        const { friends } = data;
+        updateFriendsList(friends);
+    });
+
+    function updateFriendsList(friends) {
+        const friendsListDiv = document.getElementById("friends-list");
+        friendsListDiv.innerHTML = "";
+        friends.forEach((friend) => {
+            const friendElement = document.createElement("div");
+            friendElement.className = "friend-item";
+            friendElement.innerText = friend;
+            friendsListDiv.appendChild(friendElement);
+        });
     }
 </script>
 

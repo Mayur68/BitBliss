@@ -61,20 +61,36 @@ router.post("/loadHistory", async (req, res) => {
         }
 
         const ChatHistory = await chatHistory.find({
-            $or: [
+            $and: [
                 {
-                    sender: ownerAccount._id,
-                    receiver: receiver._id,
+                    $or: [
+                        {
+                            sender: ownerAccount._id,
+                            receiver: receiver._id,
+                        },
+                        {
+                            sender: receiver._id,
+                            receiver: ownerAccount._id,
+                        },
+                    ],
                 },
                 {
-                    sender: receiver._id,
-                    receiver: ownerAccount._id,
-                },
-            ],
+                    $or: [
+                        {
+                            "name.user1ID": ownerAccount._id,
+                        },
+                        {
+                            "name.user2ID": ownerAccount._id,
+                        },
+                    ],
+                }
+            ]
         })
             .populate("sender", "username")
             .populate("receiver", "username")
             .exec();
+
+
 
         const chatHistoryWithUsernames = ChatHistory.map((chat) => ({
             sender: chat.sender.username,
@@ -96,40 +112,34 @@ router.post("/loadHistory", async (req, res) => {
     }
 });
 
-
-
-
-
-
-
 router.post("/clearChat", async (req, res) => {
     const { userId } = req.body;
 
-    const ownerAccount = await accounts.findOne({ username: userId });
-
-    if (!ownerAccount || ownerAccount.username !== userId) {
-        return res.status(403).json({
-            status: "error",
-            message: "Unauthorized access to delete chat.",
-        });
-    }
-
     try {
 
+        const ownerAccount = await accounts.findOne({ username: userId });
+
+        if (!ownerAccount || ownerAccount.username !== userId) {
+            return res.status(403).json({
+                status: "error",
+                message: "Unauthorized access to delete chat.",
+            });
+        }
+
         await chatHistory.updateMany(
-            { "name.user1ID": ownerAccount.username },
-            { $set: { "name.user1ID": "" } }
+            { "name.user1ID": ownerAccount._id },
+            { $set: { "name.user1ID": null } }
         );
 
         await chatHistory.updateMany(
-            { "name.user2ID": ownerAccount.username },
-            { $set: { "name.user2ID": "" } }
+            { "name.user2ID": ownerAccount._id },
+            { $set: { "name.user2ID": null } }
         );
 
         await chatHistory.deleteMany({
             $and: [
-                { "name.user1ID": "" },
-                { "name.user2ID": "" },
+                { "name.user1ID": null },
+                { "name.user2ID": null },
             ],
         });
 
@@ -145,6 +155,7 @@ router.post("/clearChat", async (req, res) => {
         });
     }
 });
+
 
 
 //
