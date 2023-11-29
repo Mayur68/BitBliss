@@ -1,7 +1,7 @@
 let recipientID;
 let receivedMessage;
 
-socket.on("Friends", (data) => {
+socket.on("loadFriendsResponse", (data) => {
     const { friends } = data;
     updateFriendsList(friends);
 });

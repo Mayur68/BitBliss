@@ -189,75 +189,63 @@
     }
 
     function zipFiles(files) {
-    const zip = new JSZip();
-    const promises = [];
+        const zip = new JSZip();
+        const promises = [];
 
-    files.forEach(file => {
-        const promise = new Promise((resolve, reject) => {
-            const reader = new FileReader();
+        files.forEach(file => {
+            const promise = new Promise((resolve, reject) => {
+                const reader = new FileReader();
 
-            reader.onload = function (event) {
-                const arrayBuffer = event.target.result;
-                zip.file(file.name, arrayBuffer, { binary: true });
-                resolve();
-            };
+                reader.onload = function (event) {
+                    const arrayBuffer = event.target.result;
+                    zip.file(file.name, arrayBuffer, { binary: true });
+                    resolve();
+                };
 
-            reader.onerror = function (event) {
-                reject(event.target.error);
-            };
+                reader.onerror = function (event) {
+                    reject(event.target.error);
+                };
 
-            console.log('Reading file:', file.name);
+                console.log('Reading file:', file.name);
 
-            reader.readAsArrayBuffer(file);
+                reader.readAsArrayBuffer(file);
+            });
+
+            promises.push(promise);
         });
 
-        promises.push(promise);
-    });
-
-    return Promise.all(promises)
-        .then(() => {
-            return zip.generateAsync({ type: 'blob' });
-        })
-        .catch(error => {
-            throw new Error('Error zipping files: ' + error.message);
-        });
-}
+        return Promise.all(promises)
+            .then(() => {
+                return zip.generateAsync({ type: 'blob' });
+            })
+            .catch(error => {
+                throw new Error('Error zipping files: ' + error.message);
+            });
+    }
 
     function createRepository() {
-        const name = document.getElementById("reponame");
-        const reponame = name.value;
-        const topicsInput = document.getElementById("topics");
-        const topics = topicsInput.value;
-        const repodescription = document.getElementById("repodiscription");
-        const description = repodescription.value;
+        const name = document.getElementById("reponame").value;
+        const topics = document.getElementById("topics").value;
+        const description = document.getElementById("repodiscription").value;
         const formData = new FormData();
 
-        formData.append("name", reponame);
+        if (!name || !topics || !visibility) {
+            alert("All fields are required.");
+            return;
+        }
+
+
+        formData.append("name", name);
         formData.append("visibility", visibility);
         formData.append("topics", topics);
         formData.append("description", description);
         formData.append("accountId", userId);
 
         zipFiles(filesToUpload)
-        .then(zipBlob => {
-            console.log('Generated ZIP size:', zipBlob.size);
-            console.log('Generated ZIP:', zipBlob);
-
-            formData.append('zipFile', zipBlob, 'files.zip');
-            const zipFileSize = zipBlob.size;
-            if (zipFileSize > 0) {
-                sendToServer(formData);
-            } else {
-                alert('No files selected or error zipping files. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error zipping files', error);
-            alert('An error occurred while zipping the files. Please try again later.');
-        });
-
-        zipFiles(filesToUpload)
             .then(zipBlob => {
+                console.log('Generated ZIP size:', zipBlob.size);
+                console.log('Generated ZIP:', zipBlob);
+
                 formData.append('zipFile', zipBlob, 'files.zip');
                 const zipFileSize = zipBlob.size;
                 if (zipFileSize > 0) {
@@ -274,6 +262,7 @@
 
 
     function sendToServer(formData) {
+        console.log("dhszdftghdh")
         fetch('/createRepository', {
             method: 'POST',
             body: formData,

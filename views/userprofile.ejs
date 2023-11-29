@@ -6,22 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <style>
+        /* Styling the body */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #1d1b34;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
             margin: 0;
-            padding: 20px;
-            /* Adjust padding as needed */
+            padding: 0;
         }
 
-        .profile-container {
-            background-color: #fff;
-            border-radius: 10px;
-            width: 90%;
+        /* Styling the profile container */
+        .profile {
+            max-width: 800px;
             margin: 20px auto;
-            text-align: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
+        }
+
+        /* Styling the profile header */
+        .profile-header {
+            text-align: center;
+            padding-bottom: 20px;
         }
 
         .profile-photo {
@@ -41,208 +47,388 @@
             object-fit: cover;
         }
 
-        .username {
+
+        /* Styling the profile name */
+        .profile-name {
             font-size: 24px;
-            font-weight: bold;
-            color: #007bff;
+            color: #333;
+            margin: 5px 0;
         }
 
-        .bio {
-            margin-top: 10px;
-            color: #444;
+        /* Styling the bio and location */
+        .profile-bio,
+        .profile-location {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
         }
 
-        .add-friend-button {
-            background-color: #07a607;
-            color: #fff;
-            padding: 10px 20px;
+        /* Styling the edit profile button */
+        .edit-profile-button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
-            border-radius: 5px;
-            margin-top: 20px;
-            font-weight: bold;
+            transition: background-color 0.3s;
         }
 
-        .add-friend-button:hover {
-            background-color: #059a05;
+        .edit-profile-button:hover {
+            background-color: #45a049;
         }
 
-        .repository {
-            width: 15%;
-            height: 200px;
-            background-color: #1d1b34;
-            border-radius: 20px;
-            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
-            cursor: pointer;
+        /* Styling the section titles */
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 5px;
         }
 
-        #friends-list {
-            background-color: #191961;
-            border-radius: 15px;
-            padding: 10px;
-            margin: auto;
-            height: fit-content;
-            width: 20%;
-            overflow-y: auto;
+        /* Styling the friends list */
+        .friends-list {
+            list-style: none;
+            padding: 0;
         }
 
+        /* Styling the friend items */
         .friend-item {
-            padding: 5px;
+            width: 30%;
+            font-size: 16px;
+            color: #555;
             margin-bottom: 5px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        /* Styling the repository cards */
+        .repositories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-gap: 20px;
+        }
+
+        /* Styling the repository */
+        .repository {
+            background-color: #cacaca;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styling the repository titles */
+        .repo-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        /* Styling the repository descriptions */
+        .repo-description {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Styling the profile footer */
+        .profile-footer {
+            text-align: center;
+            padding-top: 20px;
+        }
+
+        /* Styling the logout and delete buttons */
+        .logout-button,
+        .delete-account-button,
+        .remove-button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .remove-button {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .logout-button {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .delete-account-button {
+            background-color: #333;
+            color: white;
+        }
+
+        .logout-button:hover,
+        .delete-account-button:hover {
+            filter: brightness(90%);
+        }
+
+        .friend-profilePhoto {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ccc;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .friend-profilePhoto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
 
 <body>
-    <div class="profile-container">
-        <div class="profile-photo">
-            <img id="profile-image" src="" alt="Profile Photo">
+    <div class="profile">
+        <div class="profile-header">
+            <div class="profile-photo">
+                <img id="profile-image" src="" alt="Profile Photo">
+            </div>
+            <h1 class="profile-name" id="name">Username</h1>
+            <p class="profile-bio" id="bio">Bio</p>
+            <p class="profile-location" id="region">Location</p>
+            <div id="friend"></div>
         </div>
-        <div class="username" id="username"></div>
-        <div id="name" id="name"></div>
-        <div itemid="bio" id="bio"></div>
-        <div id="friend"></div>
-        <h2>Friends</h2>
-        <div id="friends-list"></div>
+
+        <div class="profile-content">
+            <h2 class="section-title">Repositories</h2>
+            <div class="repositories" id="repo-container"></div>
+            <button class="edit-profile-button" onclick="loadFriends()">Friends</button>
+            <ul class="friends-list" id="friends-list"></ul>
+        </div>
+
+        <div class="profile-footer"></div>
     </div>
-    <div id="repo-container"></div>
-</body>
 
 
-<script>
-    let friends;
-    const storedUsername = localStorage.getItem('username');
-    function checkFriend() {
-        if (storedUsername in friends && Object.keys(friends).length !== 0) {
-            document.getElementById('friend').style.display = 'none';
-        } else {
-            document.getElementById('friend').innerHTML = `<button class="add-friend-button" onclick="addFriend()">Add Friend</button>`;
+    <script>
+        const storedUsername = localStorage.getItem('username');
+
+        function checkFriend(friends) {
+            const friendId = "<%= username %>";
+            data = {
+                userId: storedUsername,
+                friendId: friendId,
+            }
+            fetch('/checkFriend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        if (data.message === "Friend found") {
+                            document.getElementById('friend').style.display = 'none';
+                        } else {
+                            document.getElementById('friend').innerHTML = `<button class="edit-profile-button" onclick="addFriend()">Add Friend</button>`;
+                        }
+
+                    } else {
+                        alert('Failed to load checkFriend');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
-    }
-    function loadData() {
-        const username = "<%= username %>";
-        fetch('/loadData', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    // document.getElementById('name').innerText = data.user.First_name + " " + data.user.Last_name || '';
-                    document.getElementById('username').innerText = data.user.username || '';
-                    document.getElementById('bio').innerText = data.user.bio || '';
-                    // document.getElementById('region').innerText = data.user.region || '';  
-                    friends = data.user.friends;
 
-                    if (data.user.profilePhoto) {
+        checkFriend()
+
+        function loadData() {
+            const username = "<%= username %>";
+            fetch('/loadData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        document.getElementById('name').textContent = data.user.username || '';
+                        document.getElementById('bio').textContent = data.user.bio || '';
+                        document.getElementById('region').textContent = data.user.region || '';
+
                         const profileImage = document.getElementById('profile-image');
-                        profileImage.src = data.user.profilePhoto;
+                        profileImage.src = data.user.profilePhoto || "../assets/default-profile.jpg";
                         profileImage.alt = "Profile Photo";
                     } else {
-                        const profileImage = document.getElementById('profile-image');
-                        profileImage.src = "../assets/default-profile.jpg";
+                        alert('Failed to load profile data');
                     }
-                    checkFriend()
-                } else {
-                    alert('Failed to load profile data');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        loadData();
+    </script>
+
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const userId = localStorage.getItem("username");
+        const friendId = "<%= username %>"
+        const socket = io();
+        socket.emit("authenticate", { userID: userId });
+
+        function addFriend() {
+            socket.emit("sendRequest", { userId, friendId });
+            document.getElementById('friend').innerHTML = `<button class="edit-profile-button">Invite sent</button>`;
+        }
+
+        function loadFriends() {
+            socket.emit("loadFriends", friendId);
+        }
+
+        socket.on("loadFriendsResponse", (data) => {
+            const { friends } = data;
+            const friendsListDiv = document.getElementById("friends-list");
+            friendsListDiv.innerHTML = "";
+            if (friends.length === 0) {
+                friendsListDiv.innerHTML = `<p>he dont have any Friends</p>`;
+            } else {
+                updateFriendsList(friends);
+            }
+        });
+
+        async function updateFriendsList(friends) {
+            for (const friend of friends) {
+                try {
+                    const response = await fetch('/loadData', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username: friend }),
+                    });
+
+                    const data = await response.json();
+
+                    if (data.status === 'success' && data.user) {
+                        createFriendElement(data.user);
+                    } else {
+                        throw new Error('Failed to load profile data for ' + friend);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to load profile data for ' + friend);
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-    loadData();
-</script>
+            }
+        }
 
 
 
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    const userId = localStorage.getItem("username");
-    const friendId = "<%= username %>"
-    const socket = io();
-    socket.emit("authenticate", { userID: userId });
-
-    function addFriend() {
-        socket.emit("sendRequest", { userId, friendId });
-        document.getElementById('friend').innerHTML = `<button class="add-friend-button">Invite sent</button>`;
-    }
-
-    socket.emit("loadFriends", userId);
-    socket.on("Friends", (data) => {
-        const { friends } = data;
-        updateFriendsList(friends);
-    });
-
-    function updateFriendsList(friends) {
-        const friendsListDiv = document.getElementById("friends-list");
-        friendsListDiv.innerHTML = "";
-        friends.forEach((friend) => {
+        function createFriendElement(user) {
+            const friendsListDiv = document.getElementById("friends-list");
+            friendsListDiv.innerHTML = "";
             const friendElement = document.createElement("div");
             friendElement.className = "friend-item";
-            friendElement.innerText = friend;
+            const profileImage = document.createElement("div");
+            profileImage.className = "friend-profilePhoto";
+            const profileImage1 = document.createElement("img");
+
+
+            if (user.profilePhoto) {
+                profileImage1.src = user.profilePhoto;
+                profileImage1.alt = "Profile Photo";
+                profileImage.appendChild(profileImage1);
+            } else {
+                profileImage1.src = "../assets/default-profile.jpg";
+                profileImage1.alt = "Profile Photo";
+                profileImage.appendChild(profileImage1);
+            }
+            friendElement.appendChild(profileImage);
+
+            const friendName = document.createElement("div");
+            friendName.className = "friend-name";
+            friendName.style.paddingTop = "10px"
+            friendName.style.marginLeft = "0"
+            friendName.innerText = user.username;
+            friendName.onclick = () => window.location = "/" + user.username;
+            friendElement.appendChild(friendName);
+
+            const removeButton = document.createElement("button");
+            removeButton.className = "remove-button";
+            removeButton.innerText = "Remove Friend";
+            removeButton.onclick = () => removeFriend(user.username);
+            friendElement.appendChild(removeButton);
+
             friendsListDiv.appendChild(friendElement);
-        });
-    }
-</script>
+        }
+
+
+
+    </script>
 
 
 
 
 
-<script>
-    function loadRepositories() {
+    <script>
+        function loadRepositories() {
 
-        fetch("/loadPublicRepository", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
+            fetch("/loadPublicRepository", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ userId: friendId }),
             })
-            .then((data) => {
-                if (data.status === "success") {
-                    const repositories = data.repositories;
-
-                    if (repositories.length > 0) {
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.status === "success") {
+                        const repositories = data.repositories;
                         const repoContainer = document.getElementById("repo-container");
                         repoContainer.innerHTML = "";
-
-                        repositories.forEach((repo) => {
-                            const repoElement = document.createElement("div");
-                            repoElement.className = "repository";
-                            repoElement.onclick = () => openRepository(repo.name);
-                            repoElement.innerHTML = `<h3>${repo.name}</h3><p>Created on: ${repo.createdAt}</p>`;
-                            repoContainer.appendChild(repoElement);
-                        });
+                        if (repositories.length > 0) {
+                            repositories.forEach((repo) => {
+                                const repoElement = document.createElement("div");
+                                repoElement.className = "repository";
+                                repoElement.onclick = () => openRepository(repo.name);
+                                repoElement.innerHTML = `<h3>${repo.name}</h3><p>Description: ${repo.description}</p>
+                            <p>Topics: ${repo.topics}</p>`;
+                                repoContainer.appendChild(repoElement);
+                            });
+                        } else {
+                            repoContainer.innerHTML = `<p>No Repository</p>`;
+                        }
+                    } else {
+                        alert("Failed to load repositories: " + data.message);
                     }
-                } else {
-                    alert("Failed to load repositories: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error loading repositories", error);
-                alert("An error occurred while loading the repositories. Please try again later.");
-            });
-    }
+                })
+                .catch((error) => {
+                    console.error("Error loading repositories", error);
+                    alert("An error occurred while loading the repositories. Please try again later.");
+                });
+        }
 
-    function openRepository(name) {
-        window.location.href = "/" + name;
-    }
+        function openRepository(name) {
+            window.location.href = "/" + name;
+        }
 
-    loadRepositories();
-</script>
+        loadRepositories();
+    </script>
 
 </html>

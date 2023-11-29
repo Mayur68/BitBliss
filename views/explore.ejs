@@ -9,180 +9,132 @@
         <%= promt %>
     </title>
     <style>
+        /* General Styling */
         body {
             background-color: #1d1b34;
             font-family: Arial, sans-serif;
-        }
-
-        /* Reset default margin and padding for the entire page */
-        body,
-        h1,
-        h2 {
             margin: 0;
-            padding: 0;
         }
 
-        /* Style the header */
         header {
             background-color: #1d1b34;
             color: #fff;
             text-align: center;
             padding: 20px;
-            font-size: 36px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        /* Style the main content */
-        main {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px;
+        /* Explore Bar Styling */
+        .explore-bar {
+            width: 70%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-right: 10px;
         }
 
-
-        /* Style section headings */
-        h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-
+        /* Explore Button Styling */
         button {
             background-color: #07a607;
             color: #fff;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
+            margin-bottom: 10px;
             border-radius: 5px;
-            margin-top: 20px;
             font-weight: bold;
         }
 
-        #input {
+        /* Main Content Styling */
+        main {
             display: flex;
             justify-content: space-between;
+            margin: 20px;
         }
 
-        input[type="text"] {
-            width: 70%;
-            /* max-height: 20px; */
-            padding: 10px;
-            border-style: none;
-            border-radius: 5px;
-        }
-
+        /* Filter Section Styling */
         #filter {
             display: flex;
             flex-direction: column;
+            align-items: center;
             color: white;
-            text-align: center;
         }
 
+        label {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        /* Results Section Styling */
         #results {
-            width: 80%;
-            height: 500px;
-            padding: 2%;
-            border: 1px solid rgb(84, 84, 84);
+            width: 70%;
+            padding: 20px;
+            border: 1px solid #474747;
             border-radius: 20px;
-            overflow-y: scroll;
-        }
-
-        #results::-webkit-scrollbar {
-            display: none;
-        }
-
-        .item {
-            width: 90%;
-            height: 100px;
-            margin: 3% 5%;
-            border-radius: 10px;
+            background-color: #26253e;
+            color: white;
             text-align: center;
-            color: white;
-            background-color: rgb(67, 67, 255);
-            border: 2px solid white;
-            cursor: pointer;
+            overflow-y: auto;
         }
 
+        /* Title Styling */
         #title {
-            margin-left: 45%;
-            font-size: 25px;
-            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #07a607;
         }
 
-
+        /* Individual Repository/User Styling */
+        .repo-container,
         .user-item {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
-            border: 1px solid #474747;
+            justify-content: space-between;
             padding: 10px;
+            border: 1px solid #474747;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            background-color: #35344f;
         }
 
+        /* User Profile Photo Styling */
         .user-profilePhoto {
             width: 50px;
             height: 50px;
             margin-right: 10px;
+            border-radius: 50%;
+            overflow: hidden;
         }
 
         .user-profilePhoto img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
+            object-fit: cover;
         }
 
+        /* User Name Styling */
         .user-name {
             font-weight: bold;
             font-size: 16px;
+            color: #07a607;
         }
 
+        /* Responsive Styling for Mobile Devices */
         @media only screen and (max-width: 768px) {
             main {
-                display: flex;
                 flex-direction: column;
-                justify-content: space-around;
-                margin: 20px;
+                align-items: center;
             }
 
             #filter {
-                display: flex;
-                flex-direction: row;
-                margin-top: 0;
-                justify-content: space-between;
-                margin-bottom: 20px;
-                text-align: center;
+                margin-top: 20px;
             }
 
             #results {
-                width: 98%;
-                height: 500px;
-                border: 1px solid rgb(84, 84, 84);
-                border-radius: 20px;
-                overflow-y: scroll;
-            }
-
-            #results::-webkit-scrollbar {
-                display: none;
-            }
-
-            .item {
                 width: 90%;
-                height: 100px;
-                margin: 3% 5%;
-                border-radius: 10px;
-                text-align: center;
-                color: white;
-                background-color: rgb(67, 67, 255);
-                border: 2px solid white;
-                cursor: pointer;
+                margin-top: 20px;
+                margin-bottom: 20px;
             }
-
-            #title {
-                /* margin-left: 30%; */
-                text-align: center;
-                font-size: 25px;
-                color: white;
-            }
-
-
         }
     </style>
 </head>
@@ -315,7 +267,7 @@
             topics: prompt,
         };
 
-        fetch("/loadPublicRepository", {
+        fetch("/exploreRepository", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -342,9 +294,9 @@
             if (repositories.length > 0) {
                 repositories.forEach((repo) => {
                     const repoElement = document.createElement("div");
-                    repoElement.className = "item";
+                    repoElement.className = "repo-container";
                     repoElement.onclick = () => openRepository(repo);
-                    repoElement.innerHTML = `<p>Repository Name: ${repo.name}</p><p>Created by: ${repo.owner.username}</p>`;
+                    repoElement.innerHTML = `<h3> ${repo.name}</h3><p>Created by: ${repo.owner}</p>`;
                     resultsSection.appendChild(repoElement);
                 });
             } else {

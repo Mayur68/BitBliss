@@ -17,8 +17,10 @@ function setupSocket(server) {
 
 
       socket.on("loadFriends", (data) => {
-        loadFriends(io, socket, connectedUsers);
-      })
+        loadFriends(io, socket, connectedUsers, data);
+      });
+
+
       socket.on("loadRooms", (data) => {
         loadRooms(io, socket, connectedUsers);
       })
@@ -143,8 +145,7 @@ async function loadNotifications(io, socket, data) {
   }
 }
 
-async function loadFriends(io, socket) {
-  const userID = socket.userID;
+async function loadFriends(io, socket, connectedUsers, userID) {
 
   try {
     const user = await accounts.findOne({ username: userID });
@@ -163,11 +164,13 @@ async function loadFriends(io, socket) {
       })
     );
 
-    socket.emit("Friends", { friends: friendUsernames });
+    // Emitting the response with the proper event name
+    socket.emit("loadFriendsResponse", { friends: friendUsernames });
   } catch (error) {
     console.error("Error loading friends:", error);
   }
 }
+
 
 
 

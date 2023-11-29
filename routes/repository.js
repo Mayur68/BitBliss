@@ -30,19 +30,18 @@ router.get("/:username/new-Repository", async (req, res) => {
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.fieldname === 'zipFile') {
-      // Destination for the ZIP file upload
       cb(null, '../../../webapp_temp');
     } else {
       const repositoryName = req.body.name;
       const uploadDir = path.join(__dirname, "../../../uploads", repositoryName);
 
-      // Create repository directory if it doesn't exist
-      fs.mkdir(uploadDir, { recursive: true }, (err) => {
-        if (err) {
-          console.error("Error creating repository directory:", err);
-        }
+      try {
+        fs.mkdirSync(uploadDir, { recursive: true });
         cb(null, uploadDir);
-      });
+      } catch (err) {
+        console.error("Error creating repository directory:", err);
+        cb(err);
+      }
     }
   },
   filename: function (req, file, cb) {
@@ -56,10 +55,9 @@ const upload = multer({ storage: storage });
 router.post("/createRepository", upload.array(['zipFile']), async (req, res) => {
   try {
     const repositoryName = req.body.name;
-    console.log(req.body)
     const username = req.body.accountId;
-    const user = await accounts.findOne({ username });
 
+    const user = await accounts.findOne({ username });
     if (!user) {
       return res.status(404).json({ status: "error", message: "User not found" });
     }
@@ -82,7 +80,6 @@ router.post("/createRepository", upload.array(['zipFile']), async (req, res) => 
     const repositoryDirectory = path.join(__dirname, "../../../uploads", repositoryName);
     fs.mkdirSync(repositoryDirectory, { recursive: true });
 
-    // Extract ZIP file if available
     if (req.files && req.files.length > 0) {
       const zipFile = req.files.find(file => file.fieldname === 'zipFile');
       if (zipFile) {
@@ -94,35 +91,29 @@ router.post("/createRepository", upload.array(['zipFile']), async (req, res) => 
           zip.extractAllTo(repositoryDirectory, true);
           const extractedFiles = fs.readdirSync(repositoryDirectory);
           console.log('Extracted files:', extractedFiles);
-      } catch (error) {
+
+          // Update the filtering logic for file paths
+          const filePaths = req.files
+            .filter(file => file.fieldname !== 'zipFile') // Exclude the 'zipFile'
+            .map(file => file.path);
+
+          newRepository.filePaths = filePaths;
+        } catch (error) {
           console.error('Error extracting zip file:', error);
           return res.status(500).json({ status: "error", message: "Error extracting ZIP file", error });
+        }
       }
-      }
-
-      // Process other files
-      const filePaths = req.files
-        .filter(file => file.fieldname !== 'zipFile')
-        .map(file => file.path);
-
-      newRepository.filePaths = filePaths;
     }
 
-    fs.mkdir(repositoryDirectory, { recursive: true }, async (err) => {
-      if (err) {
-        console.error("Error creating repository directory:", err);
-        return res.status(500).json({ status: "error", message: "Internal Server Error" });
-      }
+    await newRepository.save();
 
-      await newRepository.save();
-
-      res.status(200).json({ status: "success", message: "Repository created successfully" });
-    });
+    res.status(200).json({ status: "success", message: "Repository created successfully" });
   } catch (error) {
     console.error("Error creating repository:", error);
     res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 });
+
 
 
 // Update repository file
@@ -166,6 +157,8 @@ router.post("/loadRepository", async (req, res) => {
       name: repo.name,
       createdAt: repo.createdAt,
       filePath: repo.filePaths,
+      description: repo.description,
+      topics: repo.topics,
     }));
 
     res.status(200).json({ status: "success", repositories: repositoriesData });
@@ -191,6 +184,8 @@ router.post("/loadPublicRepository", async (req, res) => {
       name: repo.name,
       createdAt: repo.createdAt,
       filePath: repo.filePaths,
+      description: repo.description,
+      topics: repo.topics,
     }));
 
     res.status(200).json({ status: "success", repositories: repositoriesData });
@@ -199,6 +194,43 @@ router.post("/loadPublicRepository", async (req, res) => {
     res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 });
+
+router.post("/exploreRepository", async (req, res) => {
+  try {
+    const { query } = req.body;
+
+    const normalizedQuery = new RegExp(query, 'i');
+
+    const repositories = await repository.find({
+      $or: [
+        { name: { $regex: normalizedQuery } },
+        { topics: { $in: [normalizedQuery] } }
+      ]
+    })
+    .select('name createdAt filePaths description topics owner')
+    .populate({ 
+      path: 'owner', 
+      select: 'name'
+    });
+
+    const repositoriesData = repositories.map((repo) => ({
+      name: repo.name,
+      createdAt: repo.createdAt,
+      filePath: repo.filePaths,
+      description: repo.description,
+      topics: repo.topics,
+      owner: repo.owner ? repo.owner.name : null
+    }));
+
+    res.status(200).json({ status: "success", repositories: repositoriesData });
+  } catch (error) {
+    console.error("Error loading repositories:", error);
+    res.status(500).json({ status: "error", message: "Failed to load repositories" });
+  }
+});
+
+
+
 
 
 

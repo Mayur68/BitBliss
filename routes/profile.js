@@ -34,6 +34,57 @@ router.post('/loadData', async (req, res) => {
     }
 });
 
+router.post('/removeFriend', async (req, res) => {
+    try {
+        const { userId, friendId } = req.body;
+        if (!userId&& !friendId) {
+            return res.status(400).json({ message: 'User ID not provided' });
+        }
+
+        const user = await accounts.findOne({ username: userId });
+        const friend = await accounts.findOne({ username: friendId });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const updatedFriends = user.friends.filter(friend => friend !== friend._id);
+
+        await accounts.updateOne({ username: userId }, { $set: { friends: updatedFriends } });
+
+        return res.status(200).json({ status: 'success' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to remove friend' });
+    }
+});
+
+router.post('/checkFriend', async (req, res) => {
+    try {
+        const { userId, friendId } = req.body;
+        if (!userId || !friendId) {
+            return res.status(400).json({ message: 'User ID or Friend ID not provided' });
+        }
+
+        const user = await accounts.findOne({ username: userId });
+        const friend = await accounts.findOne({ username: friendId });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const isFriend = user.friends.includes(friend._id);
+
+        if (isFriend) {
+            return res.status(200).json({ status: 'success', message: 'Friend found' });
+        } else {
+            return res.status(200).json({ status: 'success', message: 'Friend not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to check Friend' });
+    }
+});
+
 
 
 
