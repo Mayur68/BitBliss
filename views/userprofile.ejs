@@ -100,7 +100,6 @@
             color: #555;
             margin-bottom: 5px;
             display: flex;
-            justify-content: space-between;
             border-bottom: 2px solid #ccc;
             padding-bottom: 10px;
         }
@@ -358,22 +357,15 @@
 
             const friendName = document.createElement("div");
             friendName.className = "friend-name";
-            friendName.style.paddingTop = "10px"
-            friendName.style.marginLeft = "0"
+            friendName.style.paddingTop = "10px";
+            friendName.style.marginLeft = "10px";
             friendName.innerText = user.username;
-            friendName.onclick = () => window.location = "/" + user.username;
+            friendName.addEventListener("click", () => {
+                window.location.href = "/" + user.username;
+            });
             friendElement.appendChild(friendName);
-
-            const removeButton = document.createElement("button");
-            removeButton.className = "remove-button";
-            removeButton.innerText = "Remove Friend";
-            removeButton.onclick = () => removeFriend(user.username);
-            friendElement.appendChild(removeButton);
-
             friendsListDiv.appendChild(friendElement);
         }
-
-
 
     </script>
 

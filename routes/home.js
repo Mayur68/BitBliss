@@ -118,7 +118,7 @@ router.post("/addFriend", async (req, res) => {
       });
     }
 
-    if (user.friends.includes(friend._id) || friend.friends.includes(user._id)) {
+    if (user.friends.includes(friend._id) && friend.friends.includes(user._id)) {
       return res.status(400).json({
         status: "error",
         message: "Friend already exists!",
@@ -126,14 +126,21 @@ router.post("/addFriend", async (req, res) => {
     }
 
     const addFriendToUser = async (user, friendId) => {
-      user.friends.push(friendId);
-      await user.save();
+      if (!user.friends.includes(friendId)) {
+        user.friends.push(friendId);
+        await user.save();
+      } else {
+        const friendIndex = user.friends.indexOf(friendId);
+        user.friends[friendIndex] = friendId;
+        await user.save();
+      }
     };
-
+    
     await Promise.all([
       addFriendToUser(user, friend._id),
       addFriendToUser(friend, user._id),
     ]);
+    
 
     const requestingUser = await notification.findOneAndUpdate(
       { username: user._id },
