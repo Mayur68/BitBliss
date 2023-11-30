@@ -137,7 +137,7 @@ router.post('/createRepository', upload.single('zipFile'), async (req, res) => {
 // Update repository file
 router.post("/updateRepositoryFile", upload.single("editedFile"), async (req, res) => {
   try {
-    const repositoryName = req.body.repositoryName;
+    const repositoryName = req.body.name;
     const editedFile = req.file;
 
     if (!editedFile) {
@@ -150,7 +150,7 @@ router.post("/updateRepositoryFile", upload.single("editedFile"), async (req, re
       return res.status(404).json({ status: "error", message: "Repository not found" });
     }
 
-    existingRepository.filePath = editedFile.path;
+    existingRepository.filePaths.push(editedFile.path);
     await existingRepository.save();
 
     res.status(200).json({ status: "success", message: "Repository file updated successfully" });
@@ -293,13 +293,10 @@ router.post('/getRepository', async (req, res) => {
 
 
 
-
-
-
 router.get('/:username/:repository', (req, res) => {
   const username = req.params.username;
   const repository = req.params.repository;
-  res.render("repository", { username: username, repository: repository });
+  res.render("loggedUserRepository", { username: username, repository: repository });
 });
 
 

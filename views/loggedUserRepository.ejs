@@ -131,7 +131,7 @@
             outline: none;
             overflow: hidden;
             height: auto;
-            width:80%;
+            width: 80%;
             font-size: 12px;
             line-height: 20px;
             overflow-wrap: normal;
@@ -166,7 +166,7 @@
 <script>
     const username = "<%= username %>";
     const repository = "<%= repository %>";
-    let fileName;
+    let file_Name;
 
     function loadRepository() {
         fetch(`/getRepository`, {
@@ -205,6 +205,7 @@
                         const listItem = document.createElement("li");
                         listItem.textContent = fileName;
                         listItem.addEventListener("click", () => {
+                            file_Name = fileName;
                             loadFileContent(fileName, fileData);
                         });
                         fileListElement.appendChild(listItem);
@@ -222,19 +223,23 @@
 
     function loadFileContent(fileName, fileData) {
         const { fileContent } = fileData.find((file) => file.fileName === fileName);
-
         const textAreaElement = document.createElement("textarea");
         textAreaElement.value = fileContent;
-
         const numLines = fileContent.split(/\r\n|\r|\n/).length;
         textAreaElement.rows = numLines;
-
+        textAreaElement.setAttribute("readonly", "true");
         const fileContentElement = document.getElementById("file-content");
         fileContentElement.innerHTML = "";
         fileContentElement.appendChild(textAreaElement);
     }
 
+
     loadRepository();
+
+    function cancel() {
+        console.log("fdghfrhfgh")
+        loadRepository()
+    }
 </script>
 
 
@@ -244,32 +249,36 @@
 <script>
     // Function to copy content
     function copy() {
-        document.querySelector("#view-file").select();
+        document.querySelector(".view-file").select();
         document.execCommand("copy");
         alert("File content copied to clipboard.");
     }
 
     // Function to edit content
     function edit() {
-        const fileContentElement = document.querySelector("#view-file");
+        const fileContentElement = document.querySelector("#file-content textarea");
         fileContentElement.removeAttribute("readonly");
-        const fileContent = document.querySelector("#view-file").value;
+        const fileContent = fileContentElement.value;
         const editTextArea = document.createElement("textarea");
         editTextArea.value = fileContent;
         fileContentElement.innerHTML = "";
         fileContentElement.appendChild(editTextArea);
     }
 
+
     // Function to save content
     function save() {
-        const editTextArea = document.querySelector("#view-file");
+        const editTextArea = document.querySelector("#file-content textarea");
         const editedContent = editTextArea.value;
+        const fileName = file_Name;
 
         const username = "<%= username %>";
         const repository = "<%= repository %>";
+
         const blob = new Blob([editedContent], { type: 'text/plain' });
 
-        const formData = new FormData()
+        const formData = new FormData();
+        formData.append("username", username);
         formData.append("name", repository);
         formData.append("editedFile", blob, fileName);
 
@@ -295,37 +304,6 @@
             });
 
         editTextArea.setAttribute("readonly", "true");
-    }
-
-    function cancel() {
-        const fileContentElement = document.getElementById("view-file");
-        fileContentElement.value = ""
-        fetch(`/getRepository?userId=${username}&repository=${repository}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (data.status === "success") {
-                    const fileContent = data.fileContent;
-
-                    fileContentElement.value = fileContent;
-                    fileContentElement.style.height = (fileContentElement.scrollHeight) + "px";
-                } else {
-                    alert("Failed to load repository: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error loading repository", error);
-                alert("An error occurred while loading the repository. Please try again later.");
-            });
     }
 
 
