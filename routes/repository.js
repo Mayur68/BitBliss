@@ -260,7 +260,7 @@ router.post("/exploreRepository", async (req, res) => {
 router.post('/getRepository', async (req, res) => {
   try {
     const { userId, re } = req.body;
-console.log(req.body)
+
     const user = await accounts.findOne({ username: userId });
 
     if (!user) {
@@ -268,26 +268,23 @@ console.log(req.body)
     }
 
     const repo = await repository.findOne({ owner: user._id, name: re });
-    console.log(repo)
+
     if (!repo) {
       return res.status(404).json({ status: "error", message: "Repository not found" });
     }
 
     const filePaths = repo.filePaths;
 
-    // Process each file path in the repository
-    const fileContents = [];
-    const fileNames = [];
+    const fileData = [];
 
     for (const filePath of filePaths) {
       const fileContent = fs.readFileSync(filePath, 'utf8');
       const fileName = path.basename(filePath);
 
-      fileContents.push(fileContent);
-      fileNames.push(fileName);
+      fileData.push({ fileName, fileContent });
     }
 
-    res.status(200).json({ status: "success", repository: repo, fileContents, fileNames });
+    res.status(200).json({ status: "success", repository: repo, fileData });
   } catch (error) {
     console.error("Error loading repository:", error);
     res.status(500).json({ status: "error", message: "Internal Server Error" });
