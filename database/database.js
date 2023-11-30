@@ -103,23 +103,18 @@ const chatHistory = mongoose.model("chatHistory", chatHistorySchema);
 
 
 const roomChatHistorySchema = new mongoose.Schema({
-  name: {
+  roomNmae: String,
+  name: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "accounts",
-  },
+  }],
   roomName: String,
   sender: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "accounts",
   },
-  receivers: {
-    userID: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "accounts",
-    },],
-  },
   message: String,
-  timestamp: Date,
+  timestamp: String,
   names: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "accounts",

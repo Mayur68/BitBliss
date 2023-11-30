@@ -253,7 +253,6 @@ function sendMessage() {
     });
 
     messageInput.value = "";
-    const chatWindow = document.getElementById("chat-window");
     scrollToBottom();
 }
 

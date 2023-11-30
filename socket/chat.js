@@ -39,28 +39,37 @@ function setupSocket(server) {
     });
 
     socket.on("send_room_message", async (data) => {
-      const { senderID, roomName, message, time } = data;
-      
+      const { sender, roomName, message, time } = data;
+
       try {
         const room = await rooms.findOne({ name: roomName }).populate('members');
-    
+
         if (!room) {
           return;
         }
-            const memberNamesPromises = room.members.map(async (member) => {
+
+        const memberNamesPromises = room.members.map(async (member) => {
           const account = await accounts.findOne({ _id: member });
           return account ? account.username : null;
         });
-    
-        const memberNames = await Promise.all(memberNamesPromises);
-    
+
+        const ownerAccount = await accounts.findOne({ _id: room.owner });
+        const ownerName = ownerAccount ? ownerAccount.username : null;
+
+        let memberNames = await Promise.all(memberNamesPromises);
+
+        if (ownerName) {
+          memberNames.push(ownerName);
+        }
+
+        memberNames = memberNames.filter(memberName => memberName !== sender);
+
         memberNames.forEach((memberName) => {
           if (connectedUsers[memberName]) {
             io.to(connectedUsers[memberName]).emit("receiveRoomMsg", {
-              senderID,
+              sender,
               message,
               time,
-              member: memberName,
             });
           }
         });
@@ -68,7 +77,10 @@ function setupSocket(server) {
         console.error("Error sending room message:", error);
       }
     });
-    
+
+
+
+
 
 
     socket.on("sendRequest", async (data) => {

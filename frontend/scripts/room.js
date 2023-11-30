@@ -141,8 +141,8 @@ function roomClickHandler(room) {
 
 
     const dataToSend = {
-        roomName: room,
-        userId: userId,
+        roomName: roomName,
+        user: userId,
     };
 
     const messages = document.getElementById("messages");
@@ -158,8 +158,8 @@ function roomClickHandler(room) {
         .then((response) => response.json())
         .then((data) => {
             if (data.status === "success") {
-                const chatHistory = data.chatHistory;
-                displayChatHistory(chatHistory);
+                const roomHistory = data.result;
+                displayChatHistory(roomHistory);
             }
         })
         .catch((error) => {
@@ -186,13 +186,6 @@ function roomClickHandler(room) {
         scrollToBottom();
     }
 }
-
-const message_Room_input = document.getElementById("message-Room-input")
-message_Room_input.addEventListener('keypress', function (event) {
-    if (event.key === 'Enter') {
-        sendRoomMessage()
-    }
-});
 
 function sendRoomMessage() {
     const messageInput = document.getElementById("message-Room-input");
@@ -227,14 +220,13 @@ function sendRoomMessage() {
 
 
     const dataToSend = {
-        roomNmae: roomName,
-        userId: userId,
+        roomName: roomName,
+        sender: userId,
         message: message,
         time: formattedTime,
     };
-    console.log(dataToSend)
 
-    fetch("/saveHistory", {
+    fetch("/saveRoomHistory", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -243,7 +235,6 @@ function sendRoomMessage() {
     })
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
             if (data.status === "success") {
                 console.log();
             } else {
@@ -257,7 +248,7 @@ function sendRoomMessage() {
 
 
     socket.emit('send_room_message', {
-        senderID: userId,
+        sender: userId,
         roomName: roomName,
         message: message,
         time: formattedTime
@@ -268,12 +259,18 @@ function sendRoomMessage() {
 }
 
 socket.on("receiveRoomMsg", (data) => {
-    const { senderID, message, time } = data;
-    receivedMessage = message;
+    const { sender, message, time } = data;
     const messagesDiv = document.getElementById("messages");
     const messageElement = document.createElement("div");
     messageElement.className = "message notself";
-    messageElement.innerText = `${message}  ${time}`;
-    messagesDiv.appendChild(messageElement);
+    const memberElement = document.createElement("div");
+    memberElement.className = "message notself";
+    memberElement.innerText = sender;
+    messageElement.appendChild(memberElement)
+    const memberMessage = document.createElement("div");
+    memberMessage.className = "message notself";
+    memberMessage.innerText = `${message}  ${time}`;
+    messageElement.appendChild(memberMessage);
+    messagesDiv.appendChild(messageElement)
     scrollToBottom();
 });

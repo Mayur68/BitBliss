@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { accounts, chatHistory } = require("../database/database");
+const { accounts, chatHistory, rooms, roomChatHistory } = require("../database/database");
 
 router.post("/saveHistory", async (req, res) => {
     const { recipientID, userId, message, time } = req.body;
@@ -163,18 +163,34 @@ router.post("/clearChat", async (req, res) => {
 //
 
 router.post("/saveRoomHistory", async (req, res) => {
-    const { recipientID, userId, message, time } = req.body;
-    const ownerAccount = await accounts.findOne({ username: userId });
+    const { roomName, sender, message, time } = req.body;
+
     try {
-        const chatRecord = new chatHistory({
-            name: ownerAccount.id,
-            sender: userId,
-            receiver: recipientID,
-            message,
+        const senderAccount = await accounts.findOne({ username: sender });
+        const room = await rooms.findOne({ name: roomName });
+
+        if (!senderAccount || !room) {
+            return res.status(401).json({
+                status: "error",
+                message: "Invalid user or room.",
+            });
+        }
+
+        const memberIds = room.members.map(member => member.toString());
+
+        if (room.owner) {
+            memberIds.push(room.owner.toString());
+        }
+
+        const chatRecord = new roomChatHistory({
+            roomName: roomName,
+            name: memberIds,
+            sender: senderAccount._id,
+            message: message,
             timestamp: time,
         });
-        const result = await chatRecord.save();
 
+        const result = await chatRecord.save();
 
         if (result) {
             return res.status(200).json({
@@ -193,21 +209,34 @@ router.post("/saveRoomHistory", async (req, res) => {
     }
 });
 
+
 router.post("/loadRoomHistory", async (req, res) => {
-    const { recipientID, userId } = req.body;
-    const ownerAccount = await accounts.findOne({ username: userId });
+    const { roomName, user } = req.body;
+    console.log(req.body)
     try {
-        const result = await chatHistory.find({
-            $and: [
-                {
-                    $or: [
-                        { "sender": userId, "receiver": recipientID },
-                        { "sender": recipientID, "receiver": userId },
-                    ],
-                },
-                { name: ownerAccount._id },
-            ],
+        const account = await accounts.findOne({ username: user });
+
+        if (!account) {
+            return res.status(401).json({
+                status: "error",
+                message: "Invalid user.",
+            });
+        }
+
+        const room = await rooms.findOne({ name: roomName });
+
+        if (!room || !room.members.includes(account._id) || room.owner != account._id) {
+            return res.status(401).json({
+                status: "error",
+                message: "User is not a member of the room or room does not exist.",
+            });
+        }
+
+        const result = await roomChatHistory.find({
+            roomName: roomName,
         }).exec();
+
+        console.log(result)
 
         return res.status(200).json({
             status: "success",
@@ -222,12 +251,13 @@ router.post("/loadRoomHistory", async (req, res) => {
     }
 });
 
+
 router.post("/clearRoomChat", async (req, res) => {
     const { recipientID, userId } = req.body;
 
-    const ownerAccount = await accounts.findOne({ username: userId });
+    const Account = await accounts.findOne({ username: userId });
 
-    if (!ownerAccount || ownerAccount.username !== userId) {
+    if (!Account || Account.username !== userId) {
         return res.status(403).json({
             status: "error",
             message: "Unauthorized access to delete chat.",
@@ -243,7 +273,7 @@ router.post("/clearRoomChat", async (req, res) => {
                         { "sender": recipientID, "receiver": userId },
                     ],
                 },
-                { name: ownerAccount._id },
+                { name: Account._id },
             ],
         });
 
