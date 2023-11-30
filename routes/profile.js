@@ -42,13 +42,13 @@ router.post('/removeFriend', async (req, res) => {
         }
 
         const user = await accounts.findOne({ username: userId });
-        const friend = await accounts.findOne({ username: friendId });
+        const friends = await accounts.findOne({ username: friendId });
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const updatedFriends = user.friends.filter(friend => friend !== friend._id);
+        const updatedFriends = user.friends.filter(friend => !friend.equals(friends._id));
 
         await accounts.updateOne({ username: userId }, { $set: { friends: updatedFriends } });
 

@@ -14,6 +14,10 @@ mongoose
 
 const db = mongoose.connection;
 
+
+
+
+
 const accountSchema = new mongoose.Schema({
   profilePhoto: String,
   username: String,
@@ -33,6 +37,12 @@ const accountSchema = new mongoose.Schema({
 });
 
 const accounts = mongoose.model("accounts", accountSchema);
+
+
+
+
+
+
 
 const fileSchema = new mongoose.Schema({
   name: String,
@@ -55,6 +65,11 @@ const fileSchema = new mongoose.Schema({
 });
 
 const repository = mongoose.model("repository", fileSchema);
+
+
+
+
+
 
 const chatHistorySchema = new mongoose.Schema({
   name: {
@@ -82,6 +97,10 @@ const chatHistorySchema = new mongoose.Schema({
 });
 
 const chatHistory = mongoose.model("chatHistory", chatHistorySchema);
+
+
+
+
 
 const roomChatHistorySchema = new mongoose.Schema({
   name: {
@@ -111,6 +130,11 @@ const roomChatHistorySchema = new mongoose.Schema({
 
 const roomChatHistory = mongoose.model("roomChatHistory", roomChatHistorySchema);
 
+
+
+
+
+
 const roomSchema = new mongoose.Schema({
   name: String,
   profilePhoto: String,
@@ -131,6 +155,11 @@ const roomSchema = new mongoose.Schema({
 const rooms = mongoose.model("rooms", roomSchema);
 
 
+
+
+
+
+
 const notificationSchema = new mongoose.Schema({
   username: {
     type: mongoose.Schema.Types.ObjectId,
@@ -147,5 +176,10 @@ const notificationSchema = new mongoose.Schema({
   });
 
 const notification = mongoose.model("notification", notificationSchema);
+
+
+
+
+
 
 module.exports = { db, accounts, repository, chatHistory, rooms, roomChatHistory, notification };

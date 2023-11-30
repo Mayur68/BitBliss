@@ -38,6 +38,39 @@ function setupSocket(server) {
       }
     });
 
+    socket.on("send_room_message", async (data) => {
+      const { senderID, roomName, message, time } = data;
+      
+      try {
+        const room = await rooms.findOne({ name: roomName }).populate('members');
+    
+        if (!room) {
+          return;
+        }
+            const memberNamesPromises = room.members.map(async (member) => {
+          const account = await accounts.findOne({ _id: member });
+          return account ? account.username : null;
+        });
+    
+        const memberNames = await Promise.all(memberNamesPromises);
+    
+        memberNames.forEach((memberName) => {
+          if (connectedUsers[memberName]) {
+            io.to(connectedUsers[memberName]).emit("receiveRoomMsg", {
+              senderID,
+              message,
+              time,
+              member: memberName,
+            });
+          }
+        });
+      } catch (error) {
+        console.error("Error sending room message:", error);
+      }
+    });
+    
+
+
     socket.on("sendRequest", async (data) => {
       try {
         const { userId, friendId } = data;
@@ -76,17 +109,6 @@ function setupSocket(server) {
         console.error('Error adding pending request:', err);
       }
     });
-
-
-    // socket.on('CreateRoom', (data) => {
-    //   const { userID, roomName } = data;
-    //   socket.join(roomName);
-
-    //   socket.emit('roomCreated', `Room ${roomName} created successfully!`);
-
-    //   io.to(roomName).emit('roomMessage', `User ${userID} has joined the room.`);
-    // });
-
 
     socket.on('typing', (data) => {
       const { userId, recipientID } = data;

@@ -195,7 +195,8 @@
             <div class="profile-photo">
                 <img id="profile-image" src="" alt="Profile Photo">
             </div>
-            <h1 class="profile-name" id="name">Username</h1>
+            <h1 class="profile-name" id="username">Username</h1>
+            <h1 class="profile-name" id="name">Nmae</h1>
             <p class="profile-bio" id="bio">Bio</p>
             <p class="profile-location" id="region">Location</p>
             <div id="friend"></div>
@@ -262,7 +263,8 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === "success") {
-                        document.getElementById('name').textContent = data.user.username || '';
+                        document.getElementById('username').textContent = data.user.username || '';
+                        document.getElementById('name').textContent = data.user.firstname || '';
                         document.getElementById('bio').textContent = data.user.bio || '';
                         document.getElementById('region').textContent = data.user.region || '';
 

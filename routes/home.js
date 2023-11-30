@@ -59,23 +59,45 @@ router.post("/createRoom", async (req, res) => {
   const { owner, roomName, members, description } = req.body;
 
   try {
-    const existingRoom = await rooms.findOne({ owner: owner, name: roomName });
+    const ownerAccount = await accounts.findOne({ username: owner });
 
-    if (existingRoom) {
+    if (!ownerAccount) {
       return res.status(400).json({
         status: "error",
-        message: "A room with the same name already exists for the owner.",
+        message: "Owner account not found.",
       });
     }
 
-    const ownerAccount = await accounts.findOne({ username: owner });
-    const memberAccounts = await accounts.find({ username: { $in: members } });
+    if (members.length > 10) {
+      return res.status(400).json({
+        status: "error",
+        message: "Exceeded the limit of 10 members per room.",
+      });
+    }
+
+    // Validate each member username against the accounts collection
+    const memberAccountsPromises = members.map(async (memberUsername) => {
+      const memberAccount = await accounts.findOne({ username: memberUsername });
+      return memberAccount;
+    });
+
+    const memberAccounts = await Promise.all(memberAccountsPromises);
+
+    // Check if any member username does not have a corresponding account
+    if (memberAccounts.some(member => !member)) {
+      return res.status(400).json({
+        status: "error",
+        message: "One or more member usernames are invalid.",
+      });
+    }
+
+    const memberIds = memberAccounts.map(member => member._id);
 
     const newRoom = new rooms({
       name: roomName,
       owner: ownerAccount._id,
-      members: memberAccounts.map(member => member._id),
-      description,
+      members: memberIds,
+      description: description,
       timestamp: new Date(),
     });
 
@@ -94,6 +116,10 @@ router.post("/createRoom", async (req, res) => {
     });
   }
 });
+
+
+
+
 
 router.post("/addFriend", async (req, res) => {
   const { userId, friendId } = req.body;
@@ -135,12 +161,12 @@ router.post("/addFriend", async (req, res) => {
         await user.save();
       }
     };
-    
+
     await Promise.all([
       addFriendToUser(user, friend._id),
       addFriendToUser(friend, user._id),
     ]);
-    
+
 
     const requestingUser = await notification.findOneAndUpdate(
       { username: user._id },

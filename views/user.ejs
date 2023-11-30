@@ -9,7 +9,6 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <title>BitBliss</title>
     <style>
-
         #notifications {
             background-color: aliceblue;
             color: black;
@@ -67,7 +66,52 @@
             display: flex;
             justify-content: space-between;
         }
-        
+
+        #chatlist {
+            width: 20%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #switchchat {
+            margin-left: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .createRoomButton {
+            padding: 5px;
+            height: 35px;
+            width: 100%;
+            margin-bottom: 5px;
+            background-color: #1d1b1b;
+            border-radius: 5px;
+        }
+
+        .createRoom {
+            padding: 2%;
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            top: 50px;
+            flex-direction: column;
+            left: 50%;
+            transform: translateX(-50%);
+            border: solid 1px rgb(92, 92, 92);
+            border-radius: 10px;
+            width: 500px;
+            height: 300px;
+            background-color: rgba(48, 48, 48);
+        }
+
+        #buttonwidth {
+            width: 47%;
+        }
+
+        #buttonwidth1 {
+            width: 47%;
+        }
     </style>
 </head>
 
@@ -86,16 +130,17 @@
     </div>
     <div>
         <div class="section">
-            <button onclick="loadFriends()">Friends</button>
-            <button onclick="loadRooms()">Rooms</button>
-            <input type="text" id="room-input" placeholder="Enter room name..">
-            <input type="text" id="members" name="members" placeholder="Add members (comma-separated)" />
-            <button onclick="createRoom()">create</button>
-
             <div class="chat-container flex">
-                <div id="friends-list">
-                    <label style="margin: auto; color: white;">Add people to chat</label>
+                <div id="chatlist">
+                    <div id="switchchat">
+                        <button onclick="loadFriends()" id="buttonwidth">Friends</button>
+                        <button onclick="loadRooms()" id="buttonwidth">Rooms</button>
+                    </div>
+                    <div id="friends-list">
+                        <label style="margin: auto; color: white;">Add people to chat</label>
+                    </div>
                 </div>
+
                 <div class="chat-window" id="chat-window">
                     <label style="margin: auto;">Select people to message</label>
                 </div>
