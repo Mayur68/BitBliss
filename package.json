@@ -28,7 +28,8 @@
     "nodemon": "^3.0.1",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "unzipper": "^0.10.14"
   },
   "repository": {
     "type": "git",

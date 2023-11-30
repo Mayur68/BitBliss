@@ -144,6 +144,7 @@
             background-color: #1d1b34;
             border-radius: 10px;
         }
+
         #reponame,
         #repodiscription {
             width: 90%;
@@ -239,9 +240,8 @@
     const username = "<%= username %>";
     const repository = "<%= repository %>";
     let fileName;
-    
-    function loadRepository() {
 
+    function loadRepository() {
         fetch(`/getRepository?userId=${username}&repository=${repository}`, {
             method: "GET",
             headers: {
@@ -257,8 +257,8 @@
             .then((data) => {
                 if (data.status === "success") {
                     const repository = data.repository;
-                    const fileContent = data.fileContent;
-                    fileName = data.fileName;
+                    const fileContents = data.fileContents;
+                    const fileNames = data.fileNames;
 
                     const repoContainer = document.getElementById("view-file");
                     const repoDetails = document.getElementById("details");
@@ -267,12 +267,27 @@
                     const repoElement = document.createElement("div");
                     repoElement.className = "repository";
                     repoDetails.innerHTML = `<h3>${repository.name}</h3><p>Description: ${repository.description || ' '}</p>
-                    <p>Topics: ${repository.topics || ' '}</p> <p>Contributers: ${repository.contributers || ' '} </p>`;
+        <p>Topics: ${repository.topics || ' '}</p> <p>Contributers: ${repository.contributers || ' '} </p>`;
                     repoContainer.appendChild(repoElement);
 
-                    const fileContentElement = document.getElementById("view-file");
-                    fileContentElement.value = fileContent;
-                    fileContentElement.style.height = (fileContentElement.scrollHeight) + "px";
+                    const fileContentElement = document.getElementById("view-files");
+                    fileContentElement.innerHTML = "";
+
+                    // Display file names
+                    const fileListElement = document.createElement("ul");
+                    fileListElement.className = "file-list";
+
+                    fileNames.forEach((fileName) => {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = fileName;
+                        listItem.addEventListener("click", () => {
+                            // Load file content when a file name is clicked
+                            loadFileContent(fileName);
+                        });
+                        fileListElement.appendChild(listItem);
+                    });
+
+                    fileContentElement.appendChild(fileListElement);
                 } else {
                     alert("Failed to load repository: " + data.message);
                 }
@@ -281,6 +296,12 @@
                 console.error("Error loading repository", error);
                 alert("An error occurred while loading the repository. Please try again later.");
             });
+    }
+
+    function loadFileContent(fileName) {
+        // Fetch and load the content of the selected file
+        // Add your logic here to load the content based on the fileName
+        // Make a fetch request or perform any action to load and display the file content
     }
 
     loadRepository();

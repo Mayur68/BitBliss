@@ -4,6 +4,7 @@ const { accounts, repository } = require("../database/database");
 const multer = require("multer");
 const fs = require('fs');
 const path = require("path");
+const unzipper = require('unzipper');
 const JSZip = require('jszip');
 
 
@@ -30,16 +31,16 @@ router.get("/:username/new-Repository", async (req, res) => {
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.fieldname === 'zipFile') {
-      cb(null, '../../../webapp_temp');
+      cb(null, path.resolve(__dirname, '../../../webapp_temp'));
     } else {
       const repositoryName = req.body.name;
-      const uploadDir = path.join(__dirname, "../../../uploads", repositoryName);
+      const uploadDir = path.join(__dirname, '../../../uploads', repositoryName);
 
       try {
         fs.mkdirSync(uploadDir, { recursive: true });
         cb(null, uploadDir);
       } catch (err) {
-        console.error("Error creating repository directory:", err);
+        console.error('Error creating repository directory:', err);
         cb(err);
       }
     }
@@ -51,21 +52,25 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Create a new repository
-router.post("/createRepository", upload.array(['zipFile']), async (req, res) => {
+
+
+
+
+// POST route for creating a new repository
+router.post('/createRepository', upload.single('zipFile'), async (req, res) => {
   try {
     const repositoryName = req.body.name;
     const username = req.body.accountId;
-
     const user = await accounts.findOne({ username });
+
     if (!user) {
-      return res.status(404).json({ status: "error", message: "User not found" });
+      return res.status(404).json({ status: 'error', message: 'User not found' });
     }
 
     const existingRepository = await repository.findOne({ name: repositoryName });
 
     if (existingRepository) {
-      return res.status(400).json({ status: "error", message: "Repository name already exists" });
+      return res.status(400).json({ status: 'error', message: 'Repository name already exists' });
     }
 
     const newRepository = new repository({
@@ -74,45 +79,61 @@ router.post("/createRepository", upload.array(['zipFile']), async (req, res) => 
       createdAt: new Date(),
       description: req.body.description,
       visibility: req.body.visibility,
-      topics: req.body.topics.split(",").map((topic) => topic.trim()),
+      topics: req.body.topics.split(',').map((topic) => topic.trim()),
+      filePaths: [], // Initialize filePaths as an empty array
     });
 
-    const repositoryDirectory = path.join(__dirname, "../../../uploads", repositoryName);
-    fs.mkdirSync(repositoryDirectory, { recursive: true });
+    const repositoryDirectory = path.join(__dirname, '../../../uploads', repositoryName);
 
-    if (req.files && req.files.length > 0) {
-      const zipFile = req.files.find(file => file.fieldname === 'zipFile');
-      if (zipFile) {
-        const zipFilePath = zipFile.path;
-        const AdmZip = require('adm-zip');
-        const zip = new AdmZip(zipFilePath);
+    if (req.file && req.file.fieldname === 'zipFile') {
+      const zipFilePath = req.file.path;
 
+      const extractionStream = fs.createReadStream(zipFilePath)
+        .pipe(unzipper.Extract({ path: repositoryDirectory }));
+
+      let extractedFilesCount = 0;
+
+      extractionStream.on('entry', () => {
+        extractedFilesCount++;
+      });
+
+      extractionStream.on('finish', async () => {
         try {
-          zip.extractAllTo(repositoryDirectory, true);
-          const extractedFiles = fs.readdirSync(repositoryDirectory);
-          console.log('Extracted files:', extractedFiles);
-
-          // Update the filtering logic for file paths
-          const filePaths = req.files
-            .filter(file => file.fieldname !== 'zipFile') // Exclude the 'zipFile'
-            .map(file => file.path);
-
+          console.log(repositoryDirectory);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          const allFiles = await fs.promises.readdir(repositoryDirectory);
+          const filePaths = allFiles.map(fileName => path.join(repositoryDirectory, fileName));
+          console.log('All files:', allFiles);
+          console.log('File paths:', filePaths);
           newRepository.filePaths = filePaths;
-        } catch (error) {
-          console.error('Error extracting zip file:', error);
-          return res.status(500).json({ status: "error", message: "Error extracting ZIP file", error });
+          await newRepository.save();
+          res.status(200).json({ status: 'success', message: 'Repository created successfully' });
+        } catch (err) {
+          console.error('Error reading files:', err);
+          res.status(500).json({ status: 'error', message: 'Error reading files', error: err });
         }
-      }
+      });
+
+      extractionStream.on('error', (err) => {
+        console.error('Error extracting files:', err);
+        res.status(500).json({ status: 'error', message: 'Error extracting files', error: err });
+      });
+    } else {
+      await newRepository.save();
+      res.status(200).json({ status: 'success', message: 'Repository created without files' });
     }
-
-    await newRepository.save();
-
-    res.status(200).json({ status: "success", message: "Repository created successfully" });
-  } catch (error) {
-    console.error("Error creating repository:", error);
-    res.status(500).json({ status: "error", message: "Internal Server Error" });
+  } catch (err) {
+    console.error('Error creating repository:', err);
+    res.status(500).json({ status: 'error', message: 'Error creating repository', error: err });
   }
 });
+
+
+
+
+
+
+
 
 
 
@@ -141,6 +162,10 @@ router.post("/updateRepositoryFile", upload.single("editedFile"), async (req, re
     res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 });
+
+
+
+
 
 router.post("/loadRepository", async (req, res) => {
   try {
@@ -207,11 +232,11 @@ router.post("/exploreRepository", async (req, res) => {
         { topics: { $in: [normalizedQuery] } }
       ]
     })
-    .select('name createdAt filePaths description topics owner')
-    .populate({ 
-      path: 'owner', 
-      select: 'name'
-    });
+      .select('name createdAt filePaths description topics owner')
+      .populate({
+        path: 'owner',
+        select: 'name'
+      });
 
     const repositoriesData = repositories.map((repo) => ({
       name: repo.name,
@@ -246,23 +271,33 @@ router.get('/getRepository', async (req, res) => {
       return res.status(404).json({ status: "error", message: "User not found" });
     }
 
-    const repo = await repository.findOne({ owner: user._id, name: repositoryName, });
+    const repo = await repository.findOne({ owner: user._id, name: repositoryName });
 
     if (!repo) {
       return res.status(404).json({ status: "error", message: "Repository not found" });
     }
 
-    const filePath = repo.filePaths;
-    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const filePaths = repo.filePaths;
 
-    const fileName = path.basename(filePath);
+    // Process each file path in the repository
+    const fileContents = [];
+    const fileNames = [];
 
-    res.status(200).json({ status: "success", repository: repo, fileContent, fileName });
+    for (const filePath of filePaths) {
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const fileName = path.basename(filePath);
+
+      fileContents.push(fileContent);
+      fileNames.push(fileName);
+    }
+
+    res.status(200).json({ status: "success", repository: repo, fileContents, fileNames });
   } catch (error) {
     console.error("Error loading repository:", error);
     res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 });
+
 
 
 

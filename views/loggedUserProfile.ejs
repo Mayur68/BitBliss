@@ -95,8 +95,7 @@
         .friends-list {
             list-style: none;
             padding: 0;
-
-
+            height: max-content;
         }
 
         /* Styling the friend items */
@@ -281,13 +280,15 @@
         const friendsListDiv = document.getElementById("friends-list");
         friendsListDiv.innerHTML = "";
         if (friends.length === 0) {
-            friendsListDiv.innerHTML = `<p>he dont have any Friends</p>`;
+            friendsListDiv.innerHTML = `<p>You dont have any Friends</p>`;
         } else {
             updateFriendsList(friends);
         }
     });
 
     async function updateFriendsList(friends) {
+        const friendsListDiv = document.getElementById("friends-list");
+        friendsListDiv.innerHTML = "";
         for (const friend of friends) {
             try {
                 const response = await fetch('/loadData', {
@@ -316,7 +317,6 @@
 
     function createFriendElement(user) {
         const friendsListDiv = document.getElementById("friends-list");
-        friendsListDiv.innerHTML = "";
         const friendElement = document.createElement("div");
         friendElement.className = "friend-item";
         const profileImage = document.createElement("div");

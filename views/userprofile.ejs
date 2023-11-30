@@ -117,6 +117,7 @@
             padding: 15px;
             border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
         }
 
         /* Styling the repository titles */
@@ -205,6 +206,8 @@
             <div class="repositories" id="repo-container"></div>
             <button class="edit-profile-button" onclick="loadFriends()">Friends</button>
             <ul class="friends-list" id="friends-list"></ul>
+            <!-- <h2 class="section-title">Cosmic Arcade</h2> -->
+            <!-- <div class="repositories" id="repo-container"></div> -->
         </div>
 
         <div class="profile-footer"></div>
@@ -308,6 +311,8 @@
         });
 
         async function updateFriendsList(friends) {
+            const friendsListDiv = document.getElementById("friends-list");
+            friendsListDiv.innerHTML = "";
             for (const friend of friends) {
                 try {
                     const response = await fetch('/loadData', {
@@ -336,7 +341,6 @@
 
         function createFriendElement(user) {
             const friendsListDiv = document.getElementById("friends-list");
-            friendsListDiv.innerHTML = "";
             const friendElement = document.createElement("div");
             friendElement.className = "friend-item";
             const profileImage = document.createElement("div");
