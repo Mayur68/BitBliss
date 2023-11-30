@@ -198,6 +198,34 @@
         button:nth-child(2) {
             background-color: #191961;
         }
+
+        /* Reset default margin and padding for ul */
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            /* Remove default bullet points */
+        }
+
+        /* Style for list items */
+        li {
+            padding: 8px 16px;
+            /* Adjust padding as needed */
+            margin-bottom: 6px;
+            /* Adjust margin between list items */
+            background-color: #f2f2f2;
+            /* Background color */
+            border-radius: 4px;
+            /* Rounded corners */
+        }
+
+        /* Hover effect for list items */
+        li:hover {
+            background-color: #ddd;
+            /* Change background color on hover */
+            cursor: pointer;
+            /* Show pointer cursor on hover */
+        }
     </style>
 </head>
 
@@ -213,12 +241,12 @@
             <button onclick="edit()">Edit</button>
             <button onclick="save()">Save</button>
             <button onclick="cancel()">cancel</button>
-            <div class="view-file">
-                <textarea id="view-file" aria-label="file content" aria-readonly="true" inputmode="none" tabindex="0"
+            <div class="view-file" id="repo-files"> </div>
+            <!-- <textarea id="view-file" aria-label="file content" aria-readonly="true" inputmode="none" tabindex="0"
                     aria-multiline="true" aria-haspopup="false" data-gramm="false" data-gramm_editor="false"
                     data-enable-grammarly="false" spellcheck="false" autocorrect="off" autocapitalize="off"
-                    autocomplete="off" data-ms-editor="false" readonly></textarea>
-            </div>
+                    autocomplete="off" data-ms-editor="false" readonly></textarea> -->
+
 
         </section>
         <section id="info">
@@ -242,67 +270,60 @@
     let fileName;
 
     function loadRepository() {
-        fetch(`/getRepository?userId=${username}&repository=${repository}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (data.status === "success") {
-                    const repository = data.repository;
-                    const fileContents = data.fileContents;
-                    const fileNames = data.fileNames;
+  fetch(`/getRepository`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userId: username,
+      re: repository,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data.status === "success") {
+        const repository = data.repository;
+        const fileContents = data.fileContents;
+        const fileNames = data.fileNames;
 
-                    const repoContainer = document.getElementById("view-file");
-                    const repoDetails = document.getElementById("details");
-                    repoContainer.innerHTML = "";
+        const fileContentElement = document.getElementById("repo-files");
+        const repoDetails = document.getElementById("details");
+        fileContentElement.innerHTML = "";
+        repoDetails.innerHTML = "";
 
-                    const repoElement = document.createElement("div");
-                    repoElement.className = "repository";
-                    repoDetails.innerHTML = `<h3>${repository.name}</h3><p>Description: ${repository.description || ' '}</p>
+        repoDetails.innerHTML = `<h3>${repository.name}</h3><p>Description: ${repository.description || ' '}</p>
         <p>Topics: ${repository.topics || ' '}</p> <p>Contributers: ${repository.contributers || ' '} </p>`;
-                    repoContainer.appendChild(repoElement);
 
-                    const fileContentElement = document.getElementById("view-files");
-                    fileContentElement.innerHTML = "";
+        const fileListElement = document.createElement("ul");
+        fileListElement.className = "file-list";
 
-                    // Display file names
-                    const fileListElement = document.createElement("ul");
-                    fileListElement.className = "file-list";
+        fileNames.forEach((fileName) => {
+          const listItem = document.createElement("li");
+          listItem.textContent = fileName;
+          listItem.addEventListener("click", () => {
+            loadFileContent(fileName);
+          });
+          fileListElement.appendChild(listItem);
+        });
+        fileContentElement.appendChild(fileListElement);
+      } else {
+        alert("Failed to load repository: " + data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading repository", error);
+      alert("An error occurred while loading the repository. Please try again later.");
+    });
+}
 
-                    fileNames.forEach((fileName) => {
-                        const listItem = document.createElement("li");
-                        listItem.textContent = fileName;
-                        listItem.addEventListener("click", () => {
-                            // Load file content when a file name is clicked
-                            loadFileContent(fileName);
-                        });
-                        fileListElement.appendChild(listItem);
-                    });
 
-                    fileContentElement.appendChild(fileListElement);
-                } else {
-                    alert("Failed to load repository: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error loading repository", error);
-                alert("An error occurred while loading the repository. Please try again later.");
-            });
-    }
-
-    function loadFileContent(fileName) {
-        // Fetch and load the content of the selected file
-        // Add your logic here to load the content based on the fileName
-        // Make a fetch request or perform any action to load and display the file content
-    }
+    function loadFileContent(fileName) { }
 
     loadRepository();
 </script>

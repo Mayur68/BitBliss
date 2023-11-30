@@ -99,12 +99,9 @@ router.post('/createRepository', upload.single('zipFile'), async (req, res) => {
 
       extractionStream.on('finish', async () => {
         try {
-          console.log(repositoryDirectory);
           await new Promise(resolve => setTimeout(resolve, 1000));
           const allFiles = await fs.promises.readdir(repositoryDirectory);
           const filePaths = allFiles.map(fileName => path.join(repositoryDirectory, fileName));
-          console.log('All files:', allFiles);
-          console.log('File paths:', filePaths);
           newRepository.filePaths = filePaths;
           await newRepository.save();
           res.status(200).json({ status: 'success', message: 'Repository created successfully' });
@@ -260,19 +257,18 @@ router.post("/exploreRepository", async (req, res) => {
 
 
 
-router.get('/getRepository', async (req, res) => {
+router.post('/getRepository', async (req, res) => {
   try {
-    const username = req.query.userId;
-    const repositoryName = req.query.repository;
-
-    const user = await accounts.findOne({ username });
+    const { userId, re } = req.body;
+console.log(req.body)
+    const user = await accounts.findOne({ username: userId });
 
     if (!user) {
       return res.status(404).json({ status: "error", message: "User not found" });
     }
 
-    const repo = await repository.findOne({ owner: user._id, name: repositoryName });
-
+    const repo = await repository.findOne({ owner: user._id, name: re });
+    console.log(repo)
     if (!repo) {
       return res.status(404).json({ status: "error", message: "Repository not found" });
     }
@@ -297,6 +293,7 @@ router.get('/getRepository', async (req, res) => {
     res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 });
+
 
 
 
