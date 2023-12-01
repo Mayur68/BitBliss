@@ -212,7 +212,7 @@ router.post("/saveRoomHistory", async (req, res) => {
 
 router.post("/loadRoomHistory", async (req, res) => {
     const { roomName, user } = req.body;
-    console.log(req.body)
+
     try {
         const account = await accounts.findOne({ username: user });
 
@@ -223,24 +223,23 @@ router.post("/loadRoomHistory", async (req, res) => {
             });
         }
 
-        const room = await rooms.findOne({ name: roomName });
+        const result = await roomChatHistory
+            .find({ roomName: roomName })
+            .populate('sender', 'username')
+            .exec();
 
-        if (!room || !room.members.includes(account._id) || room.owner != account._id) {
-            return res.status(401).json({
-                status: "error",
-                message: "User is not a member of the room or room does not exist.",
-            });
-        }
-
-        const result = await roomChatHistory.find({
-            roomName: roomName,
-        }).exec();
-
-        console.log(result)
+        const chatHistory = result.map(chat => ({
+            roomName: chat.roomName,
+            name: chat.name,
+            sender: chat.sender ? chat.sender.username : null,
+            message: chat.message,
+            timestamp: chat.timestamp,
+            names: chat.names
+        }));
 
         return res.status(200).json({
             status: "success",
-            chatHistory: result,
+            chatHistory: chatHistory,
         });
     } catch (err) {
         console.error(err);
@@ -252,34 +251,33 @@ router.post("/loadRoomHistory", async (req, res) => {
 });
 
 
+
+
 router.post("/clearRoomChat", async (req, res) => {
-    const { recipientID, userId } = req.body;
-
-    const Account = await accounts.findOne({ username: userId });
-
-    if (!Account || Account.username !== userId) {
-        return res.status(403).json({
-            status: "error",
-            message: "Unauthorized access to delete chat.",
-        });
-    }
+    const { user } = req.body;
 
     try {
-        await chatHistory.deleteMany({
-            $and: [
-                {
-                    $or: [
-                        { "sender": userId, "receiver": recipientID },
-                        { "sender": recipientID, "receiver": userId },
-                    ],
-                },
-                { name: Account._id },
-            ],
-        });
+        const account = await accounts.findOne({ username: user });
+
+        if (!account) {
+            return res.status(403).json({
+                status: "error",
+                message: "Unauthorized access to delete chat.",
+            });
+        }
+
+        const updateResult = await roomChatHistory.updateMany(
+            { names: account._id },
+            { $pull: { names: account._id } }
+        );
+
+        const deleteResult = await roomChatHistory.deleteMany({ names: [] });
 
         return res.status(200).json({
             status: "success",
             message: "Chat history deleted successfully.",
+            updateResult: updateResult,
+            deleteResult: deleteResult,
         });
     } catch (err) {
         console.error(err);
@@ -289,5 +287,6 @@ router.post("/clearRoomChat", async (req, res) => {
         });
     }
 });
+
 
 module.exports = router;

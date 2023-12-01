@@ -14,13 +14,13 @@ loadFriends()
 
 function updateFriendsList(friends) {
     const friendsListDiv = document.getElementById("friends-list");
-    if (friends) {
+    if (friends.lenght === 0) {
         friendsListDiv.innerHTML = "";
         friends.forEach((friend) => {
             loadData(friend);
         });
     } else {
-        friendsListDiv.innerHTML = `<label style="margin: auto; color:white;">Add people to chat</label>`;
+        friendsListDiv.innerHTML = `<label style="margin: auto; color:black;">Add people to chat</label>`;
     }
 
 }

@@ -127,17 +127,28 @@ let roomName;
 function roomClickHandler(room) {
     roomName = room.name;
 
-
     const chatWindow = document.querySelector(".chat-window");
-
     chatWindow.innerHTML = `<div id="chat-header"></div>
                 <div class="messages" id="messages"></div>
                 <div id="input">
                     <input type="text" id="message-Room-input" placeholder="Type a message...">
-                    <button onclick="sendRoomMessage()" >Send</button>
+                    <button onclick="sendRoomMessage()">Send</button>
                     <button onclick="clearRoomChat()">Clear chat</button>
                     <button onclick="tictactoe()">Challenge</button>
                 </div>`;
+
+                const messageRoomInput = document.getElementById("message-Room-input");
+
+                if (messageRoomInput) {
+                    messageRoomInput.addEventListener('keypress', function (event) {
+                        if (event.key === 'Enter') {
+                            sendRoomMessage();
+                        }
+                    });
+                } else {
+                    console.error("Element with ID 'message-Room-input' not found.");
+                }
+
 
 
     const dataToSend = {
@@ -158,8 +169,11 @@ function roomClickHandler(room) {
         .then((response) => response.json())
         .then((data) => {
             if (data.status === "success") {
-                const roomHistory = data.result;
+                const roomHistory = data.chatHistory;
                 displayChatHistory(roomHistory);
+            } else {
+                console.error("Error loading history:", data.message);
+                alert("An error occurred while loading history. Please try again later.");
             }
         })
         .catch((error) => {
@@ -167,20 +181,29 @@ function roomClickHandler(room) {
             alert("An error occurred while loading history. Please try again later.");
         });
 
-
-    function displayChatHistory(chatHistory) {
-        chatHistory.forEach((chat) => {
+    function displayChatHistory(roomHistory) {
+        roomHistory.forEach((chat) => {
             if (chat.message && chat.message.trim() !== '') {
                 const messageDiv = document.createElement('div');
-                if (chat.sender.userID === userId) {
-                    messageDiv.className = "message self";
-                    messageDiv.textContent = chat.message, chat.timestamp;
-                    messages.appendChild(messageDiv);
-                } else if (chat.sender.userID === recipientID) {
-                    messageDiv.className = "message notself";
+                if (chat.sender === userId) {
                     messageDiv.textContent = chat.message;
-                    messages.appendChild(messageDiv);
+                    messageDiv.className = "message self";
+                } else {
+                    messageDiv.className = "message notself";
+                    const messageElement = document.createElement("div");
+                    messageElement.className = "message notself";
+                    const memberElement = document.createElement("div");
+                    memberElement.className = "message notself";
+                    memberElement.innerText = chat.sender;
+                    messageElement.appendChild(memberElement)
+                    const memberMessage = document.createElement("div");
+                    memberMessage.className = "message notself";
+                    memberMessage.innerText = `${chat.message}  ${chat.timestamp}`;
+                    messageElement.appendChild(memberMessage);
+                    messageDiv.appendChild(messageElement)
+                    scrollToBottom();
                 }
+                messages.appendChild(messageDiv);
             }
         });
         scrollToBottom();
@@ -274,3 +297,31 @@ socket.on("receiveRoomMsg", (data) => {
     messagesDiv.appendChild(messageElement)
     scrollToBottom();
 });
+
+function clearRoomChat() {
+    document.getElementById("messages").innerHTML = "";
+    data = {
+        user: userId,
+    }
+    fetch("/clearRoomChat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            if (data.status === "success") {
+                const chat_window = document.getElementById("messages");
+                chat_window.innerHTML = "";
+            } else {
+                console.log("Failed to clear chat: " + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error("Error clearing chat:", error);
+            alert("An error occurred while clearing chat. Please try again later.");
+        });
+}
