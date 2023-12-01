@@ -104,7 +104,7 @@ const chatHistory = mongoose.model("chatHistory", chatHistorySchema);
 
 const roomChatHistorySchema = new mongoose.Schema({
   roomNmae: String,
-  name: [{
+  names: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "accounts",
   }],
@@ -115,10 +115,6 @@ const roomChatHistorySchema = new mongoose.Schema({
   },
   message: String,
   timestamp: String,
-  names: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "accounts",
-  },],
 }, {
   collection: 'roomChatHistory'
 });
@@ -132,7 +128,7 @@ const roomChatHistory = mongoose.model("roomChatHistory", roomChatHistorySchema)
 
 const roomSchema = new mongoose.Schema({
   name: String,
-  profilePhoto: String,
+  roomProfilePhoto: String,
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "accounts"

@@ -1,3 +1,6 @@
+
+// socket
+
 socket.on("UserRooms", (data) => {
     const { userRooms } = data;
     updateRoomsList(userRooms);
@@ -10,6 +13,11 @@ function loadRooms() {
     socket.emit("loadRooms", userId);
     updateRoomsList();
 }
+
+
+
+
+
 
 function updateRoomsList(rooms) {
     const friendsListDiv = document.getElementById("friends-list");
@@ -38,6 +46,9 @@ function updateRoomsList(rooms) {
 }
 
 
+
+
+
 function createNewRoom() {
     const backdrop = document.createElement('div');
     backdrop.classList.add('backdrop');
@@ -61,6 +72,12 @@ function createNewRoom() {
     roomname.type = "text";
     roomname.placeholder = "Enter room name..";
     notificationsDiv.appendChild(roomname);
+
+    const roomDescription = document.createElement('input');
+    roomDescription.setAttribute('id', 'room-input');
+    roomDescription.type = "text";
+    roomDescription.placeholder = "room Description";
+    notificationsDiv.appendChild(roomDescription);
 
     const roommembers = document.createElement('input');
     roommembers.setAttribute('id', 'members');
@@ -87,6 +104,7 @@ function createNewRoom() {
 
 function createRoom() {
     const roomName = document.getElementById("room-input").value;
+    const roomDecription = document.getElementById("room-input").value;
     const members = document.getElementById("members").value;
 
     if (roomName.trim() === "") {
@@ -97,6 +115,7 @@ function createRoom() {
     const data = {
         owner: userId,
         roomName: roomName,
+        Description: roomDecription,
         members: members.split(",").map(member => member.trim()),
     };
 
@@ -110,10 +129,10 @@ function createRoom() {
         .then((response) => response.json())
         .then((data) => {
             if (data.status === "success") {
-                console.log("Room created");
-                loadRooms()
-            } else {
-                alert("Failed to create room: " + data.message);
+                loadRooms();
+            }
+            else {
+                alert(data.message);
             }
         })
         .catch((error) => {
@@ -121,6 +140,12 @@ function createRoom() {
             alert("An error occurred while creating the room. Please try again later.");
         });
 }
+
+
+
+
+// After room
+
 
 let roomName;
 
@@ -137,19 +162,29 @@ function roomClickHandler(room) {
                     <button onclick="tictactoe()">Challenge</button>
                 </div>`;
 
-                const messageRoomInput = document.getElementById("message-Room-input");
+    loadHeader(roomName, userId)
 
-                if (messageRoomInput) {
-                    messageRoomInput.addEventListener('keypress', function (event) {
-                        if (event.key === 'Enter') {
-                            sendRoomMessage();
-                        }
-                    });
-                } else {
-                    console.error("Element with ID 'message-Room-input' not found.");
-                }
+    const messageRoomInput = document.getElementById("message-Room-input");
 
+    if (messageRoomInput) {
+        messageRoomInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                sendRoomMessage();
+            }
+        });
+    } else {
+        console.error("Element with ID 'message-Room-input' not found.");
+    }
 
+    const chat_header = document.getElementById("chat-header");
+
+    if (chat_header) {
+        chat_header.addEventListener('click', function () {
+            roomInfo(roomName, userId);
+        });
+    } else {
+        console.error("Element with ID 'message-Room-input' not found.");
+    }
 
     const dataToSend = {
         roomName: roomName,
@@ -181,6 +216,7 @@ function roomClickHandler(room) {
             alert("An error occurred while loading history. Please try again later.");
         });
 
+
     function displayChatHistory(roomHistory) {
         roomHistory.forEach((chat) => {
             if (chat.message && chat.message.trim() !== '') {
@@ -209,6 +245,35 @@ function roomClickHandler(room) {
         scrollToBottom();
     }
 }
+
+
+function loadRoomHeader(x, user) {
+    const chat_header = document.getElementById('chat-header');
+    const profileImage = document.createElement("div");
+    profileImage.className = "friend-profilePhoto";
+    profileImage.style.marginLeft = "5px";
+    const profileImage1 = document.createElement("img");
+    if (user.profilePhoto) {
+        console.log("srfdgtfgdanhz");
+        profileImage1.src = user.profilePhoto;
+        profileImage1.alt = "Profile Photo";
+        profileImage.appendChild(profileImage1);
+    } else {
+        profileImage1.src = "../assets/default-profile.jpg";
+        profileImage1.alt = "Profile Photo";
+        profileImage.appendChild(profileImage1);
+    }
+    chat_header.appendChild(profileImage);
+    const profileName = document.createElement("div");
+    profileName.className = "friend-Name";
+    profileName.innerText = x;
+    profileName.style.color = "black";
+    profileName.style.marginLeft = "10px";
+    chat_header.appendChild(profileName);
+}
+
+
+
 
 function sendRoomMessage() {
     const messageInput = document.getElementById("message-Room-input");
@@ -281,6 +346,8 @@ function sendRoomMessage() {
     scrollToBottom();
 }
 
+
+
 socket.on("receiveRoomMsg", (data) => {
     const { sender, message, time } = data;
     const messagesDiv = document.getElementById("messages");
@@ -297,6 +364,9 @@ socket.on("receiveRoomMsg", (data) => {
     messagesDiv.appendChild(messageElement)
     scrollToBottom();
 });
+
+
+
 
 function clearRoomChat() {
     document.getElementById("messages").innerHTML = "";
@@ -324,4 +394,69 @@ function clearRoomChat() {
             console.error("Error clearing chat:", error);
             alert("An error occurred while clearing chat. Please try again later.");
         });
+}
+
+
+
+
+function roomInfo(roomName, user) {
+    const backdrop = document.createElement('div');
+    backdrop.classList.add('backdrop');
+    backdrop.addEventListener('click', function (event) {
+        if (event.target === backdrop) {
+            backdrop.remove();
+            notificationsDiv.remove();
+        }
+    });
+
+    const notificationsDiv = document.createElement('div');
+    notificationsDiv.classList.add('roomInfo');
+
+    const profileImage = document.createElement("div");
+    profileImage.className = "room-profilePhoto";
+    profileImage.style.marginLeft = "5px";
+    const profileImage1 = document.createElement("img");
+    if (user.profilePhoto) {
+        console.log("srfdgtfgdanhz");
+        profileImage1.src = user.profilePhoto;
+        profileImage1.alt = "Profile Photo";
+        profileImage.appendChild(profileImage1);
+    } else {
+        profileImage1.src = "../assets/default-profile.jpg";
+        profileImage1.alt = "Profile Photo";
+        profileImage.appendChild(profileImage1);
+    }
+    notificationsDiv.appendChild(profileImage);
+
+    const mainTitle = document.createElement('h2');
+    mainTitle.setAttribute('id', 'mainTitle');
+    mainTitle.textContent = `${roomName}`;
+    notificationsDiv.appendChild(mainTitle);
+
+    const roomname = document.createElement('input');
+    roomname.setAttribute('id', 'room-input');
+    roomname.type = "text";
+    roomname.placeholder = "Enter room name..";
+    notificationsDiv.appendChild(roomname);
+
+    const roommembers = document.createElement('input');
+    roommembers.setAttribute('id', 'members');
+    roommembers.type = "text";
+    roommembers.placeholder = "Add members (comma-separated)";
+    notificationsDiv.appendChild(roommembers);
+
+    const createbutton = document.createElement('button');
+    createbutton.setAttribute('id', 'createbutton');
+    createbutton.textContent = `Create ROOM`;
+    createbutton.addEventListener('click', function (event) {
+        if (event.target === createbutton) {
+            createRoom();
+            backdrop.remove();
+            notificationsDiv.remove();
+        }
+    });
+
+    notificationsDiv.appendChild(createbutton);
+    document.body.appendChild(backdrop);
+    document.body.appendChild(notificationsDiv);
 }

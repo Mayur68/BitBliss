@@ -184,7 +184,7 @@ router.post("/saveRoomHistory", async (req, res) => {
 
         const chatRecord = new roomChatHistory({
             roomName: roomName,
-            name: memberIds,
+            names: memberIds,
             sender: senderAccount._id,
             message: message,
             timestamp: time,
@@ -230,11 +230,10 @@ router.post("/loadRoomHistory", async (req, res) => {
 
         const chatHistory = result.map(chat => ({
             roomName: chat.roomName,
-            name: chat.name,
+            names: chat.names,
             sender: chat.sender ? chat.sender.username : null,
             message: chat.message,
             timestamp: chat.timestamp,
-            names: chat.names
         }));
 
         return res.status(200).json({

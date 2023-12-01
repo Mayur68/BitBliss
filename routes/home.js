@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose')
 const { accounts, rooms, notification } = require("../database/database");
-
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 
 router.post("/notifications", async (req, res) => {
@@ -54,11 +56,29 @@ router.get("/Explore/:promt", async (req, res) => {
   }
 });
 
-
 router.post("/createRoom", async (req, res) => {
-  const { owner, roomName, members, description } = req.body;
+  const { owner, roomName, Description, members } = req.body;
 
   try {
+
+    if (!owner || !roomName || !members || !Description) {
+      console.log("sdfsdfsfsdf")
+      return res.status(400).json({
+        status: "error",
+        message: "Required fields are missing in the request.",
+      });
+    }
+
+    const existingRoom = await rooms.findOne({ name: roomName });
+
+    if (existingRoom) {
+      return res.status(400).json({
+        status: "error",
+        message: "Room with this name already exists.",
+      });
+    }
+
+
     const ownerAccount = await accounts.findOne({ username: owner });
 
     if (!ownerAccount) {
@@ -68,6 +88,8 @@ router.post("/createRoom", async (req, res) => {
       });
     }
 
+    const membersArray = Array.isArray(members) ? members : [members];
+
     if (members.length > 10) {
       return res.status(400).json({
         status: "error",
@@ -75,15 +97,13 @@ router.post("/createRoom", async (req, res) => {
       });
     }
 
-    // Validate each member username against the accounts collection
-    const memberAccountsPromises = members.map(async (memberUsername) => {
+    const memberAccountsPromises = membersArray.map(async (memberUsername) => {
       const memberAccount = await accounts.findOne({ username: memberUsername });
       return memberAccount;
     });
 
     const memberAccounts = await Promise.all(memberAccountsPromises);
 
-    // Check if any member username does not have a corresponding account
     if (memberAccounts.some(member => !member)) {
       return res.status(400).json({
         status: "error",
@@ -97,7 +117,7 @@ router.post("/createRoom", async (req, res) => {
       name: roomName,
       owner: ownerAccount._id,
       members: memberIds,
-      description: description,
+      description: Description,
       timestamp: new Date(),
     });
 
@@ -118,6 +138,104 @@ router.post("/createRoom", async (req, res) => {
 });
 
 
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const roomName = req.body.roomName;
+    const uploadDir = path.join(__dirname, '../roomProfilePhotos', roomName);
+
+    fs.mkdir(uploadDir, { recursive: true }, (err) => {
+      if (err) {
+        console.error('Error creating repository directory:', err);
+        cb(err, null);
+      } else {
+        cb(null, uploadDir);
+      }
+    });
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+router.post("/updateRoom", upload.single('profilePhoto'), async (req, res) => {
+  const { owner, roomName, Description, members } = req.body;
+
+  try {
+
+    if (!owner || !roomName || !members || !Description) {
+      return res.status(400).json({
+        status: "error",
+        message: "Required fields are missing in the request.",
+      });
+    }
+
+    if (members.length > 10) {
+      return res.status(400).json({
+        status: "error",
+        message: "Exceeded the limit of 10 members per room.",
+      });
+    }
+
+    const ownerAccount = await accounts.findOne({ username: owner });
+    const room = await rooms.findOne({ roomName: roomName });
+
+    if (!ownerAccount) {
+      return res.status(400).json({
+        status: "error",
+        message: "Owner account not found.",
+      });
+    }
+
+    const memberAccountsPromises = members.map(async (memberUsername) => {
+      const memberAccount = await accounts.findOne({ username: memberUsername });
+      return memberAccount;
+    });
+
+    const memberAccounts = await Promise.all(memberAccountsPromises);
+
+    if (memberAccounts.some(member => !member)) {
+      return res.status(400).json({
+        status: "error",
+        message: "One or more member usernames are invalid.",
+      });
+    }
+
+    const memberIds = memberAccounts.map(member => member._id);
+
+    room.name = roomName;
+    room.owner = ownerAccount._id;
+    room.members = memberIds;
+    room.description = Description;
+    room.timestamp = new Date();
+
+    let profilePhoto = req.file;
+    const originalname = roomName;
+    const photoDirectory = path.join(__dirname, '../roomProfilePhotos', originalname);
+    const filePath = path.join(photoDirectory, profilePhoto.originalname);
+
+    await fs.promises.mkdir(photoDirectory, { recursive: true });
+    fs.renameSync(profilePhoto.path, filePath);
+    room.profilePhoto = `/roomProfilePhotos/${originalname}/${profilePhoto.originalname}`;
+
+    await room.save();
+
+    return res.status(201).json({
+      status: "success",
+      message: "Room updated successfully",
+      room: room,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+    });
+  }
+});
 
 
 

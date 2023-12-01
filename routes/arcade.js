@@ -11,7 +11,7 @@ router.get("/Cosmic-Arcade/TicTacToe", (req, res) => {
   res.render("tic-tac-toe-online", { username: username });
 });
 
-router.get("/Cosmic-Arcade/shootDown", (req, res) => {
+router.get("/Cosmic-Arcade/cosmicshoot", (req, res) => {
   const username = req.params.username;
   res.render("cosmicShoot", { username: username });
 });
