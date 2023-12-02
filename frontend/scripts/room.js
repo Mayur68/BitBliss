@@ -180,7 +180,7 @@ function roomClickHandler(room) {
 
     if (chat_header) {
         chat_header.addEventListener('click', function () {
-            roomInfo(roomName, userId);
+            roomInfo(roomName);
         });
     } else {
         console.error("Element with ID 'message-Room-input' not found.");
@@ -399,64 +399,72 @@ function clearRoomChat() {
 
 
 
-function roomInfo(roomName, user) {
-    const backdrop = document.createElement('div');
-    backdrop.classList.add('backdrop');
-    backdrop.addEventListener('click', function (event) {
-        if (event.target === backdrop) {
-            backdrop.remove();
-            notificationsDiv.remove();
+async function roomInfo(roomName) {
+    try {
+        const response = await fetch('/loadRoomData', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ roomName }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch');
         }
-    });
 
-    const notificationsDiv = document.createElement('div');
-    notificationsDiv.classList.add('roomInfo');
+        const data = await response.json();
 
-    const profileImage = document.createElement("div");
-    profileImage.className = "room-profilePhoto";
-    profileImage.style.marginLeft = "5px";
-    const profileImage1 = document.createElement("img");
-    if (user.profilePhoto) {
-        console.log("srfdgtfgdanhz");
-        profileImage1.src = user.profilePhoto;
-        profileImage1.alt = "Profile Photo";
-        profileImage.appendChild(profileImage1);
-    } else {
-        profileImage1.src = "../assets/default-profile.jpg";
-        profileImage1.alt = "Profile Photo";
-        profileImage.appendChild(profileImage1);
+        if (data.status === 'success') {
+            const backdrop = document.createElement('div');
+            backdrop.classList.add('backdrop');
+            backdrop.addEventListener('click', function (event) {
+                if (event.target === backdrop) {
+                    backdrop.remove();
+                    notificationsDiv.remove();
+                }
+            });
+
+            const notificationsDiv = document.createElement('div');
+            notificationsDiv.classList.add('roomInfo');
+
+            const profileImage = document.createElement("div");
+            profileImage.className = "room-profilePhoto";
+            profileImage.style.marginLeft = "5px";
+            const profileImage1 = document.createElement("img");
+            if (data.room.profilePhoto) {
+                profileImage1.src = data.room.profilePhoto;
+                profileImage1.alt = "Profile Photo";
+                profileImage.appendChild(profileImage1);
+            } else {
+                profileImage1.src = "../assets/default-profile.jpg";
+                profileImage1.alt = "Profile Photo";
+                profileImage.appendChild(profileImage1);
+            }
+            notificationsDiv.appendChild(profileImage);
+
+            const mainTitle = document.createElement('h2');
+            mainTitle.setAttribute('id', 'mainTitle');
+            mainTitle.textContent = `${data.room.name}`;
+            notificationsDiv.appendChild(mainTitle);
+
+            const settingsButton = document.createElement('button');
+            settingsButton.setAttribute('id', 'createbutton');
+            settingsButton.innerText = "Settings";
+            settingsButton.addEventListener('click', function (event) {
+                if (event.target === settingsButton) {
+                    window.location = "/" + data.room.name + "/Settings"
+                }
+            });
+            notificationsDiv.appendChild(settingsButton);
+
+            document.body.appendChild(backdrop);
+            document.body.appendChild(notificationsDiv);
+        } else {
+            throw new Error('Failed to load room data');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to load room data');
     }
-    notificationsDiv.appendChild(profileImage);
-
-    const mainTitle = document.createElement('h2');
-    mainTitle.setAttribute('id', 'mainTitle');
-    mainTitle.textContent = `${roomName}`;
-    notificationsDiv.appendChild(mainTitle);
-
-    const roomname = document.createElement('input');
-    roomname.setAttribute('id', 'room-input');
-    roomname.type = "text";
-    roomname.placeholder = "Enter room name..";
-    notificationsDiv.appendChild(roomname);
-
-    const roommembers = document.createElement('input');
-    roommembers.setAttribute('id', 'members');
-    roommembers.type = "text";
-    roommembers.placeholder = "Add members (comma-separated)";
-    notificationsDiv.appendChild(roommembers);
-
-    const createbutton = document.createElement('button');
-    createbutton.setAttribute('id', 'createbutton');
-    createbutton.textContent = `Create ROOM`;
-    createbutton.addEventListener('click', function (event) {
-        if (event.target === createbutton) {
-            createRoom();
-            backdrop.remove();
-            notificationsDiv.remove();
-        }
-    });
-
-    notificationsDiv.appendChild(createbutton);
-    document.body.appendChild(backdrop);
-    document.body.appendChild(notificationsDiv);
 }

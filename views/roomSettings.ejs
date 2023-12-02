@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile: <%= roomName %>
+    </title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1d1b34;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            background: #fff;
+            border-radius: 15px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #ccc;
+            margin: 20px auto;
+            border: 5px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .username {
+            font-size: 28px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .field {
+            margin: 20px 0;
+        }
+
+        .field label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .field input,
+        .field textarea {
+            width: 90%;
+            padding: 10px;
+            border: 2px solid #07a607;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+
+        .field input[type="file"] {
+            background: none;
+            border: none;
+        }
+
+        .field input[type="file"]::file-selector-button {
+            background: #07a607;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+
+        .save-button {
+            background: #07a607;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .save-button:hover {
+            background: #059a05;
+            transform: scale(1.05);
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 20px auto;
+            border: 5px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <div class="profile-photo">
+            <img id="profile-image" src="" alt="Profile Photo">
+        </div>
+        <div class="username">
+            <%= roomName %>
+        </div>
+        <form enctype="multipart/form-data">
+            <div class="field">
+                <label for="firstName">Room Name</label>
+                <input type="text" id="roomName" name="firstName">
+            </div>
+            <div class="field">
+                <label for="Description">Description</label>
+                <input type="text" id="Description" name="Description">
+            </div>
+            <div class="field">
+                <label for="region">Add members</label>
+                <input type="text" id="members" name="region">
+            </div>
+            <div class="field">
+                <label for="profile-photo">Profile Photo:</label>
+                <input type="file" id="profile-photo" name="profilePhoto">
+            </div>
+            <button class="save-button" type="button" onclick="save()">Save</button>
+        </form>
+    </div>
+
+    <script>
+
+        async function loadData() {
+            const roomName = "<%= roomName %>";
+            try {
+                const response = await fetch('/loadRoomData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ roomName }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch');
+                }
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    console.log("yuiuyiyuiyuiu")
+                    document.getElementById('roomNmae').value = data.room.name || '';
+                    document.getElementById('Description').value = data.room.bio || '';
+                    document.getElementById('members').value = data.room.region || '';
+
+                    const profileImage = document.getElementById('profile-image');
+                    if (data.room.profilePhoto) {
+                        profileImage.src = data.room.profilePhoto;
+                        profileImage.alt = "Profile Photo";
+                    } else {
+                        profileImage.src = "../assets/default-profile.jpg";
+                    }
+                } else {
+                    throw new Error('Failed to load room data');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to load room data');
+            }
+        }
+
+        loadData();
+
+
+
+
+        function save() {
+            const username = document.getElementById('username').value;
+            const bio = document.getElementById('bio').value;
+            const profile_photo = document.getElementById('profile-photo').files[0];
+
+            const formData = new FormData();
+
+            formData.append("firstName", first_name);
+            formData.append("lastName", last_name);
+            formData.append("username", username);
+            formData.append("dob", dob);
+            formData.append("gender", gender);
+            formData.append("email", email);
+            formData.append("bio", bio);
+            formData.append("region", region);
+            formData.append("profilePhoto", profile_photo);
+
+            fetch('/update-profile', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "/<%= roomName %>";
+                    } else {
+                        alert('Profile update failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+
+    </script>
+</body>
+
+</html>

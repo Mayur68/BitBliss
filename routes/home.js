@@ -44,7 +44,15 @@ router.post("/notifications", async (req, res) => {
 });
 
 
-router.post("/:username/:repositoryName", async (req, res) => { });
+router.get("/:roomName/Settings", async (req, res) => {
+  try {
+    const roomName = req.params.roomName;
+    res.render("roomSettings", { roomName: roomName });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
 
 router.get("/Explore/:promt", async (req, res) => {
   try {
@@ -136,6 +144,35 @@ router.post("/createRoom", async (req, res) => {
     });
   }
 });
+
+
+router.post('/loadRoomData', async (req, res) => {
+
+  try {
+    const { roomName } = req.body;
+    if (!roomName) {
+      return res.status(400).json({ message: 'Room name not provided' });
+    }
+
+    const room = await rooms.findOne({ name: roomName });
+
+    if (!room) {
+      return res.status(404).json({ message: 'Room not found' });
+    }
+
+    const profilePhoto = room.roomProfilePhoto;
+    room.roomProfilePhoto = profilePhoto ? `https://g02bq8d9-3000.inc1.devtunnels.ms/${profilePhoto}` : '';
+
+    return res.status(200).json({ status: 'success', room });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to load room data' });
+  }
+});
+
+
+
+
 
 
 

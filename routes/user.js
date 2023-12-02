@@ -70,70 +70,78 @@ router.post("/login", async (req, res) => {
 
 router.post("/sign-up", async (req, res) => {
   const { username, email, password } = req.body;
-  const sessionString = await generateSession();
-  const sessionToken = sessionString;
-  const expirationTime = 24 * 60 * 60 * 1000;
-  const expirationDate = new Date(Date.now() + expirationTime);
 
   try {
-    const emailInUse = await accounts.findOne({ email: email });
+    const emailInUse = await accounts.findOne({ email }).lean();
 
     if (emailInUse) {
-      res.status(401).json({
+      return res.status(401).json({
         status: "error",
         message: "Email is already associated with another account",
       });
-    } else {
-
-      const existingUser = await accounts.findOne({ username: username });
-
-      if (existingUser) {
-        res.status(401).json({
-          status: "error",
-          message: "Username is already taken",
-        });
-      } else {
-
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-        const newUser = new accounts({
-          username: username,
-          email: email,
-          password: hashedPassword,
-          session: sessionString,
-        });
-
-        await newUser.save();
-
-        const user = await accounts.findOne({ username: username });
-
-        const newUserNotification = new notification({
-          username: user._id,
-        });
-
-        await newUserNotification.save();
-
-
-        res.cookie("sessionToken", sessionToken, {
-          expires: expirationDate,
-          httpOnly: true,
-        });
-
-        res.status(201).json({
-          status: "success",
-          message: "Sign-up successful!",
-        });
-      }
     }
+
+    const existingUser = await accounts.findOne({ username }).lean();
+
+    if (existingUser) {
+      return res.status(401).json({
+        status: "error",
+        message: "Username is already taken",
+      });
+    }
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const sessionString = await generateSession();
+    const sessionToken = sessionString;
+
+    const newUser = new accounts({
+      username,
+      email,
+      password: hashedPassword,
+      session: sessionString,
+    });
+
+    await newUser.save();
+
+    const user = await accounts.findOne({ username });
+
+    if (!user) {
+      return res.status(500).json({
+        status: "error",
+        message: "Failed to create user",
+      });
+    }
+
+    const newUserNotification = new notification({
+      username: user._id,
+    });
+
+    await newUserNotification.save();
+
+    const expirationTime = 24 * 60 * 60 * 1000;
+    const expirationDate = new Date(Date.now() + expirationTime);
+
+    res.cookie("sessionToken", sessionToken, {
+      expires: expirationDate,
+      httpOnly: true,
+    });
+
+    return res.status(201).json({
+      status: "success",
+      message: "Sign-up successful!",
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
+    return res.status(500).json({
       status: "error",
       message: "Internal server error",
     });
   }
 });
+
+
 
 
 

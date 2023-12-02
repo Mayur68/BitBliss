@@ -115,6 +115,7 @@ function setupSocket(server) {
         }
 
         userNotification.friendRequests.push(user._id);
+
         await userNotification.save();
 
       } catch (err) {

@@ -68,7 +68,7 @@
         }
 
         #chatlist {
-            width: 20%;
+            width: 15%;
             display: flex;
             flex-direction: column;
         }
@@ -105,6 +105,22 @@
             background-color: rgba(48, 48, 48);
         }
 
+        .roomInfo {
+            padding: 2%;
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            top: 50px;
+            flex-direction: column;
+            left: 50%;
+            transform: translateX(-50%);
+            border: solid 1px rgb(92, 92, 92);
+            border-radius: 10px;
+            width: 500px;
+            height: 400px;
+            background-color: rgba(48, 48, 48);
+        }
+
         #buttonwidth {
             width: 47%;
         }
@@ -112,23 +128,42 @@
         #buttonwidth1 {
             width: 47%;
         }
+
+        .room-profilePhoto {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 20px auto;
+            border: 5px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .room-profilePhoto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 
 <body>
+
     <div class="header">
         <a href="/"><img src="/assets/logo2.jpg"></a>
         <button class="profile-button" onclick="profile()">Profile</button>
         <input type="text" class="explore-bar" id="explore" placeholder="Explore..." />
         <button onclick="explore()">explore</button>
         <div>
-            <div id="notifications" onclick="notifications()"><span class="material-symbols-outlined">
-                    circle_notifications
-                </span></div>
+            <div id="notifications" onclick="notifications()">
+                <span class="material-symbols-outlined">circle_notifications</span>
+            </div>
         </div>
-
     </div>
-    <div>
+
+
+    <div id="main">
         <div class="section">
             <div class="chat-container flex">
                 <div id="chatlist">
