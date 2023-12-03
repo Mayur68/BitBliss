@@ -147,14 +147,16 @@ router.post("/createRoom", async (req, res) => {
 
 
 router.post('/loadRoomData', async (req, res) => {
-
   try {
     const { roomName } = req.body;
+
     if (!roomName) {
       return res.status(400).json({ message: 'Room name not provided' });
     }
 
-    const room = await rooms.findOne({ name: roomName });
+    const room = await rooms.findOne({ name: roomName })
+      .populate('owner', 'username')
+      .populate('members', 'username');
 
     if (!room) {
       return res.status(404).json({ message: 'Room not found' });
@@ -177,9 +179,14 @@ router.post('/loadRoomData', async (req, res) => {
 
 
 
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const roomName = req.body.roomName;
+    if (!roomName) {
+      return cb(new Error('Room name not provided'));
+    }
+
     const uploadDir = path.join(__dirname, '../roomProfilePhotos', roomName);
 
     fs.mkdir(uploadDir, { recursive: true }, (err) => {
@@ -199,42 +206,37 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post("/updateRoom", upload.single('profilePhoto'), async (req, res) => {
-  const { owner, roomName, Description, members } = req.body;
+  const { roomName, Description, members } = req.body;
 
   try {
-
-    if (!owner || !roomName || !members || !Description) {
+    if (!roomName || !Description || !members) {
       return res.status(400).json({
         status: "error",
         message: "Required fields are missing in the request.",
       });
     }
 
-    if (members.length > 10) {
+    const room = await rooms.findOne({ name: roomName });
+
+    if (!room) {
+      return res.status(404).json({
+        status: "error",
+        message: "Room not found",
+      });
+    }
+
+    const membersArray = Array.isArray(members) ? members : [members];
+
+    if (membersArray.length + room.members.length > 10) {
       return res.status(400).json({
         status: "error",
         message: "Exceeded the limit of 10 members per room.",
       });
     }
 
-    const ownerAccount = await accounts.findOne({ username: owner });
-    const room = await rooms.findOne({ roomName: roomName });
+    const memberAccounts = await accounts.find({ username: { $in: membersArray } });
 
-    if (!ownerAccount) {
-      return res.status(400).json({
-        status: "error",
-        message: "Owner account not found.",
-      });
-    }
-
-    const memberAccountsPromises = members.map(async (memberUsername) => {
-      const memberAccount = await accounts.findOne({ username: memberUsername });
-      return memberAccount;
-    });
-
-    const memberAccounts = await Promise.all(memberAccountsPromises);
-
-    if (memberAccounts.some(member => !member)) {
+    if (memberAccounts.length !== membersArray.length) {
       return res.status(400).json({
         status: "error",
         message: "One or more member usernames are invalid.",
@@ -244,19 +246,21 @@ router.post("/updateRoom", upload.single('profilePhoto'), async (req, res) => {
     const memberIds = memberAccounts.map(member => member._id);
 
     room.name = roomName;
-    room.owner = ownerAccount._id;
-    room.members = memberIds;
     room.description = Description;
+    room.members = memberIds;
     room.timestamp = new Date();
 
     let profilePhoto = req.file;
-    const originalname = roomName;
-    const photoDirectory = path.join(__dirname, '../roomProfilePhotos', originalname);
-    const filePath = path.join(photoDirectory, profilePhoto.originalname);
 
-    await fs.promises.mkdir(photoDirectory, { recursive: true });
-    fs.renameSync(profilePhoto.path, filePath);
-    room.profilePhoto = `/roomProfilePhotos/${originalname}/${profilePhoto.originalname}`;
+    if (profilePhoto) {
+      const originalname = roomName;
+      const photoDirectory = path.join(__dirname, '../roomProfilePhotos', originalname);
+      const filePath = path.join(photoDirectory, profilePhoto.originalname);
+
+      await fs.promises.mkdir(photoDirectory, { recursive: true });
+      fs.renameSync(profilePhoto.path, filePath);
+      room.roomProfilePhoto = `/roomProfilePhotos/${originalname}/${profilePhoto.originalname}`;
+    }
 
     await room.save();
 
@@ -273,6 +277,8 @@ router.post("/updateRoom", upload.single('profilePhoto'), async (req, res) => {
     });
   }
 });
+
+
 
 
 

@@ -28,6 +28,7 @@ for (let i = 0; i < 15; i++) {
     console.log('Exit listener', i + 1);
   });
 }
+
 app.use(express.urlencoded({ extended: false }))
 app.use('/profilePhotos', express.static(path.join(__dirname, './profilePhotos')));
 app.use('/repository', express.static(path.join(__dirname, '../uploads')));

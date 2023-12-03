@@ -9,55 +9,57 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: #1d1b34;
+            background-color: #f4f4f4;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            background-color: #8F66AE;
         }
 
         .profile-container {
-            background: #fff;
-            border-radius: 15px;
-            width: 400px;
+            width: 100%;
             text-align: center;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-            padding: 20px;
-        }
-
-        .profile-photo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: #ccc;
-            margin: 20px auto;
-            border: 5px solid #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            color: #fff;
         }
 
         .username {
+            text-align: center;
+            padding: 4%;
+            top: 50px;
             font-size: 28px;
             font-weight: bold;
-            color: #007bff;
+            text-transform: uppercase;
+        }
+
+        form {
+            left: 10px;
+            width: 500px;
         }
 
         .field {
+            display: flex;
             margin: 20px 0;
         }
 
         .field label {
+            padding: 3%;
             font-weight: bold;
-            color: #333;
+            color: #fff;
+            display: block;
+            margin-bottom: 5px;
         }
 
         .field input,
         .field textarea {
-            width: 90%;
+            width: 200px;
             padding: 10px;
-            border: 2px solid #07a607;
+            border: none;
             border-radius: 5px;
-            background: #f9f9f9;
+            background: rgba(255, 255, 255, 0.9);
+            margin-top: 5px;
+            box-sizing: border-box;
         }
 
         .field input[type="file"] {
@@ -65,17 +67,19 @@
             border: none;
         }
 
-        .field input[type="file"]::file-selector-button {
-            background: #07a607;
+        button {
+            background: #5a5a5a;
             color: #fff;
+            padding: 12px 20px;
             border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
             cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
         }
 
         .save-button {
-            background: #07a607;
+            background: #5a5a5a;
             color: #fff;
             padding: 12px 20px;
             border: none;
@@ -86,7 +90,7 @@
         }
 
         .save-button:hover {
-            background: #059a05;
+            background: #444;
             transform: scale(1.05);
         }
 
@@ -95,7 +99,7 @@
             height: 150px;
             border-radius: 50%;
             background-color: #ccc;
-            margin: 20px auto;
+            left: 10px;
             border: 5px solid #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             overflow: hidden;
@@ -106,30 +110,68 @@
             height: 100%;
             object-fit: cover;
         }
+
+        ._1 {
+            display: flex;
+        }
+
+        .member-profile-photo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ccc;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .member-profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-item {
+            width: 250px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .remove-button {
+            background-color: rgb(234, 63, 63);
+        }
     </style>
+
+
 </head>
 
 <body>
     <div class="profile-container">
-        <div class="profile-photo">
-            <img id="profile-image" src="" alt="Profile Photo">
-        </div>
-        <div class="username">
-            <%= roomName %>
-        </div>
+        <section class="_1">
+            <div class="profile-photo">
+                <img id="profile-image" src="" alt="Profile Photo">
+            </div>
+            <div class="username">
+                <%= roomName %>
+            </div>
+        </section>
+
         <form enctype="multipart/form-data">
             <div class="field">
                 <label for="firstName">Room Name</label>
                 <input type="text" id="roomName" name="firstName">
             </div>
             <div class="field">
+                <label for="firstName">Room owner</label>
+                <input type="text" id="roomOwner" name="firstName" readonly>
+            </div>
+            <div class="field">
                 <label for="Description">Description</label>
                 <input type="text" id="Description" name="Description">
             </div>
-            <div class="field">
-                <label for="region">Add members</label>
-                <input type="text" id="members" name="region">
-            </div>
+            <div class="field" id="members"></div>
+            <button type="button" onclick="addMember()">Add members</button>
+            <div class="field" id="members_"></div>
             <div class="field">
                 <label for="profile-photo">Profile Photo:</label>
                 <input type="file" id="profile-photo" name="profilePhoto">
@@ -158,14 +200,39 @@
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    console.log("yuiuyiyuiyuiu")
-                    document.getElementById('roomNmae').value = data.room.name || '';
-                    document.getElementById('Description').value = data.room.bio || '';
-                    document.getElementById('members').value = data.room.region || '';
+                    document.getElementById('roomName').value = data.room.name || '';
+                    document.getElementById('roomOwner').value = data.room.owner.username || '';
+                    document.getElementById('Description').value = data.room.description || '';
+
+                    const membersElement = document.getElementById('members');
+                    membersElement.innerHTML = '';
+
+                    for (const member of data.room.members) {
+                        try {
+                            const memberResponse = await fetch('/loadData', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ username: member.username }),
+                            });
+
+                            const memberData = await memberResponse.json();
+                            console.log(memberData)
+                            if (memberData.status === 'success' && memberData.user) {
+                                createMemberElement(memberData.user, membersElement);
+                            } else {
+                                throw new Error('Failed to load profile data for ' + member.username);
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert('Failed to load profile data for ' + member.username);
+                        }
+                    }
 
                     const profileImage = document.getElementById('profile-image');
-                    if (data.room.profilePhoto) {
-                        profileImage.src = data.room.profilePhoto;
+                    if (data.room.roomProfilePhoto) {
+                        profileImage.src = data.room.roomProfilePhoto;
                         profileImage.alt = "Profile Photo";
                     } else {
                         profileImage.src = "../assets/default-profile.jpg";
@@ -179,43 +246,93 @@
             }
         }
 
+
+        function createMemberElement(user) {
+            const membersListDiv = document.getElementById("members");
+            const memberElement = document.createElement("div");
+            memberElement.className = "member-item";
+
+            const profileImage = document.createElement("div");
+            profileImage.className = "member-profile-photo";
+            const profileImageElement = document.createElement("img");
+
+            if (user.profilePhoto) {
+                profileImageElement.src = user.profilePhoto;
+                profileImageElement.alt = "Profile Photo";
+                profileImage.appendChild(profileImageElement);
+            } else {
+                profileImageElement.src = "../assets/default-profile.jpg";
+                profileImageElement.alt = "Profile Photo";
+                profileImage.appendChild(profileImageElement);
+            }
+            memberElement.appendChild(profileImage);
+
+            const memberName = document.createElement("div");
+            memberName.className = "member-name";
+            memberName.style.paddingTop = "10px";
+            memberName.style.marginLeft = "0";
+            memberName.innerText = user.username;
+            memberName.onclick = () => window.location = "/" + user.username;
+            memberElement.appendChild(memberName);
+
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.className = "remove-button";
+            removeButton.innerText = "Remove Member";
+            removeButton.onclick = () => removeMember(user.username);
+            memberElement.appendChild(removeButton);
+
+            membersListDiv.appendChild(memberElement);
+        }
+
+
+
         loadData();
 
+        function addMember() {
+            const membersElement = document.getElementById('members_');
+            const memberElement = document.createElement('input');
+            memberElement.type = "text";
+            memberElement.placeholder = "members(comma-separated)";
+            memberElement.id = `membres`;
+            membersElement.appendChild(memberElement);
+        }
 
 
 
         function save() {
-            const username = document.getElementById('username').value;
-            const bio = document.getElementById('bio').value;
-            const profile_photo = document.getElementById('profile-photo').files[0];
+            const roomName = document.getElementById('roomName').value;
+            const description = document.getElementById('Description').value;
+            const members = document.getElementById('membres').value.split(",").map(member => member.trim());
+            const profilePhoto = document.getElementById('profile-photo').files[0];
 
             const formData = new FormData();
 
-            formData.append("firstName", first_name);
-            formData.append("lastName", last_name);
-            formData.append("username", username);
-            formData.append("dob", dob);
-            formData.append("gender", gender);
-            formData.append("email", email);
-            formData.append("bio", bio);
-            formData.append("region", region);
-            formData.append("profilePhoto", profile_photo);
+            formData.append("roomName", roomName);
+            formData.append("Description", description);
 
-            fetch('/update-profile', {
+            members.forEach(member => {
+                formData.append("members[]", member);
+            });
+
+            formData.append("profilePhoto", profilePhoto);
+
+            fetch('/updateRoom', {
                 method: 'POST',
                 body: formData,
             })
                 .then(response => {
                     if (response.ok) {
-                        window.location.href = "/<%= roomName %>";
+                        window.location.href = "/";
                     } else {
-                        alert('Profile update failed');
+                        alert('Room update failed');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
         }
+
 
 
     </script>

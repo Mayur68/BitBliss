@@ -162,7 +162,7 @@ function roomClickHandler(room) {
                     <button onclick="tictactoe()">Challenge</button>
                 </div>`;
 
-    loadHeader(roomName, userId)
+    loadRoomHeader(roomName)
 
     const messageRoomInput = document.getElementById("message-Room-input");
 
@@ -247,30 +247,53 @@ function roomClickHandler(room) {
 }
 
 
-function loadRoomHeader(x, user) {
-    const chat_header = document.getElementById('chat-header');
-    const profileImage = document.createElement("div");
-    profileImage.className = "friend-profilePhoto";
-    profileImage.style.marginLeft = "5px";
-    const profileImage1 = document.createElement("img");
-    if (user.profilePhoto) {
-        console.log("srfdgtfgdanhz");
-        profileImage1.src = user.profilePhoto;
-        profileImage1.alt = "Profile Photo";
-        profileImage.appendChild(profileImage1);
-    } else {
-        profileImage1.src = "../assets/default-profile.jpg";
-        profileImage1.alt = "Profile Photo";
-        profileImage.appendChild(profileImage1);
+async function loadRoomHeader(roomName) {
+    try {
+        const response = await fetch('/loadRoomData', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ roomName }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch');
+        }
+
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            const chat_header = document.getElementById('chat-header');
+            const profileImage = document.createElement("div");
+            profileImage.className = "friend-profilePhoto";
+            profileImage.style.marginLeft = "5px";
+            const profileImage1 = document.createElement("img");
+            if (data.room.roomProfilePhoto) {
+                profileImage1.src = data.room.roomProfilePhoto;
+                profileImage1.alt = "Profile Photo";
+                profileImage.appendChild(profileImage1);
+            } else {
+                profileImage1.src = "../assets/default-profile.jpg";
+                profileImage1.alt = "Profile Photo";
+                profileImage.appendChild(profileImage1);
+            }
+            chat_header.appendChild(profileImage);
+            const profileName = document.createElement("div");
+            profileName.className = "friend-Name";
+            profileName.innerText = data.room.name;
+            profileName.style.color = "black";
+            profileName.style.marginLeft = "10px";
+            chat_header.appendChild(profileName);
+        } else {
+            throw new Error('Failed to load room data');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to load room data');
     }
-    chat_header.appendChild(profileImage);
-    const profileName = document.createElement("div");
-    profileName.className = "friend-Name";
-    profileName.innerText = x;
-    profileName.style.color = "black";
-    profileName.style.marginLeft = "10px";
-    chat_header.appendChild(profileName);
 }
+
 
 
 
@@ -432,8 +455,8 @@ async function roomInfo(roomName) {
             profileImage.className = "room-profilePhoto";
             profileImage.style.marginLeft = "5px";
             const profileImage1 = document.createElement("img");
-            if (data.room.profilePhoto) {
-                profileImage1.src = data.room.profilePhoto;
+            if (data.room.roomProfilePhoto) {
+                profileImage1.src = data.room.roomProfilePhoto;
                 profileImage1.alt = "Profile Photo";
                 profileImage.appendChild(profileImage1);
             } else {
@@ -448,15 +471,17 @@ async function roomInfo(roomName) {
             mainTitle.textContent = `${data.room.name}`;
             notificationsDiv.appendChild(mainTitle);
 
-            const settingsButton = document.createElement('button');
-            settingsButton.setAttribute('id', 'createbutton');
-            settingsButton.innerText = "Settings";
-            settingsButton.addEventListener('click', function (event) {
-                if (event.target === settingsButton) {
-                    window.location = "/" + data.room.name + "/Settings"
-                }
-            });
-            notificationsDiv.appendChild(settingsButton);
+            if(data.room.owner.username === userId){
+                const settingsButton = document.createElement('button');
+                settingsButton.setAttribute('id', 'createbutton');
+                settingsButton.innerText = "Settings";
+                settingsButton.addEventListener('click', function (event) {
+                    if (event.target === settingsButton) {
+                        window.location = "/" + data.room.name + "/Settings"
+                    }
+                });
+                notificationsDiv.appendChild(settingsButton);
+            }
 
             document.body.appendChild(backdrop);
             document.body.appendChild(notificationsDiv);
