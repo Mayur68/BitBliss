@@ -4,12 +4,26 @@ const { accounts, rooms, notification } = require("../database/database");
 function setupSocket(server) {
   const io = socketIO(server);
   const connectedUsers = {};
+  const onlineUsers = {};
 
   io.on("connection", (socket) => {
     socket.on("authenticate", (data) => {
       const { userID } = data;
       socket.userID = userID;
       connectedUsers[userID] = socket.id;
+      onlineUsers[userID] = socket.id;
+      io.emit('update_users_status', { userId: userID, status: true });
+
+      socket.on("onlineStatus", (data) => {
+        const { user } = data;
+
+        if (user in onlineUsers) {
+          io.emit('update_users_status', { userId: user, status: true });
+        } else {
+          io.emit('update_users_status', { userId: user, status: false });
+        }
+      });
+
 
       socket.on("loadNotifications", (data) => {
         loadNotifications(io, socket, data);
@@ -158,9 +172,15 @@ function setupSocket(server) {
     });
 
     socket.on("disconnect", () => {
-      const userID = socket.userID;
-      delete connectedUsers[userID];
-      socket.leaveAll();
+      const user = Object.keys(onlineUsers).find(
+        (key) => onlineUsers[key] === socket.id
+      );
+      if (user) {
+        delete onlineUsers[user];
+        delete connectedUsers[socket.userID];
+        socket.leaveAll();
+        io.emit('update_users_status', { userId: user, status: false });
+      }
     });
   });
 }

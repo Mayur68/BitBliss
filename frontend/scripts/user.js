@@ -35,3 +35,28 @@ socket.on('istyping', (data) => {
         }
     }, 2000);
 });
+
+
+socket.emit("onlineStatus", { user: recipientID });
+
+socket.on("update_users_status", (data) => {
+    const chatHeader = document.getElementById('chat-header');
+    const existingStatus = chatHeader.querySelector('.friend-Status');
+
+    if (existingStatus) {
+        chatHeader.removeChild(existingStatus);
+    }
+
+    const profileStatus = document.createElement("div");
+    profileStatus.className = "friend-Status";
+    profileStatus.style.color = "black";
+    profileStatus.style.marginLeft = "20px";
+
+    if (data.status === true) {
+        profileStatus.innerText = "online";
+    } else {
+        profileStatus.innerText = "offline";
+    }
+
+    chatHeader.appendChild(profileStatus);
+});

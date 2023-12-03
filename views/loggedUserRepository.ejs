@@ -140,7 +140,7 @@
     </style>
 </head>
 
-<body>
+<body id="main">
     <section id="file">
         <button onclick="copy()">Copy</button>
         <button onclick="edit()">Edit</button>
@@ -237,7 +237,25 @@
     loadRepository();
 
     function cancel() {
-        console.log("fdghfrhfgh")
+        document.getElementById('main').innerHTML = `<section id="file">
+        <button onclick="copy()">Copy</button>
+        <button onclick="edit()">Edit</button>
+        <button onclick="save()">Save</button>
+        <button onclick="cancel()">cancel</button>
+        <h3>Contents</h3>
+        <div class="view-file" id="repo-files"> </div>
+    </section>
+    <section id="file-content"></section>
+    <section id="info">
+        <h2>Repository Details</h2>
+        <div id="details"></div>
+        <div>
+            <h2>Actions</h2>
+            <button onclick="settings()">settings</button>
+            <button>contributers</button>
+            <button>share</button>
+        </div>
+    </section>`;
         loadRepository()
     }
 </script>

@@ -14,7 +14,7 @@ loadFriends()
 
 function updateFriendsList(friends) {
     const friendsListDiv = document.getElementById("friends-list");
-    
+
     if (friends.length === 0) {
         friendsListDiv.innerHTML = `<label style="margin: auto; color:black;">Add people to chat</label>`;
     } else {

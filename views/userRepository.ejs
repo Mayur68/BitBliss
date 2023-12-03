@@ -31,15 +31,6 @@
             color: white;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            background-color: #1d1b34;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-
         .profile-button {
             background-color: transparent;
             border: none;
@@ -105,10 +96,6 @@
 </head>
 
 <body>
-    <div class="header">
-        <a href="/"><img src="/assets/logo2.jpg"></a>
-        <button class="profile-button" onclick="profile()">Profile</button>
-    </div>
     <main>
         <section id="file">
             <div id="details">
@@ -136,7 +123,6 @@
     }
 </script>
 <script>
-    // Function to display files in the "fileTree" div
     function displayFilesInRepository(files) {
         const fileTree = document.getElementById("fileTree");
         fileTree.innerHTML = "";
@@ -155,9 +141,8 @@
         }
     }
 
-    // Function to open a repository
     function openRepository(repoName) {
-        // Implement logic to open the selected repository
+
     }
 </script>
 <script>
