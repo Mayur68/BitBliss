@@ -181,9 +181,11 @@
     </div>
 
     <script>
+        const owner = "<%= username %>";
+        const roomName = "<%= roomName %>";
 
         async function loadData() {
-            const roomName = "<%= roomName %>";
+
             try {
                 const response = await fetch('/loadRoomData', {
                     method: 'POST',
@@ -218,7 +220,6 @@
                             });
 
                             const memberData = await memberResponse.json();
-                            console.log(memberData)
                             if (memberData.status === 'success' && memberData.user) {
                                 createMemberElement(memberData.user, membersElement);
                             } else {
@@ -290,12 +291,52 @@
         loadData();
 
         function addMember() {
-            const membersElement = document.getElementById('members_');
-            const memberElement = document.createElement('input');
-            memberElement.type = "text";
-            memberElement.placeholder = "members(comma-separated)";
-            memberElement.id = `membres`;
-            membersElement.appendChild(memberElement);
+    const membersElement = document.getElementById('members_');
+
+    const existingMemberElement = document.getElementById('membres');
+    
+    if (existingMemberElement) {
+        membersElement.removeChild(existingMemberElement);
+    }
+
+    const memberElement = document.createElement('input');
+    memberElement.type = "text";
+    memberElement.placeholder = "members(comma-separated)";
+    memberElement.id = `membres`;
+    membersElement.appendChild(memberElement);
+}
+
+
+
+        function removeMember(memberName) {
+
+            const data = {
+                roomName: roomName,
+                owner: owner,
+                member: memberName,
+            };
+
+            fetch('/removeMembers', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        loadData();
+                    } else {
+                        return response.json().then(errorData => {
+                            console.error('Error:', errorData.message);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch Error:', error);
+                    alert("error")
+                });
         }
 
 
@@ -303,8 +344,20 @@
         function save() {
             const roomName = document.getElementById('roomName').value;
             const description = document.getElementById('Description').value;
-            const members = document.getElementById('membres').value.split(",").map(member => member.trim());
+            const membresInput = document.getElementById('membres');
+            const members = membresInput ? membresInput.value.split(",").map(member => member.trim()) : [];
+
+            if (membresInput && membresInput.value) {
+                const members = membresInput.value.split(",").map(member => member.trim());
+            } else {
+                const members = [];
+            }
             const profilePhoto = document.getElementById('profile-photo').files[0];
+
+            if (!roomName || !description ) {
+                alert('Please fill in all required fields');
+                return;
+            }
 
             const formData = new FormData();
 
@@ -315,7 +368,9 @@
                 formData.append("members[]", member);
             });
 
-            formData.append("profilePhoto", profilePhoto);
+            if (profilePhoto) {
+                formData.append("profilePhoto", profilePhoto);
+            }
 
             fetch('/updateRoom', {
                 method: 'POST',
@@ -325,13 +380,15 @@
                     if (response.ok) {
                         window.location.href = "/";
                     } else {
-                        alert('Room update failed');
+                        alert('Room update failed. Please try again.'); // Improved error message
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    alert('An error occurred. Please try again later.'); // General error alert
                 });
         }
+
 
 
 
