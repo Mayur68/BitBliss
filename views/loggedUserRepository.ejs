@@ -252,12 +252,13 @@
         <div>
             <h2>Actions</h2>
             <button onclick="settings()">settings</button>
-            <button>contributers</button>
+            <button onclick="contributers()">contributers</button>
             <button>share</button>
         </div>
     </section>`;
         loadRepository()
     }
+
 </script>
 
 
@@ -345,6 +346,11 @@
         <button type="button" onclick="delete()">Delete</button>
         <button type="button" onclick="createRepository()">Save</button>
     </form>`
+    }
+
+    function contributers() {
+        const main = document.getElementById('main')
+        main.innerHTML = ``
     }
 </script>
 

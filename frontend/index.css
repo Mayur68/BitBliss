@@ -1,0 +1,313 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background: #150026;
+}
+
+body::-webkit-scrollbar {
+    scroll-behavior: smooth;
+    display: none;
+}
+
+.main-container {
+    width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    text-align: center;
+    align-items: center;
+}
+
+.balloon {
+    position: absolute;
+    animation-fill-mode: forwards;
+}
+
+@keyframes moveUpAndDown1 {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10vh);
+    }
+}
+
+@keyframes moveUpAndDown2 {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(10vh);
+    }
+}
+
+.balloon1 {
+    top: 0;
+    left: 0;
+    width: 13vw;
+    height: 13vw;
+    animation: moveUpAndDown1 5s ease-in-out infinite;
+}
+
+.balloon2 {
+    top: 0;
+    left: 80%;
+    transform: translateX(-50%);
+    width: 10vw;
+    height: 10vw;
+    animation: moveUpAndDown1 6s ease-in-out infinite;
+}
+
+.balloon3 {
+    top: 25%;
+    left: 20%;
+    width: 9vw;
+    height: 9vw;
+    animation: moveUpAndDown1 4s ease-in-out infinite;
+}
+
+.balloon4 {
+    top: 20%;
+    left: 90%;
+    width: 10vw;
+    height: 10vw;
+    animation: moveUpAndDown2 5s ease-in-out infinite;
+}
+
+.balloon5 {
+    top: 10%;
+    left: 70%;
+    transform: translateX(-50%);
+    width: 15vw;
+    height: 15vw;
+    animation: moveUpAndDown2 6s ease-in-out infinite;
+}
+
+.balloon6 {
+    top: 55%;
+    left: 10%;
+    width: 16vw;
+    height: 16vw;
+    animation: moveUpAndDown2 5s ease-in-out infinite;
+}
+
+.balloon7 {
+    top: 50%;
+    left: 80%;
+    width: 7vw;
+    height: 7vw;
+    animation: moveUpAndDown2 5s ease-in-out infinite;
+}
+
+.balloon8 {
+    top: 80%;
+    right: 0;
+    width: 9vw;
+    height: 9vw;
+    animation: moveUpAndDown1 3s ease-in-out infinite;
+}
+
+.balloon9 {
+    top: 85%;
+    left: 0;
+    width: 6vw;
+    height: 6vw;
+    animation: moveUpAndDown2 7s ease-in-out infinite;
+}
+
+.balloon10 {
+    top: 85%;
+    left: 60%;
+    transform: translateX(-50%);
+    width: 6vw;
+    height: 6vw;
+    animation: moveUpAndDown1 8s ease-in-out infinite;
+}
+
+.headding1 {
+    font-family: Montserrat, sans-serif;
+    color: #B3FFFB;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 60px;
+}
+
+.heading2 {
+    font-family: Montserrat, sans-serif;
+    font-size: 6rem;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(180deg, #00FFF0, #00CCC0);
+    -webkit-background-clip: text;
+    color: transparent;
+    margin: 0;
+    padding: 0;
+}
+
+.heading3 {
+    font-family: Montserrat, sans-serif;
+    color: #DDB2FF;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.before-button2 {
+    width: 60%;
+    height: 3vh;
+    color: #FFF;
+    font-family: Montserrat;
+    margin-top: 15%;
+    margin-left: 20%;
+    font-size: 1.5vw;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 145.83%;
+}
+
+.button2 {
+    display: flex;
+    width: 2%;
+    height: 5vh;
+    padding: 1vh 2vw;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+    margin-left: 46.5%;
+    gap: 1vw;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #7200CC 0%, #A533FF 99.48%);
+    box-shadow: 0px -0.3vh 0px 0px rgba(0, 0, 0, 0.20) inset, 0px 0.3vh 0px 0px rgba(255, 255, 255, 0.40) inset, 0px 0px 0px 0.5vw rgba(255, 255, 255, 0.07);
+}
+
+.second-container {
+    width: 100%;
+}
+
+.section {
+    width: 90%;
+    height: 450px;
+    border-radius: 40px;
+    margin: 0 auto;
+    margin-bottom: 200px;
+    border: 5px solid rgba(255, 255, 255, 0.20);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0px 4px 150px 0px #7F3EB2;
+}
+
+.section1 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.section2 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.section3 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.content1 {
+    width: 60%;
+    padding: 2%;
+    text-align: center;
+    align-items: center;
+}
+
+.content2 {
+    width: 40%;
+    display: flex;
+    padding: 102px 42px 101.883px 42px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.chatsvg1 {
+    width: 260px;
+    height: 211.5px;
+    flex-shrink: 0;
+    fill: linear-gradient(233deg, rgba(255, 166, 54, 0.03) 1.2%, rgba(255, 166, 54, 0.24) 42.68%, rgba(255, 166, 54, 0.30) 63.88%, rgba(255, 166, 54, 0.30) 80.68%);
+    box-shadow: 0px 4px 40px 0px rgba(255, 255, 255, 0.35) inset;
+    backdrop-filter: blur(12.5px);
+}
+
+.chatsvg2 {
+    width: 187px;
+    height: 152.117px;
+    flex-shrink: 0;
+    fill: linear-gradient(139deg, #FF9E6B 29.1%, #FFD55E 94.86%);
+}
+
+.before-footer {
+    width: 100%;
+    height: max-content;
+    background: #150026;
+    align-items: center;
+    text-align: center;
+}
+
+.ellipse {
+    width: 1530px;
+    height: 1530px;
+    border-radius: 1530px;
+    background: linear-gradient(180deg, #A533FF 0%, rgba(36, 5, 61, 0.50) 34.8%, rgba(21, 0, 38, 0.25) 56.58%);
+}
+
+.join-now {
+    color: #FFF;
+    display: flex;
+    width: 224px;
+    height: 54px;
+    padding: 12px 24px;
+    margin-top: 90px;
+    margin-left: 40rem;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #7200CC 0%, #A533FF 99.48%);
+    box-shadow: 0px -4px 0px 0px rgba(0, 0, 0, 0.20) inset, 0px 2px 0px 0px rgba(255, 255, 255, 0.40) inset, 0px 0px 0px 4px rgba(255, 255, 255, 0.07);
+    font-family: Montserrat;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 122.2%;
+}
+
+.footer-button {
+    display: flex;
+    width: 147px;
+    height: 40px;
+    padding: 8px 50px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px 10px 0px 0px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.20) 0.01%, rgba(255, 255, 255, 0.02) 100%);
+    box-shadow: 0px 0px 0px 4px rgba(255, 255, 255, 0.07), 0px 2px 0px 0px rgba(255, 255, 255, 0.40) inset;
+}
+
+
+.footer {
+    width: 1196px;
+    height: 130px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%);
+    box-shadow: 0px 2px 0px 0px rgba(255, 255, 255, 0.40) inset, 0px 0px 0px 4px rgba(255, 255, 255, 0.07);
+}
+
+@media screen and (max-width: 768px) {
+    .heading2 {
+        font-size: 4rem;
+    }
+}

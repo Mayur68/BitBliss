@@ -39,6 +39,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
 
+app.use(express.static("frontend"));
 app.use("/", user);
 app.use("/", profile);
 app.use("/", arcade);
