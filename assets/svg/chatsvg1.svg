@@ -1,21 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="260" height="212" viewBox="0 0 260 212" fill="none">
-  <g filter="url(#filter0_bi_2985_209)">
-    <path d="M260 42C260 18.804 241.196 0 218 0H42C18.804 0 0 18.804 0 42V142C0 165.196 18.8044 184 42.0004 184C42.334 184 42.6672 184 43 184C48.9612 184 49.786 211.5 55.5 211.5C61.4434 211.5 72.2671 184 78 184C125.398 184 166.594 184 217.988 184C241.184 184 260 165.196 260 142V42Z" fill="url(#paint0_linear_2985_209)" fill-opacity="0.3"/>
+  <g filter="url(#filter0_bi_2860_769)">
+    <path d="M260 42C260 18.804 241.196 0 218 0H42C18.804 0 0 18.804 0 42V142C0 165.196 18.8044 184 42.0004 184C42.334 184 42.6672 184 43 184C48.9612 184 49.786 211.5 55.5 211.5C61.4434 211.5 72.2671 184 78 184C125.398 184 166.594 184 217.988 184C241.184 184 260 165.196 260 142V42Z" fill="url(#paint0_linear_2860_769)" fill-opacity="0.3"/>
   </g>
-  <defs>
-    <filter id="filter0_bi_2985_209" x="-25" y="-25" width="310" height="261.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <defs>
+    <filter id="blurFilter" x="0" y="0" width="100%" height="80%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+    </filter>
+    <filter id="filter0_bi_2860_769" x="-25" y="-25" width="310" height="261.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
       <feFlood flood-opacity="0" result="BackgroundImageFix"/>
       <feGaussianBlur in="BackgroundImageFix" stdDeviation="12.5"/>
-      <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_2985_209"/>
-      <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_2985_209" result="shape"/>
+      <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_2860_769"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_2860_769" result="shape"/>
       <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
       <feOffset dy="4"/>
       <feGaussianBlur stdDeviation="20"/>
       <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
       <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.35 0"/>
-      <feBlend mode="normal" in2="shape" result="effect2_innerShadow_2985_209"/>
+      <feBlend mode="normal" in2="shape" result="effect2_innerShadow_2860_769"/>
     </filter>
-    <linearGradient id="paint0_linear_2985_209" x1="5.5" y1="-1.80145e-06" x2="202.5" y2="183" gradientUnits="userSpaceOnUse">
+    <linearGradient id="paint0_linear_2860_769" x1="5.5" y1="-1.80145e-06" x2="202.5" y2="183" gradientUnits="userSpaceOnUse" style="filter: url(#blurFilter);">
       <stop stop-color="#FFA636" stop-opacity="0.1"/>
       <stop offset="0.515821" stop-color="#FFA636" stop-opacity="0.8"/>
       <stop offset="0.779545" stop-color="#FFA636"/>
