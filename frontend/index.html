@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap">
   <link rel="stylesheet" href="./index.css" />
+  <link rel="stylesheet" href="./css/global.css" />
   <title>Bit Bliss</title>
 </head>
 
@@ -14,7 +15,8 @@
     <img src="./../assets/svg/ballon1.svg" alt="Your SVG" class="balloon balloon1" />
     <img src="./../assets/svg/ballon2.svg" alt="Your SVG" class="balloon balloon2" />
     <img src="./../assets/svg/ballon3.svg" alt="Your SVG" class="balloon balloon3" />
-    <img src="./../assets/svg/ballon4.svg" alt="Your SVG" class="balloon4 balloon" />
+    <!-- <img src="./../assets/svg/ballon4.svg" alt="Your SVG" class="balloon4 balloon" /> -->
+    <img src="./../assets/svg/ballon7.svg" alt="Your SVG" class="balloon4 balloon" />
     <img src="./../assets/svg/ballon5.svg" alt="Your SVG" class="balloon5 balloon" />
     <img src="./../assets/svg/ballon6.svg" alt="Your SVG" class="balloon6 balloon" />
     <img src="./../assets/svg/ballon7.svg" alt="Your SVG" class="balloon7 balloon" />
@@ -32,52 +34,48 @@
     <div id="next-content" class="section section1">
       <div class="content1">
         <h1>Chat with Ease</h1>
-        <p>Instantly connect with friends or teammates. Chat effortlessly and stay in sync, making communication a
+        <p>Instantly connect with friends or teammates.<br /> Chat effortlessly and stay in sync, making communication a
           breeze.</p>
       </div>
       <div class="content2">
-        <img src="./../assets/svg/chatsvg2.svg" alt="Your SVG" class="chatsvg chatsvg2" />
-        <img src="./../assets/svg/chatsvg1.svg" alt="Your SVG" class="chatsvg chatsvg1" />
-        <img src="./../assets/svg/chatsvg3.svg" alt="Your SVG" class="chatsvg chatsvg3" />
-        <img src="./../assets/svg/chatsvg3.svg" alt="Your SVG" class="chatsvg chatsvg4" />
-        <img src="./../assets/svg/chatsvg3.svg" alt="Your SVG" class="chatsvg chatsvg5" />
+        <img src="./../assets/svg/chat1.svg" alt="Your SVG" class="svg chat1" />
+        <img src="./../assets/svg/chat2.svg" alt="Your SVG" class="svg chat2" />
       </div>
     </div>
     <div class="section section2">
       <div class="content1">
         <h1>Share Files in a Snap</h1>
-        <p>Swap files seamlessly! Our platform makes sharing photos, documents, and more a
-          simple, hassle-free experience.</p>
+        <p>Swap files seamlessly! Our platform makes sharing<br /> photos, documents, and more a
+          simple, hassle-free<br /> experience.</p>
       </div>
       <div class="content2">
-        <img src="./../assets/svg/sharesvg2.svg" alt="Your SVG" class="sharesvg sharesvg2" />
-        <div class="sharesvg sharesvg3"></div>
-        <img src="./../assets/svg/sharesvg1.svg" alt="Your SVG" class="sharesvg sharesvg1" />
+        <img src="./../assets/svg/share1.svg" alt="Your SVG" class="svg share1" />
+        <img src="./../assets/svg/share2.svg" alt="Your SVG" class="svg share2" />
       </div>
     </div>
     <div class="section section3">
       <div class="content1">
         <h1>Team Up on Projects</h1>
-        <p>Boost productivity! Collaborate on repositories effortlessly. Track changes, work
-          together, and achieve success as a team.</p>
+        <p>Boost productivity! Collaborate on repositories<br /> effortlessly. Track changes, work
+          together, and<br /> achieve success as a team.</p>
       </div>
       <div class="content2">
-        <img src="./../assets/svg/sharesvg2.svg" alt="Your SVG" class="sharesvg sharesvg2" />
-        <div class="sharesvg sharesvg3"></div>
-        <img src="./../assets/svg/buildsvg.svg" alt="Your SVG" class="sharesvg buildsvg" />
+
+        <img src="./../assets/svg/team1.svg" alt="Your SVG" class="svg team1" />
+        <img src="./../assets/svg/team2.svg" alt="Your SVG" class="svg team2" />
       </div>
 
     </div>
     <div class="section section4">
       <div class="content1">
         <h1>Game On!</h1>
-        <p>Level up your gaming. Connect with fellow gamers, share tips, and dive into exciting adventures together. The
+        <p>Level up your gaming. Connect with fellow gamers,<br /> share tips, and dive into exciting adventures
+          together.<br /> The
           ultimate gaming experience awaits!</p>
       </div>
       <div class="content2">
-        <img src="./../assets/svg/sharesvg2.svg" alt="Your SVG" class="sharesvg sharesvg2" />
-        <div class="sharesvg sharesvg3"></div>
-        <img src="./../assets/svg/gamesvg.svg" alt="Your SVG" class="sharesvg sharesvg1" />
+        <img src="./../assets/svg/game1.svg" alt="Your SVG" class="svg game1" />
+        <img src="./../assets/svg/game2.svg" alt="Your SVG" class="svg gmae2" />
       </div>
 
     </div>
@@ -86,13 +84,31 @@
   <div class="before-footer">
     <div class="ellipse">
       <h1 class="footer-heading2">Bit Bliss</h1>
-    <h3 class="footer-heading3">Where code meets collaboration and fun</h3>
-    <div class="join-now" onclick="sign_up()">Join Now</div>
+      <h3 class="footer-heading3">Where code meets collaboration and fun</h3>
+      <div class="join-now" onclick="sign_up()">Join Now</div>
     </div>
   </div>
   <footer>
-    <button class="footer-button"></button>
-    <div class="footer"></div>
+    <button class="footer-button" onclick="footer()">
+      <img src="./../assets/svg/footer.svg" alt="Your SVG" class="footersvg" />
+    </button>
+    <div class="footer">
+      <div class="content3">
+        <div class="sub-content3-1">
+          <img src="./../assets/svg/footer/teamsvg.svg" alt="Your SVG" class=" footerteam" />
+        </div>
+        <div class="sub-content3-2">
+          <img src="./../assets/svg/footer/feedbacksvg.svg" alt="Your SVG" class=" footerteam" />
+        </div>
+        <div class="sub-content3-3">
+          <img src="./../assets/svg/footer/helpsvg.svg" alt="Your SVG" class=" footerteam" />
+        </div>
+        <div class="sub-content3-4">
+          <img src="./../assets/svg/footer/socialmediasvg.svg" alt="Your SVG" class=" footerteam" />
+        </div>
+      </div>
+      <p class="leagel-rights">© 2023 BitBliss. All rights reserved.</p>
+    </div>
   </footer>
 </body>
 <script>
@@ -136,7 +152,7 @@
       if (isElementInViewport(svg)) {
         svg.style.opacity = 1;
         svg.style.transform = 'translateY(0)';
-        svg.style.animation = 'moveUpAndDown3 8s ease-in-out infinite';
+
       }
     })
   }
@@ -146,6 +162,12 @@
   function sign_up() {
     window.location = "/sign-up";
   }
+
+  function moveFooterUp() {
+    const footer = document.querySelector('.footer');
+    footer.style.transform = 'translateY(-100%)';
+  }
+
 </script>
 
 </html>
