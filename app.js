@@ -71,10 +71,10 @@ app.get("/", (req, res) => {
           if (sessionString === user.session) {
             res.render("user", { username: user.username });
           } else {
-            res.sendFile(__dirname + "/frontend/index.html");
+            res.sendFile(__dirname + "/frontend/landingPage.html");
           }
         } else {
-          res.sendFile(__dirname + "/frontend/index.html");
+          res.sendFile(__dirname + "/frontend/landingPage.html");
         }
       })
       .catch((err) => {
@@ -82,7 +82,7 @@ app.get("/", (req, res) => {
         res.status(500).send("Internal server error");
       });
   } else {
-    res.sendFile(__dirname + "/frontend/index.html");
+    res.sendFile(__dirname + "/frontend/landingPage.html");
   }
 });
 
