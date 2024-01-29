@@ -30,7 +30,7 @@ body::-webkit-scrollbar {
     width: 13vw;
     height: 13vw;
     animation: moveUpAndDown1 5s ease-in-out infinite;
-    
+
     /* backdrop-filter: blur(15px); */
 
 }
@@ -307,33 +307,33 @@ body::-webkit-scrollbar {
 }
 
 .share1 {
-    top: 158px;
-    left: 230px;
+    top: 115px;
+    left: 140px;
 }
 
 .share2 {
-    top: 158px;
+    top: 200px;
     left: 306px;
 }
 
 .team1 {
-    top: 148px;
-    left: 240px;
+    top: 115px;
+    left: 140px;
 }
 
 .team2 {
-    top: 158px;
-    left: 306px;
+    top: 200px;
+    left: 326px;
 }
 
 .game1 {
-    top: 148px;
-    left: 240px;
+    top: 115px;
+    left: 140px;
 }
 
 .game2 {
-    top: 158px;
-    left: 306px;
+    top: 200px;
+    left: 326px;
 }
 
 .before-footer {
@@ -354,7 +354,6 @@ body::-webkit-scrollbar {
     background: linear-gradient(180deg, #A533FF 0%, rgba(36, 5, 61, 0.50) 34.8%, rgba(21, 0, 38, 0.25) 56.58%);
 }
 
-
 .footer-heading2 {
     font-size: 6rem;
     font-weight: 700;
@@ -366,26 +365,6 @@ body::-webkit-scrollbar {
     color: transparent;
     margin: 0;
     padding: 0;
-}
-
-.footersvg {
-    position: relative;
-    left: 35%;
-    animation: rotateAnimation 2s ease-in-out infinite;
-}
-
-@keyframes rotateAnimation {
-    0% {
-        transform: translateX(-50%) rotate(0deg);
-    }
-
-    50% {
-        transform: translateX(-50%) rotate(60deg);
-    }
-
-    100% {
-        transform: translateX(-50%) rotate(0deg);
-    }
 }
 
 .footer-heading3 {
@@ -418,13 +397,22 @@ body::-webkit-scrollbar {
     line-height: 122.2%;
 }
 
+#footer {
+    height: 230px;
+    overflow: hidden;
+    position: fixed;
+    bottom: -180px;
+    left: 140px;
+    transition: bottom 0.5s ease;
+  }
+
 .footer-button {
     position: relative;
-    top: -3px;
-    left: 700px;
+    top: 0;
+    left: 560px;
     display: flex;
-    width: 147px;
-    height: 40px;
+    width: 50px;
+    height: 25px;
     padding: 8px 50px;
     justify-content: center;
     align-items: center;
@@ -434,6 +422,26 @@ body::-webkit-scrollbar {
     box-shadow: 0px 0px 0px 4px rgba(255, 255, 255, 0.07), 0px 2px 0px 0px rgba(255, 255, 255, 0.40) inset;
 }
 
+.footersvg {
+    position: relative;
+    left: 35%;
+    animation: rotateAnimation 2s ease-in-out infinite;
+}
+
+@keyframes rotateAnimation {
+    0% {
+        transform: translateX(-50%) rotate(0deg);
+    }
+
+    50% {
+        transform: translateX(-50%) rotate(60deg);
+    }
+
+    100% {
+        transform: translateX(-50%) rotate(0deg);
+    }
+}
+
 .footer {
     position: relative;
     top: 0;
@@ -441,6 +449,7 @@ body::-webkit-scrollbar {
     width: 80%;
     height: 162.544px;
     border-radius: 20px;
+    margin-bottom: 0;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 100%);
     box-shadow: 0px 2px 0px 0px rgba(255, 255, 255, 0.40) inset, 0px 0px 0px 4px rgba(255, 255, 255, 0.07);
 }
@@ -506,6 +515,9 @@ body::-webkit-scrollbar {
     font-weight: 700;
     line-height: normal;
 }
+
+
+
 
 @media (max-width: 768px) {
 

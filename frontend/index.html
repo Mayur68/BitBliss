@@ -49,8 +49,8 @@
           simple, hassle-free<br /> experience.</p>
       </div>
       <div class="content2">
-        <img src="./../assets/svg/share1.svg" alt="Your SVG" class="svg share1" />
         <img src="./../assets/svg/share2.svg" alt="Your SVG" class="svg share2" />
+        <img src="./../assets/svg/share1.svg" alt="Your SVG" class="svg share1" />
       </div>
     </div>
     <div class="section section3">
@@ -60,9 +60,8 @@
           together, and<br /> achieve success as a team.</p>
       </div>
       <div class="content2">
-
-        <img src="./../assets/svg/team1.svg" alt="Your SVG" class="svg team1" />
         <img src="./../assets/svg/team2.svg" alt="Your SVG" class="svg team2" />
+        <img src="./../assets/svg/team1.svg" alt="Your SVG" class="svg team1" />
       </div>
 
     </div>
@@ -74,8 +73,8 @@
           ultimate gaming experience awaits!</p>
       </div>
       <div class="content2">
+        <img src="./../assets/svg/game2.svg" alt="Your SVG" class="svg game2" />
         <img src="./../assets/svg/game1.svg" alt="Your SVG" class="svg game1" />
-        <img src="./../assets/svg/game2.svg" alt="Your SVG" class="svg gmae2" />
       </div>
 
     </div>
@@ -88,10 +87,10 @@
       <div class="join-now" onclick="sign_up()">Join Now</div>
     </div>
   </div>
-  <footer>
-    <button class="footer-button" onclick="footer()">
+  <footer id="footer">
+    <div class="footer-button" onclick="moveFooterUp()">
       <img src="./../assets/svg/footer.svg" alt="Your SVG" class="footersvg" />
-    </button>
+    </div>
     <div class="footer">
       <div class="content3">
         <div class="sub-content3-1">
@@ -132,7 +131,7 @@
   function handleScroll() {
     const h1Elements = document.querySelectorAll('.content1 > h1');
     const pElements = document.querySelectorAll('.content1 > p');
-    const elements = document.querySelectorAll('.chatsvg, .sharesvg');
+    const elements = document.querySelectorAll('.svg');
 
     h1Elements.forEach(h1Element => {
       if (isElementInViewport(h1Element)) {
@@ -163,10 +162,23 @@
     window.location = "/sign-up";
   }
 
-  function moveFooterUp() {
-    const footer = document.querySelector('.footer');
-    footer.style.transform = 'translateY(-100%)';
+  let _footer = false;
+
+function moveFooterUp() {
+  const footer = document.getElementById('footer');
+
+  if (_footer === false) {
+    footer.style.transition = 'bottom 0.5s ease';
+    footer.style.bottom = '0';
+    _footer = true;
+  } else {
+    footer.style.transition = 'bottom 0.5s ease';
+    footer.style.bottom = '-180px';
+    _footer = false;
   }
+}
+
+
 
 </script>
 
