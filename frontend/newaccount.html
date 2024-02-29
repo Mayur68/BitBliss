@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1, width=device-width" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" />
+  <link href="./css/sign-in.css" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      line-height: normal;
+    }
+
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+
+    :root {
+      /* fonts */
+      --font-montserrat: Montserrat;
+
+      /* font sizes */
+      --font-size-17xl: 36px;
+      --font-size-xl: 20px;
+
+      /* Colors */
+      --color-gray: rgba(255, 255, 255, 0.6);
+      --color-white: #fff;
+
+      /* Border radiuses */
+      --br-3xs: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cta">
+    <img class="icon" alt="" src="./../assets/1 24.png" />
+    <img class="bitbliss-logo-icon" alt="" src="./../assets/Bitbliss logo.png" />
+    <div class="glass-container">
+      <b class="new-to-bit-container">
+        <span class="new-to-bit-container1">
+          <p class="new-to-bit-bliss">
+            <span class="new-to">New to </span>
+            <span>Bit Bliss?</span>
+          </p>
+          <p class="fantastic-were-here">
+            Fantastic! We're here to set you up quickly.
+          </p>
+        </span>
+      </b>
+      <b class="join-the-fun">Join the fun!</b>
+      <b class="already-a-bit">Already a Bit Blisser?</b>
+      <div class="sign-in" onclick="sign_in()">
+        <b class="sign-in1">Sign in</b>
+      </div>
+      <div class="login" onclick="log_in()">
+        <b class="login1">Login</b>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  function sign_in() {
+    window.location = "/sign-up";
+  }
+
+  function log_in() {
+    window.location = "/login";
+  }
+</script>

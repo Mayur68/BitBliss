@@ -1,0 +1,148 @@
+.cta {
+  width: 100%;
+  position: relative;
+  background-color: #23003f;
+  height: 100vh;
+  overflow: hidden;
+  text-align: center;
+  font-size: var(--font-size-xl);
+  color: var(--color-gray);
+  font-family: var(--font-montserrat);
+}
+
+.bitbliss-logo-icon,
+
+.icon {
+  position: absolute;
+  top: calc(50% - 462px);
+  left: calc(50% - 821px);
+  width: 1642px;
+  height: 924px;
+  object-fit: cover;
+}
+
+.bitbliss-logo-icon {
+  top: calc(50% - 400px);
+  left: calc(50% - 640px);
+  width: 1279px;
+  height: 799px;
+}
+
+.new-to {
+  color: var(--color-white);
+}
+
+.new-to-bit-bliss {
+  margin: 0;
+}
+
+.fantastic-were-here {
+  margin: 0;
+  color: var(--color-white);
+}
+
+.new-to-bit-container1 {
+  width: 100%;
+}
+
+.new-to-bit-container {
+  position: absolute;
+  width: 82.62%;
+  top: 38px;
+  left: 8.8%;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  height: 134px;
+  color: #22ddd2;
+}
+
+.already-a-bit,
+.join-the-fun {
+  position: absolute;
+  left: calc(50% - 185px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 371px;
+}
+
+.join-the-fun {
+  top: calc(50% - 29px);
+}
+
+.already-a-bit {
+  bottom: 149px;
+}
+
+.sign-in1 {
+  position: relative;
+  line-height: 122.2%;
+}
+
+.sign-in {
+  cursor: pointer;
+  position: absolute;
+  height: calc(100% - 512px);
+  top: 307px;
+  bottom: 205px;
+  left: calc(50% - 152px);
+  border-radius: var(--br-3xs);
+  background: linear-gradient(180deg, #7200cc, #a533ff 99.48%);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.07),
+    0 2px 0 rgba(255, 255, 255, 0.4) inset, 0-4px 0 rgba(0, 0, 0, 0.2) inset;
+  width: 304px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  box-sizing: border-box;
+  text-align: left;
+  font-size: var(--font-size-17xl);
+  color: var(--color-white);
+}
+
+.login1 {
+  position: relative;
+  cursor: pointer;
+}
+
+.glass-container,
+.login {
+  position: absolute;
+  border: 2px solid var(--color-gray);
+  box-sizing: border-box;
+}
+
+.login {
+  cursor: pointer;
+  bottom: 51px;
+  left: calc(50% - 152px);
+  border-radius: var(--br-3xs);
+  width: 304px;
+  height: 83px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 19px 87px;
+  font-size: var(--font-size-17xl);
+  color: var(--color-white);
+}
+
+.glass-container {
+  top: calc(50% - 337px);
+  left: calc(50% - 233px);
+  border-radius: 40px;
+  background: linear-gradient(149.21deg,
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.2));
+  box-shadow: 5px 5px 4px 2px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  width: 466px;
+  height: 594px;
+  overflow: hidden;
+}

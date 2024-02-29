@@ -7,6 +7,11 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 
 // Route for the sign-up page
+router.get("/account", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/newaccount.html"));
+});
+
+// Route for the sign-up page
 router.get("/sign-up", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/sign-up.html"));
 });
