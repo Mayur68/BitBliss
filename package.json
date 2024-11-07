@@ -1,5 +1,5 @@
 {
-  "name": "WebApp",
+  "name": "BitBliss",
   "version": "1.0.0",
   "description": "Simple BtiBliss",
   "main": "app.js",
@@ -11,7 +11,7 @@
     "compile-server": "echo 'Compiling server...'"
   },
   "keywords": [],
-  "author": "Mayur",
+  "author": "Mayura",
   "license": "ISC",
   "dependencies": {
     "adm-zip": "^0.5.10",
@@ -33,12 +33,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mayur68/WebApp.git"
+    "url": "git+https://github.com/Mayura01/WebApp.git"
   },
   "bugs": {
-    "url": "https://github.com/Mayur68/WebApp/issues"
+    "url": "https://github.com/Mayura01/WebApp/issues"
   },
-  "homepage": "https://github.com/Mayur68/WebApp#readme",
+  "homepage": "https://github.com/Mayura01/WebApp#readme",
   "devDependencies": {
     "jest": "^29.7.0"
   }
